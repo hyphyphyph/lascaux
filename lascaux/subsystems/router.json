@@ -1,0 +1,6 @@
+{
+    "name": "lascaux_router",
+    "title": "Lascaux Router",
+    "description": "Router subsystem for Lascaux",
+    "package": "router"
+}

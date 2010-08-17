@@ -3,5 +3,8 @@ syntax: regexp
 ^bin/
 ^lib/
 ^include/
+^main.py
 
 syntax: glob
+*.pyc
+*.pyo

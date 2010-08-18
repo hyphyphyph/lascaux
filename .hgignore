@@ -3,6 +3,7 @@ syntax: regexp
 ^bin/
 ^lib/
 ^include/
+^tmp/
 ^main.py
 
 syntax: glob

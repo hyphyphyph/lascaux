@@ -21,7 +21,7 @@ class PluginSubSystem(instlatte.SubSystem):
                     if os.path.isfile(os.path.join(plugin_dir,
                                                    config_filename)):
                         logger.info(
-                            "Found plugin: %s using %s as the config." \
+                            "Found plugin: `%s` using %s" \
                             % (plugin_name, os.path.join(plugin_dir,
                                                          config_filename)))
                         self.plugins[plugin_name] = {
@@ -38,4 +38,4 @@ class PluginSubSystem(instlatte.SubSystem):
         class_ = getattr(module, class_)
         class_.config = config
         Plugin["__class__"] = class_
-        logger.info("Loaded plugin: %s" % Plugin["name"])
+        logger.info("Loaded plugin: `%s`" % Plugin["name"])

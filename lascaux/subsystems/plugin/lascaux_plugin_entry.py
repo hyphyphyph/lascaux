@@ -9,6 +9,7 @@ import instlatte
 
 
 class PluginSubSystem(instlatte.SubSystem):
+
     def discover_plugins(self):
         for source in self.config["sources"]:
             source = os.path.abspath(source)

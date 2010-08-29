@@ -1,0 +1,7 @@
+{
+    "subsystems": {
+        "lascaux_plugin": {
+            "sources": ["plugins"]
+        }
+    }
+}

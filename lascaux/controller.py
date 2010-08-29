@@ -1,10 +1,10 @@
 import weakref
 
-from lascaux import Object
+from lascaux import SObject
 from lascaux.util import parse_route_to_regex
 
 
-class Controller(Object):
+class Controller(SObject):
 
     app = None
     request = None

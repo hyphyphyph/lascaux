@@ -13,7 +13,7 @@ class RouterSubsystem(instlatte.SubSystem):
 
     def get_sources(self):
         sources = []
-        obj = lascaux.Object()
+        obj = lascaux.SObject()
         sources.append(os.path.join(obj.get_lib_path(), "routers"))
         sources.append(os.path.join(self.get_exec_path(), "routers"))
         return sources

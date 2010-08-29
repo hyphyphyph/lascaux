@@ -1,6 +1,6 @@
 from lascaux import SObject
 
 
-class BaseRouter(SObject):
+class App(SObject):
     def __init__(self):
         pass

@@ -25,16 +25,16 @@ class PluginSubSystem(instlatte.SubSystem):
                             "Found plugin: `%s` using %s" \
                             % (plugin_name, os.path.join(plugin_dir,
                                                          config_filename)))
-                        self.plugins[plugin_name] = {
+                        self.plugins.append({
                             "name": plugin_name,
-                            "config_filename": os.path.join(plugin_dir,
+                            "__config_file__": os.path.join(plugin_dir,
                                                             config_filename),
-                            "path": plugin_dir}
+                            "__path__": plugin_dir})
 
     def load_plugin(self, Plugin):
-        config = parse_config(Plugin["config_filename"])
+        config = parse_config(Plugin["__config_file__"])
         entry = Plugin["name"]+"_controller.py"
-        module = self.import_file(os.path.join(Plugin["path"], entry))
+        module = self.import_file(os.path.join(Plugin["__path__"], entry))
         class_ = Plugin["name"].title()+"Controller"
         class_ = getattr(module, class_)
         class_.config = config

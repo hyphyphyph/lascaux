@@ -26,10 +26,11 @@ class RouterSubsystem(instlatte.SubSystem):
                     config = parse_config(config_path)
                     config_ = {
                         "name": config["name"],
-                        "config": config,
-                        "config_filename": config_path,
-                        "path": os.path.dirname(config_path)
+                        "__config__": config,
+                        "__config_file__": config_path,
+                        "__path__": os.path.dirname(config_path)
                     }
+                    self.plugins.append(config)
                     logger.info("Found router: `%s` using %s" % \
                         (config["name"], config_path))
 

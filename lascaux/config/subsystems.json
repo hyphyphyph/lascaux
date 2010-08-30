@@ -2,6 +2,9 @@
     "subsystems": {
         "lascaux_plugin": {
             "sources": ["plugins"]
+        },
+        "lascaux_server": {
+            "sources": ["servers"]
         }
     }
 }

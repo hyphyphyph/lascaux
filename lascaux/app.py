@@ -1,6 +1,7 @@
 import os.path
 
 import instlatte
+from libel import sl
 
 from lascaux import SObject, config
 
@@ -15,6 +16,8 @@ class App(SObject):
         self.manager.add_subsystem_source(os.path.join("lascaux",
                                                        "subsystems"))
         self.manager.init()
+
+        print self.manager.select("subsystem", sl.EQUALS("server"))
 
     def __call__(self):
         self.dispatch()

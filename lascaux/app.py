@@ -18,3 +18,6 @@ class App(SObject):
 
     def __call__(self):
         self.dispatch()
+
+
+app = App()

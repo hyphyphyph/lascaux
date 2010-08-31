@@ -16,8 +16,9 @@ class App(SObject):
         self.manager.add_subsystem_source(os.path.join("lascaux",
                                                        "subsystems"))
         self.manager.init()
-
-        print self.manager.select("subsystem", sl.EQUALS("server"))
+        self.manager.execute(self.manager.select("subsystem",
+                                                 sl.EQUALS("lascaux_server")),
+                             "init_server", {"app": self})
 
     def __call__(self):
         self.dispatch()

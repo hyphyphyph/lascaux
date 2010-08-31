@@ -18,7 +18,7 @@ class RouterSubsystem(instlatte.SubSystem):
         sources.append(os.path.join(self.get_exec_path(), "routers"))
         return sources
 
-    def discover_plugins(self):
+    def _discover_plugins(self):
         for source in self.get_sources():
             for config_path in glob.glob(os.path.join(source, "*", "*.json")):
                 if os.path.splitext(config_path)[1] in \
@@ -34,5 +34,5 @@ class RouterSubsystem(instlatte.SubSystem):
                     logger.info("Found router: `%s` using %s" % \
                         (config["name"], config_path))
 
-    def load_plugin(self, Plugin):
+    def _load_plugin(self, Plugin):
         pass

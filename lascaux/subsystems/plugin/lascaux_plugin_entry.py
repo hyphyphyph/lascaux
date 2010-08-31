@@ -10,7 +10,7 @@ import instlatte
 
 class PluginSubSystem(instlatte.SubSystem):
 
-    def discover_plugins(self):
+    def _discover_plugins(self):
         for source in self.config["sources"]:
             source = os.path.abspath(source)
             for plugin_dir in [d for d in
@@ -31,7 +31,7 @@ class PluginSubSystem(instlatte.SubSystem):
                                                             config_filename),
                             "__path__": plugin_dir})
 
-    def load_plugin(self, Plugin):
+    def _load_plugin(self, Plugin):
         config = parse_config(Plugin["__config_file__"])
         entry = Plugin["name"]+"_controller.py"
         module = self.import_file(os.path.join(Plugin["__path__"], entry))

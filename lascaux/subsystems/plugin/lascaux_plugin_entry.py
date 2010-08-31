@@ -37,6 +37,13 @@ class PluginSubSystem(instlatte.SubSystem):
         module = self.import_file(os.path.join(Plugin["__path__"], entry))
         class_ = Plugin["name"].title()+"Controller"
         class_ = getattr(module, class_)
+        class_.name = Plugin["name"]
+        class_.path = Plugin["__path__"]
         class_.config = config
         Plugin["__class__"] = class_
+        Plugin["__instance__"] = class_()
         logger.info("Loaded plugin: `%s`" % Plugin["name"])
+
+    def execute(self, Plugin, Command, Data):
+        if Command == "get_static_dirs":
+            Data += Plugin["__instance__"].__get_static_dirs__()

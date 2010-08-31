@@ -5,6 +5,7 @@ syntax: regexp
 ^include/
 ^tmp/
 ^main.py
+^public/
 
 syntax: glob
 *.pyc

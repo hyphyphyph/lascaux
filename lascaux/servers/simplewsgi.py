@@ -4,6 +4,7 @@ from wsgiref.simple_server import make_server
 from lascaux.baseserver import BaseServer
 from lascaux import config, logger
 logger = logger(__name__)
+from lascaux.request import Request
 
 
 class SimpleWSGIServer(BaseServer):
@@ -23,8 +24,15 @@ class SimpleWSGIServer(BaseServer):
         server.serve_forever()
 
     def __call__(self, environ, start_response):
-        self.handle_request(environ=environ,
+        return self.handle_request(environ=environ,
                             start_response=start_response)
 
     def handle_request(self, environ, start_response):
-        pass
+        uri = environ.get("PATH_INFO")
+        request = Request(uri)
+        request = self.handle_static_serve(request)
+        headers = []
+        for header in request.headers:
+            headers.append((header, request.headers[header]))
+        start_response(request.get_http_code(), headers)
+        return [str(request.content)]

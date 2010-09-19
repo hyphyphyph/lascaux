@@ -11,6 +11,7 @@ class Request(SObject):
     cookies = None
     session = None
     content = None
+    redirect = None
     http_status_code = "202 SUCCESS"
 
     def __init__(self, URI):

@@ -23,5 +23,16 @@ class App(SObject):
     def __call__(self):
         self.dispatch()
 
+    def find_exec(self, Request):
+        self.manager.execute(self.manager.select("subsystem",
+                                                 sl.EQUALS("lascaux_router")),
+                             "find_exec", {"app": "self", "request": Request})
+
+
+    def route(self, Request):
+        self.manager.execute(self.manager.select("subsystem",
+                                                 sl.EQUALS("lascaux_router")),
+                             "find_route", {"app": "self", "request": Request})
+
 
 app = App()

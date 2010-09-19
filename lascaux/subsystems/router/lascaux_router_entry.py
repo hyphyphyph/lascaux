@@ -3,6 +3,7 @@ import glob
 
 import lascaux
 from lascaux.util import parse_config, SUPPORTED_CONFIG_EXTENSIONS
+from lascaux.baserouter import BaseRouter
 from lascaux import logger
 logger = logger(__name__)
 
@@ -28,11 +29,26 @@ class RouterSubsystem(instlatte.SubSystem):
                         "name": config["name"],
                         "__config__": config,
                         "__config_file__": config_path,
-                        "__path__": os.path.dirname(config_path)
+                        "__path__": os.path.dirname(config_path),
                     }
-                    self.plugins.append(config)
+                    config_["__file__"] = os.path.join(config_["__path__"],
+                                                       config_["name"])
+                    self.plugins.append(config_)
                     logger.info("Found router: `%s` using %s" % \
-                        (config["name"], config_path))
+                        (config_["name"], config_path))
 
     def _load_plugin(self, Plugin):
-        pass
+        print "--------------------------------------------------"
+        module = self.import_file(Plugin["__file__"])
+        for symbol in dir(module):
+            symbol = getattr(module, symbol)
+            if type(symbol) == type(self.__class__):
+                if issubclass(symbol, BaseRouter) and \
+                   BaseRouter in symbol.__bases__:
+                    Plugin["__instance__"] = symbol()
+
+    def execute(self, Plugin, Command, Data={}):
+        if Command == "find_route":
+            print Plugin
+            # Plugin["__instance__"].init_server(Data["app"])
+        return False

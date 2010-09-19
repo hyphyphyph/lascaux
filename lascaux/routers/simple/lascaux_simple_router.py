@@ -1,4 +1,4 @@
-from lascaux import BaseRouter
+from lascaux.baserouter import BaseRouter
 
 
 class SimpleRouter(BaseRouter):

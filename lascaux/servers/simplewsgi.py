@@ -30,9 +30,9 @@ class SimpleWSGIServer(BaseServer):
     def handle_request(self, environ, start_response):
         uri = environ.get("PATH_INFO")
         request = Request(uri)
-        request = self.handle_static_serve(request)
+        request = BaseServer.handle_request(self, request)
         headers = []
         for header in request.headers:
             headers.append((header, request.headers[header]))
         start_response(request.get_http_code(), headers)
-        return [str(request.content)]
+        return [str(request.get_content())]

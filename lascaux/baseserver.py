@@ -16,8 +16,15 @@ class BaseServer(SObject):
     def init_server(self, App):
         self.app = weakref.proxy(App)
 
-    def handle_request(self):
-        pass
+    def handle_request(self, Request):
+        if self._get_static_path(Request.URI):
+            return self.handle_static_serve(Request)
+        # elif self.app.router.find_route(Request):
+        #     return self.handle_request(Request)
+        # elif Request.redirect:
+        #     return self.handle_redirect_serve(Request)
+        else:
+            return self.handle_error_serve("404", Request)
 
     def handle_static_serve(self, Request):
         path = self._get_static_path(Request.URI)
@@ -54,5 +61,8 @@ class BaseServer(SObject):
     def handle_redirect_serve(self, Request):
         pass
 
-    def handle_serve_error(self, Code, Request):
-        pass
+    def handle_error_serve(self, Code, Request):
+        if Code == "404":
+            Request.set_http_code("404 NOT FOUND")
+            Request.save("Error 404, not found.")
+        return Request

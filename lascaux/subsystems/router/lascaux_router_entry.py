@@ -38,7 +38,6 @@ class RouterSubsystem(instlatte.SubSystem):
                         (config_["name"], config_path))
 
     def _load_plugin(self, Plugin):
-        print "--------------------------------------------------"
         module = self.import_file(Plugin["__file__"])
         for symbol in dir(module):
             symbol = getattr(module, symbol)

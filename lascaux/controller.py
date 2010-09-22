@@ -13,13 +13,16 @@ class Controller(SObject):
     path = None
     config = {}
     routes = []
+    POST = None
 
     def __init__(self, Request=None):
         self.content = ""
+        self.POST = {}
         if not self.__class__.routes:
             self.__class__.routes = self.config["routes"]
         if Request:
             self.request = Request
+            self.POST = self.request.POST
 
     def __get_static_dirs__(self):
         dirs = []

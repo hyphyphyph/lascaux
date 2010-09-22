@@ -16,6 +16,7 @@ class Request(SObject):
     exec_plugin = None
     exec_route = None
     exec_args = None
+    POST = None
 
     def __init__(self, URI):
         self.URI = URI
@@ -24,6 +25,7 @@ class Request(SObject):
         self.session = Session(self)
         self.content = u""
         self.exec_args = {}
+        self.POST = {}
 
     def get_content(self):
         return self.content

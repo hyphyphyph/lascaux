@@ -31,6 +31,10 @@ class Config(dict, SObject):
                     except Exception as e:
                         logger.error("Failed to load config file %s: %s" %
                             (config_file, e))
+        self._parse_special()
+
+    def _parse_special(self):
+        self["paths"]["tmp"] = os.path.abspath(self["paths"]["tmp"])
 
 
 config = Config()

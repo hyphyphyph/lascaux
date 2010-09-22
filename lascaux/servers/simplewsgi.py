@@ -1,10 +1,18 @@
+import cgi
+import binascii
+import uuid
+import os.path
+
 import wsgiref.simple_server
 from wsgiref.simple_server import make_server
+
+import libel
 
 from lascaux.baseserver import BaseServer
 from lascaux import config, logger
 logger = logger(__name__)
 from lascaux.request import Request
+from lascaux import config
 
 
 class SimpleWSGIServer(BaseServer):
@@ -28,6 +36,25 @@ class SimpleWSGIServer(BaseServer):
                             start_response=start_response)
 
     def handle_request(self, environ, start_response):
+        if environ["REQUEST_METHOD"] == "POST":
+            form_data = cgi.FieldStorage(fp=environ["wsgi.input"], environ=environ)
+            form_values = {}
+            for name in form_data:
+                # type=file
+                if form_data[name].filename:
+                    dir_ = os.path.join(config["paths"]["tmp"],
+                                        str(uuid.uuid1()))
+                    filename = form_data[name].filename
+                    libel.mkdir(dir_)
+                    file = open(os.path.join(dir_, filename), "wb")
+                    file.write(form_data[name].file.read())
+                    file.close()
+                    form_values[name] = os.path.join(dir_, filename)
+                # anything "normal"
+                else:
+                    form_values[name] = form_data[name].value
+            print form_values
+
         uri = environ.get("PATH_INFO")
         request = Request(uri)
         request = BaseServer.handle_request(self, request)

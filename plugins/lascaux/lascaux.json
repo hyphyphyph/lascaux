@@ -8,6 +8,10 @@
             "i18n": {
                 "fr_CA": "lascaux/maison"
             }
+        },
+        "lascaux/view/{id:#}": {
+            "description": "Something",
+            "action": "view"
         }
     }
 }

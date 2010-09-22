@@ -48,6 +48,7 @@ class RouterSubsystem(instlatte.SubSystem):
 
     def execute(self, Plugin, Command, Data={}):
         if Command == "find_route":
-            print Plugin
-            # Plugin["__instance__"].init_server(Data["app"])
+            return Plugin["__instance__"].find_route(**Data)
+        elif Command == "exec_route":
+            return Plugin["__instance__"].exec_route(**Data)
         return False

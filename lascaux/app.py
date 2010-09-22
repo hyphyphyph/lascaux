@@ -3,7 +3,8 @@ import os.path
 import instlatte
 from libel import sl
 
-from lascaux import SObject, config
+from lascaux.sobject import SObject
+from lascaux.config import config
 
 
 class App(SObject):
@@ -16,6 +17,8 @@ class App(SObject):
         self.manager.add_subsystem_source(os.path.join("lascaux",
                                                        "subsystems"))
         self.manager.init()
+
+    def init_server(self):
         self.manager.execute(self.manager.select("subsystem",
                                                  sl.EQUALS("lascaux_server")),
                              "init_server", {"app": self})
@@ -29,10 +32,13 @@ class App(SObject):
                              "find_exec", {"app": "self", "request": Request})
 
 
-    def route(self, Request):
-        self.manager.execute(self.manager.select("subsystem",
-                                                 sl.EQUALS("lascaux_router")),
-                             "find_route", {"app": "self", "request": Request})
+    def find_route(self, Request):
+        results = self.manager.execute(self.manager.select(
+            "subsystem", sl.EQUALS("lascaux_router")), "find_route",
+            {"App": self, "Request": Request})
+        return True in results.values()
 
-
-app = App()
+    def exec_route(self, Request):
+        results = self.manager.execute(self.manager.select(
+            "subsystem", sl.EQUALS("lascaux_router")), "exec_route",
+            {"App": self, "Request": Request})

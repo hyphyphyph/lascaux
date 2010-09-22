@@ -11,8 +11,11 @@ class Request(SObject):
     cookies = None
     session = None
     content = None
-    redirect = None
+    flag_redirect = None
     http_status_code = "202 SUCCESS"
+    exec_plugin = None
+    exec_route = None
+    exec_args = None
 
     def __init__(self, URI):
         self.URI = URI
@@ -20,6 +23,7 @@ class Request(SObject):
         self.cookies = HTTPCookie(self)
         self.session = Session(self)
         self.content = u""
+        self.exec_args = {}
 
     def get_content(self):
         return self.content

@@ -2,4 +2,5 @@ from lascaux import Controller
 
 
 class LascauxController(Controller):
-    pass
+    def view(self, id):
+        self.save("HERE I AM, VIEWING HERE I AM, VIEWING HERE I AM, VIEWING %s" % id)

@@ -6,6 +6,7 @@ syntax: regexp
 ^tmp/
 ^main.py
 ^public/
+^instlatte/
 
 syntax: glob
 *.pyc

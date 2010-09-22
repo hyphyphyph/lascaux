@@ -19,10 +19,14 @@ class BaseServer(SObject):
     def handle_request(self, Request):
         if self._get_static_path(Request.URI):
             return self.handle_static_serve(Request)
-        elif self.app.route(Request):
-            pass
-            # return self.app.router.do(Request)
-        elif Request.redirect:
+        elif self.app.find_route(Request):
+            if Request.flag_redirect:
+                return self.handle_redirect_serve(Request)
+            self.app.exec_route(Request)
+            if Request.flag_redirect:
+                return self.handle_redirect_serve(Request)
+            return Request
+        elif Request.flag_redirect:
             return self.handle_redirect_serve(Request)
         else:
             return self.handle_error_serve("404", Request)

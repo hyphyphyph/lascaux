@@ -41,3 +41,10 @@ class Request(SObject):
 
     def get_http_code(self):
         return self.http_status_code
+
+    def get_http_headers(self):
+        self.cookies.save()
+        headers = []
+        for header in self.headers:
+            headers.append((header, self.headers[header]))
+        return headers

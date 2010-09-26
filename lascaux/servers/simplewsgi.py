@@ -57,8 +57,5 @@ class SimpleWSGIServer(BaseServer):
                     form_values[name] = form_data[name].value
             request.POST = form_values
         request = BaseServer.handle_request(self, request)
-        headers = []
-        for header in request.headers:
-            headers.append((header, request.headers[header]))
-        start_response(request.get_http_code(), headers)
+        start_response(request.get_http_code(), request.get_http_headers())
         return [str(request.get_content())]

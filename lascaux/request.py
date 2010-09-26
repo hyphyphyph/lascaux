@@ -13,10 +13,12 @@ class Request(SObject):
     content = None
     flag_redirect = None
     http_status_code = "202 SUCCESS"
+    http_extra = None
     exec_plugin = None
     exec_route = None
     exec_args = None
     POST = None
+    config = None
 
     def __init__(self, URI):
         self.URI = URI
@@ -25,7 +27,15 @@ class Request(SObject):
         self.session = Session(self)
         self.content = u""
         self.exec_args = {}
+        self.http_extra = {}
         self.POST = {}
+        self.config = {
+            "cookie": {
+                "output_domain": True,
+                "output_path": True,
+                "http_only": True
+            }
+        }
 
     def get_content(self):
         return self.content
@@ -48,3 +58,9 @@ class Request(SObject):
         for header in self.headers:
             headers.append((header, self.headers[header]))
         return headers
+
+    def set_domain(self, Domain):
+        self.http_extra["domain"] = Domain
+
+    def get_domain(self):
+        return self.http_extra.get("domain")

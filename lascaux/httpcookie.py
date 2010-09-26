@@ -21,4 +21,11 @@ class HTTPCookie(dict, SObject):
         cookie_ = http_cookies.SimpleCookie()
         for key in self:
             cookie_[key] = self[key]
-        self.request.headers.set("Set-cookie", "%s HttpOnly" % cookie_.output(header=""))
+        output = "%s; " % cookie_.output(header="")
+        if self.request.config["cookie"].get("output_path"):
+            output += "path=/; "
+        if self.request.config["cookie"].get("output_domain"):
+            output += "domain=%s; " % self.request.get_domain()
+        if self.request.config["cookie"].get("http_only"):
+            output += "HttpOnly"
+        self.request.headers.set("Set-cookie", "%s" % output)

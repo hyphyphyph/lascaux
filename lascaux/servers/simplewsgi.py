@@ -38,6 +38,7 @@ class SimpleWSGIServer(BaseServer):
     def handle_request(self, environ, start_response):
         uri = environ.get("PATH_INFO")
         request = Request(uri)
+        request.set_domain(environ.get("HTTP_HOST"))
         if environ["REQUEST_METHOD"] == "POST":
             form_data = cgi.FieldStorage(fp=environ["wsgi.input"], environ=environ)
             form_values = {}

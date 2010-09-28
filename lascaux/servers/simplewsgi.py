@@ -37,7 +37,9 @@ class SimpleWSGIServer(BaseServer):
 
     def handle_request(self, environ, start_response):
         uri = environ.get("PATH_INFO")
-        request = Request(uri)
+        request = Request(self.app.get_root(), uri)
+        request.cookies.load(environ.get("HTTP_COOKIE"))
+        request.session.load()
         request.set_domain(environ.get("HTTP_HOST"))
         if environ["REQUEST_METHOD"] == "POST":
             form_data = cgi.FieldStorage(fp=environ["wsgi.input"], environ=environ)
@@ -58,5 +60,6 @@ class SimpleWSGIServer(BaseServer):
                     form_values[name] = form_data[name].value
             request.POST = form_values
         request = BaseServer.handle_request(self, request)
+        request.close()
         start_response(request.get_http_code(), request.get_http_headers())
         return [str(request.get_content())]

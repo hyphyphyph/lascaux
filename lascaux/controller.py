@@ -14,6 +14,8 @@ class Controller(SObject):
     config = {}
     routes = []
     POST = None
+    cookies = None
+    session = None
 
     def __init__(self, Request=None):
         self.content = ""
@@ -23,6 +25,8 @@ class Controller(SObject):
         if Request:
             self.request = Request
             self.POST = self.request.POST
+            self.cookies = self.request.cookies
+            self.session = self.request.session
 
     def __get_static_dirs__(self):
         dirs = []

@@ -10,5 +10,16 @@
 
     "paths": {
         "tmp": "./tmp"
+    },
+
+    "session": {
+        "cookie_uuid_key": "lascaux_session_uuid",
+        "storage": "json_file",
+        "store_path": "./tmp/session_data"
+    },
+
+    "security": {
+        "salt": "salt",
+        "pepper": "pepper"
     }
 }

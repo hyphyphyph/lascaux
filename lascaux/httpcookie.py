@@ -15,17 +15,18 @@ class HTTPCookie(dict, SObject):
         self.request = weakref.proxy(Request)
 
     def set(self, Key, Value):
-        self[Key] = Value
+        self[str(Key)] = Value
+
+    def load(self, RAW):
+        if RAW:
+            cookie = http_cookies.SimpleCookie()
+            cookie.load(RAW)
+            for key in cookie:
+                self[key] = cookie[key].value
 
     def save(self):
-        cookie_ = http_cookies.SimpleCookie()
-        for key in self:
-            cookie_[key] = self[key]
-        output = "%s; " % cookie_.output(header="")
-        if self.request.config["cookie"].get("output_path"):
-            output += "path=/; "
-        if self.request.config["cookie"].get("output_domain"):
-            output += "domain=%s; " % self.request.get_domain()
-        if self.request.config["cookie"].get("http_only"):
-            output += "HttpOnly"
-        self.request.headers.set("Set-cookie", "%s" % output)
+        if self:
+            cookie = http_cookies.SimpleCookie()
+            for key in self:
+                cookie[key] = self[key]
+            self.request.headers.set("Set-cookie", cookie.output(header=""))

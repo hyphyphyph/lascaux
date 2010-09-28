@@ -5,6 +5,9 @@
         },
         "lascaux_server": {
             "sources": ["servers"]
+        },
+        "lascaux_sess_store": {
+            "sources": ["sess_stores"]
         }
     }
 }

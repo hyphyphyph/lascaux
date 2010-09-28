@@ -1,3 +1,5 @@
+import weakref
+
 from lascaux import SObject
 from lascaux.httpheader import HTTPHeader
 from lascaux.httpcookie import HTTPCookie
@@ -6,6 +8,7 @@ from lascaux.session import Session
 
 class Request(SObject):
 
+    app = None
     URI = None
     headers = None
     cookies = None
@@ -20,7 +23,8 @@ class Request(SObject):
     POST = None
     config = None
 
-    def __init__(self, URI):
+    def __init__(self, App, URI):
+        self.app = weakref.proxy(App)
         self.URI = URI
         self.headers = HTTPHeader(self)
         self.cookies = HTTPCookie(self)
@@ -36,6 +40,10 @@ class Request(SObject):
                 "http_only": True
             }
         }
+
+    def close(self):
+        self.session.save()
+        self.cookies.save()
 
     def get_content(self):
         return self.content
@@ -53,7 +61,6 @@ class Request(SObject):
         return self.http_status_code
 
     def get_http_headers(self):
-        self.cookies.save()
         headers = []
         for header in self.headers:
             headers.append((header, self.headers[header]))

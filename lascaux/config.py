@@ -4,6 +4,7 @@ if __name__ == "__main__":
 
 import os.path
 import glob
+import hashlib
 
 from libel import merge_dict
 
@@ -33,9 +34,20 @@ class Config(dict, SObject):
                             (config_file, e))
         self._parse_special()
 
+    def sap(self, String=""):
+        """ Salt and pepper """
+        return self["security"]["salt"]+""+self["security"]["pepper"]
+
     def _parse_special(self):
         self["paths"]["tmp"] = os.path.abspath(self["paths"]["tmp"])
-
+        self["session"]["store_path"] = os.path.abspath(self["session"] \
+                                                        ["store_path"])
+        self["security"]["salt_raw"] = self["security"]["salt"]
+        self["security"]["salt"] = hashlib.sha1(self["security"] \
+                                                ["salt"]).hexdigest()
+        self["security"]["pepper_raw"] = self["security"]["pepper"]
+        self["security"]["pepper"] = hashlib.sha1(self["security"] \
+                                                  ["pepper"]).hexdigest()
 
 config = Config()
 config.reload()

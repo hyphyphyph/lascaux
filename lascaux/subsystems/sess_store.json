@@ -1,0 +1,6 @@
+{
+    "name": "lascaux_sess_store",
+    "title": "Lascaux Session Store",
+    "description": "Storage mechanisms for sessions",
+    "package": "sess_store"
+}

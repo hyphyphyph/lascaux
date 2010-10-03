@@ -8,7 +8,7 @@ import hashlib
 
 from libel import merge_dict
 
-from lascaux import logger
+from lascaux.logger import logger
 logger = logger(__name__)
 from lascaux.util import parse_config, SUPPORTED_CONFIG_EXTENSIONS
 from lascaux import SObject
@@ -48,6 +48,9 @@ class Config(dict, SObject):
         self["security"]["pepper_raw"] = self["security"]["pepper"]
         self["security"]["pepper"] = hashlib.sha1(self["security"] \
                                                   ["pepper"]).hexdigest()
+        
+    def get_tmp(self):
+        return self["paths"]["tmp"]
 
 config = Config()
 config.reload()

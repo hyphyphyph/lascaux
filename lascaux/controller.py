@@ -1,7 +1,11 @@
 import os.path
 import weakref
 
+from crepehat import Kitchen
+from mako.template import Template
+
 from lascaux import SObject
+from lascaux.config import config
 from lascaux.util import parse_route_to_regex
 
 
@@ -45,3 +49,26 @@ class Controller(SObject):
             self.request.save(Content)
         else:
             self.content += Content
+            
+    def get_template(self, Name, Dirs=None, Extensions=None):
+        Dirs = Dirs or [os.path.join(self.get_exec_path(), "templates"),
+                        os.path.join(self.path, "templates")]
+        Extensions = Extensions or [".mako"]
+        k = Kitchen(Dirs, Extensions)
+        return k.get(Name)
+    
+    def get_js(self, Name):
+        return self.get_template(Name, [self.get_exec_path(), "scripts",
+                                        self.path, "script"], [".js"])
+
+    def get_css(self, Name):
+        return self.get_template(Name, [self.get_exec_path(), "styles",
+                                        self.path, "styles"], [".css"])
+    
+    def render(self, File, Data=None):
+        Data = Data or {}
+        if not os.path.isfile(File):
+            File = self.get_template(File)
+        t = Template(filename=File, module_directory=os.path.join(
+            config.get_tmp(), "tmpl_cache"))
+        return t.render(**Data)

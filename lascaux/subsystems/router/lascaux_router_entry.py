@@ -51,4 +51,6 @@ class RouterSubsystem(instlatte.SubSystem):
             return Plugin["__instance__"].find_route(**Data)
         elif Command == "exec_route":
             return Plugin["__instance__"].exec_route(**Data)
+        elif Command == "get_route":
+            return Plugin["__instance__"].get_route(**Data)
         return False

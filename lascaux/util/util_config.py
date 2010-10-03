@@ -14,4 +14,4 @@ def parse_config(Config):
         file = open(Config, "r+")
         Config = file.read()
         file.close()
-    return json.loads(Config)
+    return json.loads(Config.decode())

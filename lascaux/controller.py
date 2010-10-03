@@ -72,3 +72,8 @@ class Controller(SObject):
         t = Template(filename=File, module_directory=os.path.join(
             config.get_tmp(), "tmpl_cache"))
         return t.render(**Data)
+    
+    def route(self, Controller, Action, Args={}):
+        if Controller is self:
+            Controller = self.name
+        return self.request.get_route(Controller, Action, Args)

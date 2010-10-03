@@ -1,5 +1,7 @@
 import weakref
 
+from libel import sl
+
 from lascaux import SObject
 from lascaux.httpheader import HTTPHeader
 from lascaux.httpcookie import HTTPCookie
@@ -71,3 +73,12 @@ class Request(SObject):
 
     def get_domain(self):
         return self.http_extra.get("domain")
+
+    def get_route(self, Controller, Action, Args={}):
+        args = Args or {}
+        m = self.app.manager
+        routes = m.execute(m.select("subsystem", sl.EQUALS("lascaux_router")), 
+                           "get_route", {"request": self, 
+                                         "controller": Controller, 
+                                         "action": Action, "args": args})
+        return routes.values()[0]

@@ -36,7 +36,7 @@ class Config(dict, SObject):
 
     def sap(self, String=""):
         """ Salt and pepper """
-        return self["security"]["salt"]+""+self["security"]["pepper"]
+        return self["security"]["salt"]+u"%s"%String+self["security"]["pepper"]
 
     def _parse_special(self):
         self["paths"]["tmp"] = os.path.abspath(self["paths"]["tmp"])

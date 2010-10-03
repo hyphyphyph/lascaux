@@ -1,10 +1,33 @@
-from lascaux.model import User, create_store
-from lascaux import Controller
+import uuid
+import hashlib
+import time
+
+from lascaux.model import User
+from lascaux import Controller, config
 
 from .forms import Register
 
 
 class UserController(Controller):
     def register(self):
-        self.save(self.render("register"))
-        #self.save(Register("123").render())
+        form = Register(self.route(self, "register"))
+        if self.POST:
+            form.ingest(self.POST)
+            if form.validates():
+                user = User(uuid.uuid1().hex.decode())
+                user.username = form.username().value
+                user.email = form.email().value
+                user.password = hashlib.sha1(
+                    config.sap(form.password().value)).hexdigest().decode()
+                user.created = int(time.time())
+                self.db.add(user)
+                self.db.flush()
+                self.save(self.render("register_success", {
+                    "username": user.username,
+                    "email": user.email
+                }))
+                return True
+            else:
+                self.save(form.render(self.render("register_form")))
+            return True
+        self.save(form.render(self.render("register_form")))

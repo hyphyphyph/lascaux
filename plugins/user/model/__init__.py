@@ -12,3 +12,6 @@ class User(object):
     password = Unicode()
     created = Int()
     lastlogin = Int()
+    
+    def __init__(self, uuid):
+        self.uuid = uuid

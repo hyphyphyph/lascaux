@@ -47,3 +47,8 @@ class PluginSubSystem(instlatte.SubSystem):
     def execute(self, Plugin, Command, Data):
         if Command == "get_static_dirs":
             Data += Plugin["__instance__"].__get_static_dirs__()
+        elif Command == "list":
+            if not self.plugins:
+                self._discover_plugins()
+            return self.plugins
+            

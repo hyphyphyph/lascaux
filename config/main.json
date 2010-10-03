@@ -1,3 +1,11 @@
 {
-    "title": "Lascaux Application"
+    "title": "Lascaux Application",
+    "database": {
+        "interface": "mysql",
+        "host": "localhost",
+        "port": "",
+        "database": "lascaux_dev",
+        "username": "root",
+        "password": "root"
+    }
 }

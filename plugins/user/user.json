@@ -1,0 +1,9 @@
+{
+    "title": "Lascaux User Plugin",
+    "description": "Contains basic stuff for user registration and login.",
+    "routes": {
+        "register": {
+            "action": "register"
+        }
+    }
+}

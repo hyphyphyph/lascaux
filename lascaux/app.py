@@ -7,6 +7,15 @@ from lascaux.sobject import SObject
 from lascaux.config import config
 
 
+def get_manager(config_=None, init=False):
+    config_ = config_ or config["subsystems"]
+    manager = instlatte.Manager(SObject().get_exec_path(), config_, False)
+    manager.add_subsystem_source(os.path.join("lascaux", "subsystems"))
+    if init:
+        manager.init()
+    return manager
+
+
 class App(SObject):
 
     manager = None
@@ -14,11 +23,7 @@ class App(SObject):
 
     def __init__(self):
         self.app = self
-        self.manager = instlatte.Manager(self.get_exec_path(),
-            config["subsystems"], False)
-        self.manager.add_subsystem_source(os.path.join("lascaux",
-                                                       "subsystems"))
-        self.manager.init()
+        self.manager = get_manager(init=True)
 
     def init_server(self):
         self.manager.execute(self.manager.select("subsystem",

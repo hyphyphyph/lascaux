@@ -3,6 +3,7 @@ from libel import sl
 
 from lascaux.baserouter import BaseRouter
 
+
 class SimpleRouter(BaseRouter):
     def find_route(self, App, Request):
         plugins = App.manager.select("subsystem", sl.EQUALS("lascaux_plugin"))

@@ -59,6 +59,8 @@ class SimpleWSGIServer(BaseServer):
                 else:
                     form_values[name] = form_data[name].value
             request.POST = form_values
+        else:
+            request.POST = False
         request = BaseServer.handle_request(self, request)
         request.close()
         start_response(request.get_http_code(), request.get_http_headers())

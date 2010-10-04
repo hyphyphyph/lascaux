@@ -11,7 +11,7 @@ from .user_forms import Register
 class UserController(Controller):
     def register(self):
         form = Register(self.route(self, "register"))
-        if self.POST:
+        if self.request.POST:
             form.ingest(self.POST)
             if self.db.find(User, username=form.username().value).count():
                 form.username.error = True

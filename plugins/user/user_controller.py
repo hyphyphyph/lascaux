@@ -5,7 +5,7 @@ import time
 from lascaux.model import User
 from lascaux import Controller, config
 
-from .forms import Register
+from .user_forms import Register
 
 
 class UserController(Controller):

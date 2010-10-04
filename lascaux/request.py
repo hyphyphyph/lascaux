@@ -53,7 +53,7 @@ class Request(SObject):
             content[key] = u"\n".join(self.content[key])
         return content
 
-    def save(self, Content, Name):
+    def save(self, Content, Name="content"):
         if Name not in self.content:
             self.content[Name] = []
         self.content[Name].append(Content)
@@ -65,12 +65,12 @@ class Request(SObject):
         self.http_status_code = Code
 
     def get_http_code(self):
-        return self.http_status_code
+        return str(self.http_status_code)
 
     def get_http_headers(self):
         headers = []
         for header in self.headers:
-            headers.append((header, self.headers[header]))
+            headers.append((header, str(self.headers[header])))
         return headers
 
     def set_domain(self, Domain):

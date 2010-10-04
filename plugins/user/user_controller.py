@@ -5,12 +5,12 @@ import time
 from lascaux.model import User
 from lascaux import Controller, config
 
-from .user_forms import Register
+from .user_forms import *
 
 
 class UserController(Controller):
     def register(self):
-        form = Register(self.route(self, "register"))
+        form = Register(self.route("register"))
         if self.request.POST:
             form.ingest(self.POST)
             if self.db.find(User, username=form.username().value).count():
@@ -38,3 +38,24 @@ class UserController(Controller):
         else:
             self.save(form.render(), "form")
         self.save(self.render("register"))
+        
+    def login(self):
+        form = Login(self.route("login"))
+        if self.POST:
+            form.ingest(self.POST)
+            user = self.db.find(User, username=form.username().value,
+                                password=hashlib.sha1(
+                                    config.sap(form.password().value)). \
+                                hexdigest().decode()).one()
+            if not user:
+                form.username.error = True
+                form.username.error_message = "Wrong username/password."
+                self.save(form.render(), "form")
+            else:
+                return self.redirect("home")
+        else:
+            self.save(form.render(), "form")
+        self.save(self.render("login"))
+        
+    def home(self):
+        self.save("Welcome home!")

@@ -6,7 +6,7 @@ from mako.template import Template
 
 import libel
 
-from lascaux import SObject
+from lascaux import SObject, Redirect
 from lascaux.config import config
 from lascaux.util import parse_route_to_regex
 
@@ -79,7 +79,14 @@ class Controller(SObject):
             config.get_tmp(), "tmpl_cache"))
         return t.render(**Data)
     
-    def route(self, Controller, Action, Args={}):
+    def route(self, Controller, Action=None, Args={}):
+        if type(Action) is dict or Action is None:
+            Args = Action
+            Action = Controller
+            Controller = self
         if Controller is self:
             Controller = self.name
         return self.request.get_route(Controller, Action, Args)
+    
+    def redirect(self, Controller, Action=None, Args={}):
+        return Redirect(self.route(Controller, Action, Args))

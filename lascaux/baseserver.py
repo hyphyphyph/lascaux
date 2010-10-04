@@ -64,7 +64,7 @@ class BaseServer(SObject):
         return False
 
     def handle_redirect_serve(self, Request):
-        pass
+        return Request
 
     def handle_error_serve(self, Code, Request):
         if Code == "404":

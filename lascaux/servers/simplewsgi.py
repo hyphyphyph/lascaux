@@ -42,7 +42,8 @@ class SimpleWSGIServer(BaseServer):
         request.session.load()
         request.set_domain(environ.get("HTTP_HOST"))
         if environ["REQUEST_METHOD"] == "POST":
-            form_data = cgi.FieldStorage(fp=environ["wsgi.input"], environ=environ)
+            form_data = cgi.FieldStorage(fp=environ["wsgi.input"], 
+                                         environ=environ)
             form_values = {}
             for name in form_data:
                 # type=file
@@ -64,4 +65,7 @@ class SimpleWSGIServer(BaseServer):
         request = BaseServer.handle_request(self, request)
         request.close()
         start_response(request.get_http_code(), request.get_http_headers())
-        return [str(request.get_content()["content"])]
+        if request.flag_redirect:
+            return [""]
+        return [str(request.get_content()["content"])]        
+        

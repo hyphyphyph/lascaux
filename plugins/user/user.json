@@ -4,6 +4,12 @@
     "routes": {
         "register": {
             "action": "register"
+        },
+        "login": {
+            "action": "login"
+        },
+        "home": {
+            "action": "home"
         }
     }
 }

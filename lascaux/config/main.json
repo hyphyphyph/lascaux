@@ -11,6 +11,10 @@
     "paths": {
         "tmp": "./tmp"
     },
+    
+    "defaults": {
+        "redirect_code": "300 MULTIPLE CHOICES"
+    },
 
     "session": {
         "cookie_uuid_key": "lascaux_session_uuid",

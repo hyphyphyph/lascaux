@@ -16,3 +16,12 @@ class Register(Form):
                         error_message="You have to enter a password.")
     password_confirm = Password(title="Confirm Password")
     register = Button(title="Register")
+    
+
+class Login(Form):
+    
+    __order__ = ["username", "password", "submit"]
+    
+    username = Text(required=True, title="Username")
+    password = Password(required=True, title="Password")
+    submit = Button(title="Login")

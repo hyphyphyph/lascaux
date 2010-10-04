@@ -31,7 +31,7 @@ class Request(SObject):
         self.headers = HTTPHeader(self)
         self.cookies = HTTPCookie(self)
         self.session = Session(self)
-        self.content = u""
+        self.content = {"content": []}
         self.exec_args = {}
         self.http_extra = {}
         self.POST = {}
@@ -48,10 +48,15 @@ class Request(SObject):
         self.cookies.save()
 
     def get_content(self):
-        return self.content
+        content = {}
+        for key in self.content:
+            content[key] = u"\n".join(self.content[key])
+        return content
 
-    def save(self, Content):
-        self.content += Content
+    def save(self, Content, Name):
+        if Name not in self.content:
+            self.content[Name] = []
+        self.content[Name].append(Content)
 
     def redirect(self, Where, Code="302"):
         pass

@@ -64,4 +64,4 @@ class SimpleWSGIServer(BaseServer):
         request = BaseServer.handle_request(self, request)
         request.close()
         start_response(request.get_http_code(), request.get_http_headers())
-        return [str(request.get_content())]
+        return [str(request.get_content()["content"])]

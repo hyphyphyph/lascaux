@@ -4,6 +4,8 @@ import weakref
 from crepehat import Kitchen
 from mako.template import Template
 
+import libel
+
 from lascaux import SObject
 from lascaux.config import config
 from lascaux.util import parse_route_to_regex
@@ -41,14 +43,17 @@ class Controller(SObject):
                          os.path.join(self.path, dir[1])])
         return dirs
 
-    def save(self, Content):
+    def save(self, Content, Name="content"):
         if self.request:
             if self.content:
-                self.request.save(self.content)
-                self.content = ""
-            self.request.save(Content)
+                for key in self.content:
+                    self.request.save(self.content[key], key)
+                self.content = {}
+            self.request.save(Content, Name)
         else:
-            self.content += Content
+            if Name not in self.content:
+                self.content[Name] = []
+            self.content[Name].append(Content)
             
     def get_template(self, Name, Dirs=None, Extensions=None):
         Dirs = Dirs or [os.path.join(self.get_exec_path(), "templates"),
@@ -67,6 +72,7 @@ class Controller(SObject):
     
     def render(self, File, Data=None):
         Data = Data or {}
+        libel.merge_dict(Data, self.request.get_content())
         if not os.path.isfile(File):
             File = self.get_template(File)
         t = Template(filename=File, module_directory=os.path.join(

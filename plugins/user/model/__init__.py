@@ -12,6 +12,7 @@ class User(object):
     password = Unicode()
     created = Int()
     lastlogin = Int()
+    active = Bool(default=False)
     
     def __init__(self, uuid):
         self.uuid = uuid

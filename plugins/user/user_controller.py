@@ -34,6 +34,7 @@ class UserController(Controller):
                 }))
                 return True
             else:
-                self.save(form.render(self.render("register_form")))
-            return True
-        self.save(form.render(self.render("register_form")))
+                self.save(form.render(), "form")
+        else:
+            self.save(form.render(), "form")
+        self.save(self.render("register"))

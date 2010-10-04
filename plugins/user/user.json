@@ -8,7 +8,7 @@
         "login": {
             "action": "login"
         },
-        "home": {
+        "user/home": {
             "action": "home"
         }
     }

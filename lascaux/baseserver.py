@@ -39,7 +39,7 @@ class BaseServer(SObject):
         file = open(path, "r")
         content = file.read()
         file.close()
-        Request.content = content
+        Request.save(content)
         logger.info("Serving static file %s via %s" % (path, Request.URI))
         return Request
 
@@ -47,8 +47,8 @@ class BaseServer(SObject):
         plugins = self.app.manager.select("subsystem",
                                           sl.EQUALS("lascaux_plugin"))
         dirs = []
-        for dir in (["", "public"],
-                    ["styles", "styles"],
+        for dir in (["", "public"], 
+                    ["styles", "styles"], 
                     ["scripts", "scripts"]):
             dirs.append([dir[0], os.path.join(self.get_exec_path(), dir[1])])
         self.app.manager.execute(plugins, "get_static_dirs", dirs)
@@ -57,8 +57,9 @@ class BaseServer(SObject):
                 dir[0] = os.path.join("/", dir[0])
         for dir in dirs:
             if URI.startswith(dir[0]):
+                URI_ = URI[len(dir[0]):]
                 path = os.path.join(dir[1], *filter(lambda s: s,
-                                                    URI.split("/")))
+                                                    URI_.split("/")))
                 if os.path.isfile(path):
                     return path
         return False

@@ -3,6 +3,7 @@ import hashlib
 import time
 
 from lascaux.model import User
+from lascaux.helpers import get_resource
 from lascaux import Controller, config
 
 from .user_forms import *
@@ -58,4 +59,4 @@ class UserController(Controller):
         self.save(self.render("login"))
         
     def home(self):
-        self.save("Welcome home!")
+        self.save(self.render("home"))

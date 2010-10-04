@@ -13,6 +13,12 @@ class UserController(Controller):
         form = Register(self.route(self, "register"))
         if self.POST:
             form.ingest(self.POST)
+            if self.db.find(User, username=form.username().value).count():
+                form.username.error = True
+                form.username.error_message = "That username is already in use."
+            if form.password().value != form.password_confirm().value:
+                form.password.error = True
+                form.password.error_message = "Your passwords don't match."
             if form.validates():
                 user = User(uuid.uuid1().hex.decode())
                 user.username = form.username().value

@@ -10,6 +10,7 @@ from .user_forms import *
 
 
 class UserController(Controller):
+
     def register(self):
         form = Register(self.route("register"))
         if self.request.POST:
@@ -39,7 +40,7 @@ class UserController(Controller):
         else:
             self.save(form.render(), "form")
         self.save(self.render("register"))
-        
+
     def login(self):
         form = Login(self.route("login"))
         if self.POST:
@@ -53,10 +54,17 @@ class UserController(Controller):
                 form.username.error_message = "Wrong username/password."
                 self.save(form.render(), "form")
             else:
+                user.login(self.request)
                 return self.redirect("home")
         else:
             self.save(form.render(), "form")
         self.save(self.render("login"))
-        
+
     def home(self):
+        user = self.db.get(User, self.request.session["user_uuid"])
         self.save(self.render("home"))
+
+    def logout(self):
+        user = self.db.get(User, self.request.session["user_uuid"])
+        user.logout(self.request)
+        return self.redirect("login")

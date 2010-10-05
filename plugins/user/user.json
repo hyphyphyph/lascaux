@@ -8,6 +8,9 @@
         "login": {
             "action": "login"
         },
+        "logout": {
+            "action": "logout"
+        },
         "user/home": {
             "action": "home"
         }

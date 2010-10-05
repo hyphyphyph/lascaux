@@ -82,8 +82,11 @@ class Request(SObject):
     def get_route(self, Controller, Action, Args={}):
         args = Args or {}
         m = self.app.manager
-        routes = m.execute(m.select("subsystem", sl.EQUALS("lascaux_router")), 
-                           "get_route", {"request": self, 
-                                         "controller": Controller, 
+        routes = m.execute(m.select("subsystem", sl.EQUALS("lascaux_router")),
+                           "get_route", {"request": self,
+                                         "controller": Controller,
                                          "action": Action, "args": args})
         return routes.values()[0]
+
+    def hook(self, hook, data={}):
+        return self.app.hook(hook, data)

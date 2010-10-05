@@ -6,8 +6,8 @@
         "lascaux_server": {
             "sources": ["servers"]
         },
-        "lascaux_router": {
-        },
+        "lascaux_router": {},
+        "lascaux_hook": {},
         "lascaux_sess_store": {
             "sources": ["sess_stores"]
         }

@@ -55,6 +55,7 @@ class UserController(Controller):
                 self.save(form.render(), "form")
             else:
                 user.login(self.request)
+                self.hook("user_login", {"user": user})
                 return self.redirect("home")
         else:
             self.save(form.render(), "form")

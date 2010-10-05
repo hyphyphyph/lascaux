@@ -24,6 +24,16 @@ class App(SObject):
     def __init__(self):
         self.app = self
         self.manager = get_manager(init=True)
+        self.manager.execute(self.manager.select("subsystem",
+                                                 sl.EQUALS("lascaux_hook")),
+                             "_discover_plugins", {"app": self})
+        self.hook("app_init", {"app": self})
+
+    def hook(self, hook, data={}):
+        self.data = data or {}
+        self.manager.execute(self.manager.select("subsystem",
+                                                 sl.EQUALS("lascaux_hook")),
+                             "exec_hook", {"hook": hook, "data": data})
 
     def init_server(self):
         self.manager.execute(self.manager.select("subsystem",

@@ -1,0 +1,6 @@
+{
+    "name": "lascaux_hook",
+    "title": "Lascaux Hook",
+    "description": "Hook subsystem for Lascaux",
+    "package": "hook"
+}

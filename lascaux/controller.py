@@ -54,14 +54,14 @@ class Controller(SObject):
             if Name not in self.content:
                 self.content[Name] = []
             self.content[Name].append(Content)
-            
+
     def get_template(self, Name, Dirs=None, Extensions=None):
         Dirs = Dirs or [os.path.join(self.get_exec_path(), "templates"),
                         os.path.join(self.path, "templates")]
         Extensions = Extensions or [".mako"]
         k = Kitchen(Dirs, Extensions)
         return k.get(Name)
-    
+
     def get_js(self, Name):
         return self.get_template(Name, [self.get_exec_path(), "scripts",
                                         self.path, "script"], [".js"])
@@ -69,7 +69,7 @@ class Controller(SObject):
     def get_css(self, Name):
         return self.get_template(Name, [self.get_exec_path(), "styles",
                                         self.path, "styles"], [".css"])
-    
+
     def render(self, File, Data=None):
         Data = Data or {}
         libel.merge_dict(Data, self.request.get_content())
@@ -78,7 +78,7 @@ class Controller(SObject):
         t = Template(filename=File, module_directory=os.path.join(
             config.get_tmp(), "tmpl_cache"))
         return t.render(**Data)
-    
+
     def route(self, Controller, Action=None, Args={}):
         if type(Action) is dict or Action is None:
             Args = Action
@@ -87,6 +87,9 @@ class Controller(SObject):
         if Controller is self:
             Controller = self.name
         return self.request.get_route(Controller, Action, Args)
-    
+
     def redirect(self, Controller, Action=None, Args={}):
         return Redirect(self.route(Controller, Action, Args))
+
+    def hook(self, hook, data={}):
+        return self.request.hook(hook, data)

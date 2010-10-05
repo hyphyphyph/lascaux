@@ -12,6 +12,8 @@ from .user_forms import *
 class UserController(Controller):
 
     def register(self):
+        if self.user:
+            return self.redirect("home")
         form = Register(self.route("register"))
         if self.request.POST:
             form.ingest(self.POST)
@@ -42,6 +44,8 @@ class UserController(Controller):
         self.save(self.render("register"))
 
     def login(self):
+        if self.user:
+            return self.redirect("home")
         form = Login(self.route("login"))
         if self.POST:
             form.ingest(self.POST)

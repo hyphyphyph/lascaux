@@ -1,0 +1,9 @@
+{
+    "title": "Braaains Project",
+    "description": "Project Manager...",
+    "routes": {
+        "projects": {
+            "action": "index"
+        }
+    }
+}

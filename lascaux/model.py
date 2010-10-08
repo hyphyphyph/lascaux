@@ -8,7 +8,7 @@ from lascaux import SObject, config
 import instlatte
 
 
-db = create_database("%s://%s:%s@%s%s/%s" % 
+db = create_database("%s://%s:%s@%s%s/%s" %
                      (config["database"]["interface"],
                       config["database"]["username"],
                       config["database"]["password"],
@@ -28,11 +28,11 @@ __manager__ = instlatte.Manager(SObject().get_lib_path(),
 __manager__.add_subsystem_source(os.path.join("lascaux", "subsystems"))
 __manager__.discover_subsystems()
 __manager__.load_subsystems(Init=False)
-plugins = __manager__.execute(__manager__.select("subsystem", 
-                                                 sl.EQUALS("lascaux_plugin")), 
+plugins = __manager__.execute(__manager__.select("subsystem",
+                                                 sl.EQUALS("lascaux_plugin")),
                               "list")
-for plugin in plugins.values():
-    path = plugin[0]["__path__"]
+for plugin in plugins.values()[0]:
+    path = plugin["__path__"]
     if os.path.isdir(os.path.join(path, "model")):
         for file in glob.glob(os.path.join(path, "model", "*.py")):
             dot_path = SObject().determine_dot_path(file)

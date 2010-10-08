@@ -1,0 +1,9 @@
+{
+    "title": "Braaains Page",
+    "description": "Braaains Wiki/CMS...",
+    "routes": {
+        "page/view/{id:#}": {
+            "action": "view"
+        }
+    }
+}

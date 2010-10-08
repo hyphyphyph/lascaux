@@ -1,0 +1,9 @@
+{
+    "title": "Braaains Asset Manager",
+    "description": "Asset Manager...",
+    "routes": {
+        "assets": {
+            "action": "index"
+        }
+    }
+}

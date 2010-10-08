@@ -12,6 +12,7 @@ class Page(object):
     created = Int()
     updated = Int()
     enabled = Bool(default=True)
+    project_id = Int()
 
 
 class PageVersion(object):

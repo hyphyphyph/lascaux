@@ -15,6 +15,7 @@ class Asset(object):
     title = Unicode()
     body = Unicode()
     type = Int()
+    project_id = Int()
 
 
 class AssetType(object):
@@ -29,3 +30,4 @@ class AssetType(object):
     has_file = Bool(default=False)
     has_vcs_file = Bool(default=False)
     has_page = Bool(default=False)
+    project_id = Int()

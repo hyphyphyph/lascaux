@@ -73,6 +73,7 @@ class Controller(SObject):
 
     def render(self, File, Data=None):
         Data = Data or {}
+        Data["controller"] = self
         libel.merge_dict(Data, self.request.get_content())
         if not os.path.isfile(File):
             File = self.get_template(File)
@@ -93,4 +94,4 @@ class Controller(SObject):
         return Redirect(self.route(Controller, Action, Args))
 
     def hook(self, hook, data={}):
-        return self.request.hook(hook, data)
+        return self.request.hook(hook, data, self)

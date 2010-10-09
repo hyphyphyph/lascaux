@@ -29,8 +29,10 @@ class App(SObject):
                              "_discover_plugins", {"app": self})
         self.hook("app_init", {"app": self})
 
-    def hook(self, hook, data={}):
-        self.data = data or {}
+    def hook(self, hook, data={}, controller=None, request=None):
+        data = data or {}
+        data["controller_"] = controller
+        data["request_"] = request
         self.manager.execute(self.manager.select("subsystem",
                                                  sl.EQUALS("lascaux_hook")),
                              "exec_hook", {"hook": hook, "data": data})

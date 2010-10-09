@@ -8,7 +8,7 @@ from lascaux import SObject, config
 import instlatte
 
 
-db = create_database("%s://%s:%s@%s%s/%s" %
+__db__ = create_database("%s://%s:%s@%s%s/%s" %
                      (config["database"]["interface"],
                       config["database"]["username"],
                       config["database"]["password"],
@@ -19,7 +19,12 @@ db = create_database("%s://%s:%s@%s%s/%s" %
 
 
 def create_store():
-    return Store(db)
+    return Store(__db__)
+
+
+# Default store for interactive testing.
+# Never --dude, seriously!- never use this for actual development.
+db = create_store()
 
 
 __manager__ = instlatte.Manager(SObject().get_lib_path(),

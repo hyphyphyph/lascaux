@@ -24,6 +24,6 @@ def get_resource(resource, plugin=None):
     if extension == ".js":
         return u'<script src="/%s" type="text/javascript"></script>' % resource
     elif extension == ".css":
-        return u"%s%s />" % (u'<link rel="stylesheet" type="text/css" href="/',
+        return u"%s%s\" />" % (u'<link rel="stylesheet" type="text/css" href="/',
                              resource)
     return u""

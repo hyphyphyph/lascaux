@@ -1,5 +1,7 @@
 from storm.locals import *
 
+from lascaux.model import *
+
 
 class Page(object):
 
@@ -9,10 +11,12 @@ class Page(object):
     id = Int(primary=True)
     vid = Int()
     user_uuid = Unicode()
+    user = Reference(user_uuid, User.uuid)
     created = Int()
     updated = Int()
     enabled = Bool(default=True)
     project_id = Int()
+    project = Reference(project_id, Project.id)
 
 
 class PageVersion(object):
@@ -20,10 +24,16 @@ class PageVersion(object):
     __export_to_model__ = True
     __storm_table__ = "page_version"
 
-    id = Int()
+    page_id = Int()
     vid = Int(primary=True)
     title = Unicode()
     body = Unicode()
     format = Unicode()
     created = Int()
     user_uuid = Unicode()
+    user = Reference(user_uuid, User.uuid)
+
+
+Page.version = Reference(Page.vid, PageVersion.vid)
+PageVersion.page = Reference(PageVersion.page_id, Page.id)
+Project.pages = ReferenceSet(Project.id, Page.project_id)

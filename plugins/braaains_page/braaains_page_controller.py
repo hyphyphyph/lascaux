@@ -1,3 +1,5 @@
+import time
+
 from lascaux.model import Page, PageVersion
 
 from lascaux import Controller
@@ -21,17 +23,17 @@ class Braaains_PageController(Controller):
                 version = PageVersion()
                 version.title = form.title().value
                 version.body = form.body().value
-                version.user_uuid = u"abc"
-                version.created = 1
+                version.user_uuid = self.user and self.user.uuid or u""
+                version.created = int(time.time())
                 version.format = u"html"
                 self.db.add(version)
                 self.db.flush()
 
                 page = Page()
                 page.vid = version.vid
-                page.user_uuid = u"abc"
-                page.created = 1
-                page.updated = 1
+                page.user_uuid = self.user and self.user.uuid or u""
+                page.created = int(time.time())
+                page.updated = int(time.time())
                 page.enabled = True
                 page.project_id = id
                 self.db.add(page)

@@ -88,5 +88,8 @@ class Request(SObject):
                                          "action": Action, "args": args})
         return routes.values()[0]
 
+    def route(self, controller, action, args={}):
+        return self.get_route(controller, action, args)
+
     def hook(self, hook, data={}, controller=None):
-        return self.app.hook(hook, data, controller, self)
+        return self.app.hook(hook, data, controller=controller, request=self)

@@ -1,7 +1,11 @@
+from lascaux.model import Page
+
 from lascaux import Hook
 
 
 class ProjectHook(Hook):
 
     def hook_braaains_project_view(self, project, blocks):
-        blocks["page-list"] = u"Hello World"
+        pages = project.pages
+        blocks["page-list"] = self.render("page-list", {"project": project,
+                                                        "pages": pages})

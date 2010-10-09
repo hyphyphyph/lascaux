@@ -70,11 +70,12 @@ class HookSubsystem(instlatte.SubSystem):
 
     def exec_hook(self, plugin, data):
         if data["hook"] in plugin["responds_to"]:
-            instance = plugin["__class__"]()
-            instance.controller = "controller_" in data and \
-                    data["data"]["controller_"]
-            instance.request = "request_" in data["data"] and \
-                    data["data"]["request_"]
+            controller = "controller_" in data["data"] and \
+                    data["data"]["controller_"] or None
+            request = "request_" in data["data"] and \
+                    data["data"]["request_"] or None
+            instance = plugin["__class__"](controller=controller,
+                                           request=request)
             if "controller_" in data["data"]:
                 del data["data"]["controller_"]
             if "request_" in data["data"]:

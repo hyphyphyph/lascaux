@@ -2,8 +2,7 @@
     "title": "Braaains Page",
     "description": "Braaains Wiki/CMS...",
     "routes": {
-        "page/view/{id:#}": {
-            "action": "view"
-        }
+        "page/view/{id:#}": {"action": "view"},
+        "page/new/{id:#}": {"action": "new"}
     }
 }

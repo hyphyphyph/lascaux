@@ -3,6 +3,7 @@
     "description": "Project Manager...",
     "routes": {
         "projects": {"action": "list"},
-        "project/{id:#}": {"action": "view"}
+        "project/{id:#}": {"action": "view"},
+        "project/new": {"action": "new"}
     }
 }

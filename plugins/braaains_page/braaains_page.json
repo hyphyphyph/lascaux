@@ -3,6 +3,7 @@
     "description": "Braaains Wiki/CMS...",
     "routes": {
         "page/view/{id:#}": {"action": "view"},
-        "page/new/{id:#}": {"action": "new"}
+        "page/new/{project_id:#}": {"action": "new"},
+        "page/edit/{id:#}": {"action": "edit"}
     }
 }

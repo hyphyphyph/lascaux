@@ -11,8 +11,9 @@ class Braaains_ProjectController(Controller):
 
     def view(self, id):
         project = self.db.get(Project, id)
-        blocks = {}
-        self.hook("braaains_project_view", {"project": project,
-                                            "blocks": blocks})
-        self.save(self.render("view", {"project": project,
-                                       "blocks": blocks}))
+        if project:
+            blocks = {}
+            self.hook("braaains_project_view", {"project": project,
+                                                "blocks": blocks})
+            self.save(self.render("view", {"project": project,
+                                           "blocks": blocks}))

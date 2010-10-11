@@ -1,4 +1,4 @@
-<h2>Pages</h2><a href="${controller.route("braaains_page", "new", dict(id=project.id))}">New</a>
+<h2>Pages</h2><a href="${controller.route("braaains_page", "new", dict(project_id=project.id))}">New</a>
 <ul class="page-list">
     % for page in pages:
         <li>

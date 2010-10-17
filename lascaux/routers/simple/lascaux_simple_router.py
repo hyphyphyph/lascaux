@@ -41,8 +41,8 @@ class SimpleRouter(BaseRouter):
                     regex_fragments.append("([\d]+)")
             else:
                 regex_fragments.append(fragment)
-        return re.compile("/".join(regex_fragments) + "[/]?", re.U)
-    
+        return re.compile("^" + "/".join(regex_fragments) + "[/]?$", re.U)
+
     def _get_arguments(self, route):
         args = []
         for fragment in route.split("/"):
@@ -50,20 +50,23 @@ class SimpleRouter(BaseRouter):
                 fragment = fragment.strip("{}")
                 args.append(fragment.split(":")[0])
         return args
-    
+
     def _sub_args(self, route, args):
         fragments = []
         for fragment in route.split("/"):
             if fragment.startswith("{"):
-                fragment = fragment.strip("{}").split(":")[0]
-                fragments.append(unicode(args[fragment]))
+                try:
+                    fragment = fragment.strip("{}").split(":")[0]
+                    fragments.append(unicode(args[fragment]))
+                except:
+                    raise ValueError("Required route argument not supplied.")
             else:
                 fragments.append(fragment)
         return u"/".join(fragments)
-    
+
     def get_route(self, request, controller, action, args={}):
         args = args or {}
-        plugins = request.app.manager.select("subsystem", 
+        plugins = request.app.manager.select("subsystem",
                                              sl.EQUALS("lascaux_plugin"))
         matches = []
         for plugin in plugins:

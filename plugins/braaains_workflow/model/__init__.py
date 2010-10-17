@@ -1,5 +1,7 @@
 from storm.locals import *
 
+from plugins.braaains_project.model import Project
+
 
 class WorkflowSet(object):
 
@@ -7,6 +9,7 @@ class WorkflowSet(object):
     __storm_table__ = "workflow_set"
 
     id = Int(primary=True)
+    project_id = Int()
     title = Unicode()
     desc = Unicode()
 
@@ -29,6 +32,9 @@ class WorkflowSet(object):
         return states
 
 
+Project.workflow_sets = ReferenceSet(Project.id, WorkflowSet.project_id)
+
+
 class WorkflowState(object):
 
     __export_to_model__ = True
@@ -47,4 +53,5 @@ class WorkflowState(object):
 WorkflowState.next = Reference(WorkflowState.next_id, WorkflowState.id)
 WorkflowState.prev = Reference(WorkflowState.prev_id, WorkflowState.id)
 
-WorkflowSet.states = ReferenceSet(WorkflowSet.id, WorkflowState.workflow_set_id)
+WorkflowSet.states = ReferenceSet(WorkflowSet.id,
+                                  WorkflowState.workflow_set_id)

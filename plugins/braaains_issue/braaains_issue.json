@@ -1,0 +1,11 @@
+{
+    "title": "Braaains Issue",
+    "description": "Issue tracker for Braaains...",
+    "routes": {
+        "issue/{project_id:#}/type/new": {"action": "new_type"},
+
+        "issues/{project_id:#}": {"action": "list"},
+        "issue/{project_id:#}/create": {"action": "new"},
+        "issue/{id:#}": {"action": "view"}
+    }
+}

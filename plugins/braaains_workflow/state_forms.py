@@ -42,7 +42,8 @@ class NewStateForm(Form):
             if self.next.value == "__none__":
                 self.next.value = 0
         if hasattr(self, "prev") and hasattr(self, "next") and \
-           self.prev.value == self.next.value:
+           (self.prev.value != 0 or self.next.value != 0) \
+           and self.prev.value == self.next.value:
             self.prev.error = True
             self.prev.error_message = "Improper workflow progression."
             self.next.error = True

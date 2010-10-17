@@ -77,9 +77,11 @@ class Controller(SObject):
         libel.merge_dict(Data, self.request.get_content())
         if not os.path.isfile(File):
             File = self.get_template(File)
-        t = Template(filename=File, module_directory=os.path.join(
-            config.get_tmp(), "tmpl_cache"))
-        return t.render(**Data)
+        if File:
+            t = Template(filename=File, module_directory=os.path.join(
+                config.get_tmp(), "tmpl_cache"))
+            return t.render(**Data)
+        return u""
 
     def route(self, Controller, Action=None, Args={}):
         if type(Action) is dict or Action is None:

@@ -1,6 +1,7 @@
 from storm.locals import *
 
-from lascaux.model import *
+from plugins.user.model import User
+from plugins.braaains_project.model import Project
 
 
 class Page(object):

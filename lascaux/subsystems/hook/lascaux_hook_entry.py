@@ -80,10 +80,6 @@ class HookSubsystem(instlatte.SubSystem):
             for key in data["data"]:
                 if key not in ("controller_", "request_"):
                     data_[key] = data["data"][key]
-            # if "controller_" in data["data"]:
-            #     del data["data"]["controller_"]
-            # if "request_" in data["data"]:
-            #     del data["data"]["request_"]
             return getattr(instance, "hook_%s" % data["hook"])(**data_)
         return None
 

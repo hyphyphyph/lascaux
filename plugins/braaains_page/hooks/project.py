@@ -1,5 +1,3 @@
-from lascaux.model import Page
-
 from lascaux import Hook
 
 

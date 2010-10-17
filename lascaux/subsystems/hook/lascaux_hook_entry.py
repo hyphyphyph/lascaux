@@ -76,11 +76,15 @@ class HookSubsystem(instlatte.SubSystem):
                     data["data"]["request_"] or None
             instance = plugin["__class__"](controller=controller,
                                            request=request)
-            if "controller_" in data["data"]:
-                del data["data"]["controller_"]
-            if "request_" in data["data"]:
-                del data["data"]["request_"]
-            return getattr(instance, "hook_%s" % data["hook"])(**data["data"])
+            data_ = {}
+            for key in data["data"]:
+                if key not in ("controller_", "request_"):
+                    data_[key] = data["data"][key]
+            # if "controller_" in data["data"]:
+            #     del data["data"]["controller_"]
+            # if "request_" in data["data"]:
+            #     del data["data"]["request_"]
+            return getattr(instance, "hook_%s" % data["hook"])(**data_)
         return None
 
     def execute(self, Plugin, Command, Data={}):

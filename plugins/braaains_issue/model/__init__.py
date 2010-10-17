@@ -1,7 +1,6 @@
 from storm.locals import *
 
-from plugins.user.model import User
-from plugins.braaains_project.model import Project
+from lascaux.model_setup import User, Project
 from plugins.braaains_workflow.model import WorkflowSet, WorkflowState
 
 
@@ -18,9 +17,6 @@ class IssueType(object):
     project = Reference(project_id, Project.id)
     workflow_set_id = Int()
     workflow_set = Reference(workflow_set_id, WorkflowSet.id)
-
-
-Project.issue_types = ReferenceSet(Project.id, IssueType.project_id)
 
 
 class Issue(object):
@@ -43,4 +39,6 @@ class Issue(object):
     updated = Int()
 
 
-Project.issues = ReferenceSet(Project.id, Issue.project_id)
+def setup():
+    Project.issue_types = ReferenceSet(Project.id, IssueType.project_id)
+    Project.issues = ReferenceSet(Project.id, Issue.project_id)

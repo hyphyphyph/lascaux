@@ -1,8 +1,6 @@
 from storm.locals import *
 
-from lascaux.model import Project, User
-
-from .asset_types import *
+from lascaux.model_setup import Project, User
 
 
 class Asset(object):
@@ -21,8 +19,6 @@ class Asset(object):
     project_id = Int()
     project = Reference(project_id, Project.id)
 
-Project.assets = ReferenceSet(Project.id, Asset.project_id)
-
 
 class AssetType(object):
 
@@ -40,5 +36,34 @@ class AssetType(object):
     project = Reference(project_id, Project.id)
 
 
-Asset.type = Reference(Asset.type_id, AssetType.id)
-Project.asset_types = ReferenceSet(Project.id, AssetType.project_id)
+class AssetResourceFile(object):
+
+    __export_to_model__ = True
+    __store_table__ = "asset_resoure_file"
+
+    id = Int(primary=True)
+    path = Unicode()
+    created = Int()
+    asset_id = Int()
+    asset = Reference(asset_id, Asset.id)
+
+
+class AssetResourcePage(object):
+
+    __export_to_model__ = True
+    __store_table__ = "asset_resoure_page"
+
+    id = Int(primary=True)
+    page_id = Int()
+    created = Int()
+    asset_id = Int()
+    asset = Reference(asset_id, Asset.id)
+
+
+def setup():
+    Project.assets = ReferenceSet(Project.id, Asset.project_id)
+    Asset.type = Reference(Asset.type_id, AssetType.id)
+    Project.asset_types = ReferenceSet(Project.id, AssetType.project_id)
+
+    Asset.resource_file = Reference(Asset.id, AssetResourceFile.asset_id)
+    Asset.resource_page = Reference(Asset.id, AssetResourcePage.asset_id)

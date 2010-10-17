@@ -1,7 +1,7 @@
 from storm.locals import *
 
-from plugins.user.model import User
-from plugins.braaains_project.model import Project
+from lascaux.model_setup import User, Project
+# from plugins.braaains_project.model import Project
 
 
 class Page(object):
@@ -35,6 +35,7 @@ class PageVersion(object):
     user = Reference(user_uuid, User.uuid)
 
 
-Page.version = Reference(Page.vid, PageVersion.vid)
-PageVersion.page = Reference(PageVersion.page_id, Page.id)
-Project.pages = ReferenceSet(Project.id, Page.project_id)
+def setup():
+    Page.version = Reference(Page.vid, PageVersion.vid)
+    PageVersion.page = Reference(PageVersion.page_id, Page.id)
+    Project.pages = ReferenceSet(Project.id, Page.project_id)

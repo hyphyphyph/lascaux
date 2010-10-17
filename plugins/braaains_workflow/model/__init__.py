@@ -1,6 +1,6 @@
 from storm.locals import *
 
-from plugins.braaains_project.model import Project
+from lascaux.model_setup import Project
 
 
 class WorkflowSet(object):
@@ -50,8 +50,9 @@ class WorkflowState(object):
     prev_id = Int()
 
 
-WorkflowState.next = Reference(WorkflowState.next_id, WorkflowState.id)
-WorkflowState.prev = Reference(WorkflowState.prev_id, WorkflowState.id)
+def setup():
+    WorkflowState.next = Reference(WorkflowState.next_id, WorkflowState.id)
+    WorkflowState.prev = Reference(WorkflowState.prev_id, WorkflowState.id)
 
-WorkflowSet.states = ReferenceSet(WorkflowSet.id,
-                                  WorkflowState.workflow_set_id)
+    WorkflowSet.states = ReferenceSet(WorkflowSet.id,
+                                      WorkflowState.workflow_set_id)

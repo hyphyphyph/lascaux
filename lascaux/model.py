@@ -7,6 +7,8 @@ from libel import sl
 from lascaux import SObject, config
 import instlatte
 
+from lascaux.model_setup import model_modules, model_classes
+
 
 __db__ = create_database("%s://%s:%s@%s%s/%s" %
                      (config["database"]["interface"],
@@ -27,25 +29,9 @@ def create_store():
 db = create_store()
 
 
-__manager__ = instlatte.Manager(SObject().get_lib_path(),
-                                {"lascaux_plugin":
-                                 config["subsystems"]["lascaux_plugin"]}, False)
-__manager__.add_subsystem_source(os.path.join("lascaux", "subsystems"))
-__manager__.discover_subsystems()
-__manager__.load_subsystems(Init=False)
-plugins = __manager__.execute(__manager__.select("subsystem",
-                                                 sl.EQUALS("lascaux_plugin")),
-                              "list")
-for plugin in plugins.values()[0]:
-    path = plugin["__path__"]
-    if os.path.isdir(os.path.join(path, "model")):
-        for file in glob.glob(os.path.join(path, "model", "*.py")):
-            dot_path = SObject().determine_dot_path(file)
-            module = __import__(dot_path)
-            for fragment in dot_path.split(".")[1:]:
-                module = getattr(module, fragment)
-            for symbol in dir(module):
-                obj = getattr(module, symbol)
-                if hasattr(obj, "__export_to_model__") and \
-                   obj.__export_to_model__:
-                    globals()[symbol] = obj
+for module in model_modules:
+    if "setup" in dir(module):
+        module.setup()
+
+for model in model_classes:
+    globals()[model] = model_classes[model]

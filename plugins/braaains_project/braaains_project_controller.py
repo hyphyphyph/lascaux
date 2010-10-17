@@ -33,4 +33,5 @@ class Braaains_ProjectController(Controller):
                 self.db.add(project)
                 self.db.flush()
                 return self.redirect("view", {"id": project.id})
-        self.save(form.render())
+        self.save(form.render(), "form_content")
+        self.save(self.render("new"))

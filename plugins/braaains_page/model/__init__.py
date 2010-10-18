@@ -1,8 +1,5 @@
 from storm.locals import *
 
-from lascaux.model_setup import User, Project
-# from plugins.braaains_project.model import Project
-
 
 class Page(object):
 
@@ -12,12 +9,10 @@ class Page(object):
     id = Int(primary=True)
     vid = Int()
     user_uuid = Unicode()
-    user = Reference(user_uuid, User.uuid)
     created = Int()
     updated = Int()
     enabled = Bool(default=True)
     project_id = Int()
-    project = Reference(project_id, Project.id)
 
 
 class PageVersion(object):
@@ -32,10 +27,16 @@ class PageVersion(object):
     format = Unicode()
     created = Int()
     user_uuid = Unicode()
-    user = Reference(user_uuid, User.uuid)
 
 
 def setup():
+    from lascaux.model_setup import User, Project
+
+    Page.user = Reference(Page.user_uuid, User.uuid)
+    Page.project = Reference(Page.project_id, Project.id)
     Page.version = Reference(Page.vid, PageVersion.vid)
+
+    PageVersion.user = Reference(PageVersion.user_uuid, User.uuid)
     PageVersion.page = Reference(PageVersion.page_id, Page.id)
+
     Project.pages = ReferenceSet(Project.id, Page.project_id)

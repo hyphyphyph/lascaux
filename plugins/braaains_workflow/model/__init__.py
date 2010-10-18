@@ -1,7 +1,5 @@
 from storm.locals import *
 
-from lascaux.model_setup import Project
-
 
 class WorkflowSet(object):
 
@@ -32,9 +30,6 @@ class WorkflowSet(object):
         return states
 
 
-Project.workflow_sets = ReferenceSet(Project.id, WorkflowSet.project_id)
-
-
 class WorkflowState(object):
 
     __export_to_model__ = True
@@ -42,7 +37,6 @@ class WorkflowState(object):
 
     id = Int(primary=True)
     workflow_set_id = Int()
-    set = Reference(workflow_set_id, WorkflowSet.id)
     name = Unicode()
     title = Unicode()
     desc = Unicode()
@@ -51,8 +45,14 @@ class WorkflowState(object):
 
 
 def setup():
-    WorkflowState.next = Reference(WorkflowState.next_id, WorkflowState.id)
-    WorkflowState.prev = Reference(WorkflowState.prev_id, WorkflowState.id)
+    from lascaux.model_setup import Project
 
     WorkflowSet.states = ReferenceSet(WorkflowSet.id,
                                       WorkflowState.workflow_set_id)
+
+    WorkflowState.set = Reference(WorkflowState.workflow_set_id,
+                                  WorkflowSet.id)
+    WorkflowState.next = Reference(WorkflowState.next_id, WorkflowState.id)
+    WorkflowState.prev = Reference(WorkflowState.prev_id, WorkflowState.id)
+
+    Project.workflow_sets = ReferenceSet(Project.id, WorkflowSet.project_id)

@@ -1,7 +1,5 @@
 from storm.locals import *
 
-from lascaux.model_setup import Project, User
-
 
 class Asset(object):
 
@@ -12,12 +10,10 @@ class Asset(object):
     created = Int()
     updated = Int()
     user_uuid = Unicode()
-    user = Reference(user_uuid, User.uuid)
     title = Unicode()
     body = Unicode()
     type_id = Int()
     project_id = Int()
-    project = Reference(project_id, Project.id)
 
 
 class AssetType(object):
@@ -33,7 +29,6 @@ class AssetType(object):
     has_vcs_file = Bool(default=False)
     has_page = Bool(default=False)
     project_id = Int()
-    project = Reference(project_id, Project.id)
 
 
 class AssetResourceFile(object):
@@ -61,6 +56,13 @@ class AssetResourcePage(object):
 
 
 def setup():
+    from lascaux.model_setup import Project, User
+
+    Asset.user = Reference(Asset.user_uuid, User.uuid)
+    Asset.project = Reference(Asset.project_id, Project.id)
+
+    AssetType.project = Reference(AssetType.project_id, Project.id)
+
     Project.assets = ReferenceSet(Project.id, Asset.project_id)
     Asset.type = Reference(Asset.type_id, AssetType.id)
     Project.asset_types = ReferenceSet(Project.id, AssetType.project_id)

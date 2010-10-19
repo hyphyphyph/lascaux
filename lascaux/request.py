@@ -99,7 +99,7 @@ class Request(SObject):
                            "get_route", {"request": self,
                                          "controller": Controller,
                                          "action": Action, "args": args})
-        return routes.values()[0]
+        return routes.values()[0] or u"/"
 
     def route(self, controller, action, args={}):
         return self.get_route(controller, action, args)

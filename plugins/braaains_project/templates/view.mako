@@ -1,3 +1,4 @@
+<a href="${controller.route("braaains_project", "list")}">Back to Projects</a>
 <h1>${project.title}</h1>
 % if project.desc:
     <p class="project-desciption">${project.desc}</p>

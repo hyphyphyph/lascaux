@@ -15,6 +15,13 @@ class Braaains_IssueController(Controller):
         self.save(self.render("list", {"project": project,
                                        "issues": [i for i in project.issues]}))
 
+    def view(self, id):
+        issue = self.db.get(model.Issue, id)
+        self.save(self.render("comments", {"issue": issue,
+                                           "comments": issue.comments}),
+                  "comments")
+        self.save(self.render("issue", {"issue": issue}))
+
     def new(self, project_id):
         project = self.db.get(model.Project, project_id)
         form = NewIssueForm(self.route("new", {"project_id": project_id}))

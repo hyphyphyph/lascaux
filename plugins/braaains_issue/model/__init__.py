@@ -31,6 +31,19 @@ class Issue(object):
     updated = Int()
 
 
+class IssueComment(object):
+
+    __export_to_model__ = True
+    __storm_table__ = "issue_comment"
+
+    id = Int(primary=True)
+    issue_id = Int()
+    user_uuid = Unicode()
+    title = Unicode()
+    body = Unicode()
+    created = Int()
+
+
 def setup():
     from lascaux.model_setup import User, Project, WorkflowSet, WorkflowState
 
@@ -41,6 +54,10 @@ def setup():
     Issue.state = Reference(Issue.workflow_state_id, WorkflowState.id)
     Issue.project = Reference(Issue.project_id, Project.id)
     Issue.user = Reference(Issue.user_uuid, User.uuid)
+    Issue.comments = ReferenceSet(Issue.id, IssueComment.issue_id)
+
+    IssueComment.issue = Reference(IssueComment.issue_id, Issue.id)
+    IssueComment.user = Reference(IssueComment.user_uuid, User.uuid)
 
     Project.issue_types = ReferenceSet(Project.id, IssueType.project_id)
     Project.issues = ReferenceSet(Project.id, Issue.project_id)

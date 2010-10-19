@@ -1,11 +1,15 @@
+import os.path
 import weakref
 
 from libel import sl
 
-from lascaux import SObject
+from lascaux import SObject, config
 from lascaux.httpheader import HTTPHeader
 from lascaux.httpcookie import HTTPCookie
 from lascaux.session import Session
+
+from crepehat import Kitchen
+from mako.template import Template
 
 
 class Request(SObject):
@@ -52,6 +56,15 @@ class Request(SObject):
         for key in self.content:
             content[key] = u"\n".join(self.content[key])
         return content
+
+    def render_final(self):
+        dirs = [os.path.join(self.get_exec_path(), "templates")]
+        k = Kitchen(dirs, [".mako"])
+        file = k.get("index")
+
+        t = Template(filename=file, module_directory=os.path.join(
+            config.get_tmp(), "tmpl_cache"))
+        return t.render(**self.get_content())
 
     def save(self, Content, Name="content"):
         if Name not in self.content:

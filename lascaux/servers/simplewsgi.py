@@ -64,9 +64,8 @@ class SimpleWSGIServer(BaseServer):
             request.POST = False
         request = BaseServer.handle_request(self, request)
         request.close()
-        content = request.render_final()
         start_response(request.get_http_code(), request.get_http_headers())
         if request.flag_redirect:
             return [""]
+        content = request.render_final()
         return [str(content)]
-

@@ -34,9 +34,9 @@ class SimpleRouter(BaseRouter):
             if fragment.startswith("{") and fragment.endswith("}"):
                 name, type = fragment[1:-1].split(":")
                 if type == "*":
-                    regex_fragments.append("([\S]+")
+                    regex_fragments.append("([\S]+)")
                 elif type == "$":
-                    regex_fragments.append("([\W_])+")
+                    regex_fragments.append("([\W_]+)")
                 elif type == "#":
                     regex_fragments.append("([\d]+)")
             else:

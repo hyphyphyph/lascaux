@@ -1,0 +1,7 @@
+{
+    "title": "LAF",
+    "description": "Lost and Found",
+    "routes": {
+        "laf": {"action": "index"}
+    }
+}

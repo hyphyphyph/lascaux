@@ -1,8 +1,8 @@
 {
-    "title": "Braaains Workflow",
-    "description": "Braaains Workflow Manager",
+    "title": "Workflow",
+    "description": "Workflow Manager",
     "routes": {
-        "workflow/{project_id:#}/set/new": {"action": "new_set"},
+        "workflow/set/new": {"action": "new_set"},
         "workflow/set/{id:#}": {"action": "view_set"},
         "workflow/set/{id:#}/edit": {"action": "edit_set"},
 

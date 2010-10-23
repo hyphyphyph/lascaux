@@ -7,7 +7,6 @@ class WorkflowSet(object):
     __storm_table__ = "workflow_set"
 
     id = Int(primary=True)
-    project_id = Int()
     title = Unicode()
     desc = Unicode()
 
@@ -15,21 +14,24 @@ class WorkflowSet(object):
         ids = []
         states = []
         for state in self.states:
-            if not state.prev:
-                ids.append(state.id)
+            if state.initial:
                 states.append(state)
-        state = states and states[0]
-        while state and state.next and state.next is not state:
-            state = state.next
-            states.append(state)
-            ids.append(state.id)
+                ids.append(state.id)
+                break
+        if states:
+            state = states[0]
+            while state.next_id:
+                if state.id not in ids:
+                    states.append(state)
+                    ids.append(state.id)
+                state = state.next
         for state in self.states:
             if state.id not in ids:
                 states.append(state)
-                ids.append(state.id)
+                ids.append(state)
         return states
 
-
+                
 class WorkflowState(object):
 
     __export_to_model__ = True
@@ -42,11 +44,9 @@ class WorkflowState(object):
     desc = Unicode()
     next_id = Int()
     prev_id = Int()
-
+    initial = Bool()
 
 def setup():
-    from lascaux.model_setup import Project
-
     WorkflowSet.states = ReferenceSet(WorkflowSet.id,
                                       WorkflowState.workflow_set_id)
 
@@ -54,5 +54,3 @@ def setup():
                                   WorkflowSet.id)
     WorkflowState.next = Reference(WorkflowState.next_id, WorkflowState.id)
     WorkflowState.prev = Reference(WorkflowState.prev_id, WorkflowState.id)
-
-    Project.workflow_sets = ReferenceSet(Project.id, WorkflowSet.project_id)

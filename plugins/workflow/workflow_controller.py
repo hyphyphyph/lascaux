@@ -5,19 +5,19 @@ from .set_forms import *
 from .state_forms import *
 
 
-class Braaains_WorkflowController(Controller):
+class WorkflowController(Controller):
 
-    def new_set(self, project_id):
-        form = NewSetForm(self.route("new_set", {"project_id": project_id}))
+    def new_set(self):
+        form = NewSetForm(self.route("new_set"))
         if self.POST:
             form.ingest(self.POST)
             if form.validates():
                 set = model.WorkflowSet()
-                set.project_id = project_id
                 set.title = form.title.value
                 set.desc = form.desc.value
                 self.db.add(set)
                 self.db.flush()
+                self.db.commit()
                 return self.redirect("view_set", {"id": set.id})
         self.save(form.render(), "form_content")
         self.save(self.render("new_set"))
@@ -62,10 +62,12 @@ class Braaains_WorkflowController(Controller):
                 state.next_id = hasattr(form, "next") and form.next.value
                 self.db.add(state)
                 self.db.flush()
+                self.db.commit()
                 if update_first:
                     first.next_id = state.id
                     self.db.add(first)
                     self.db.flush()
+                    self.db.commit()
                 return self.redirect("view_set", {"id": set_id})
         self.save(form.render())
 
@@ -83,6 +85,7 @@ class Braaains_WorkflowController(Controller):
                 state.next = form.next.value
                 self.db.add(state)
                 self.db.flush()
+                self.db.commit()
                 return self.redirect("view_set", {"id": state.set.id})
         form.name(state.name)
         form.title(state.title)

@@ -1,5 +1,5 @@
 <h1>Projects</h1>
-<a href="${controller.route("braaains_project", "new")}">New</a>
+<a href="${controller.route("braaains_project", "new")}">New Project</a>
 <ul>
     % for project in projects:
         <li>

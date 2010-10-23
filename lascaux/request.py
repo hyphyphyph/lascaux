@@ -1,11 +1,15 @@
+import os.path
 import weakref
 
 from libel import sl
 
-from lascaux import SObject
+from lascaux import SObject, config
 from lascaux.httpheader import HTTPHeader
 from lascaux.httpcookie import HTTPCookie
 from lascaux.session import Session
+
+from crepehat import Kitchen
+from mako.template import Template
 
 
 class Request(SObject):
@@ -16,6 +20,7 @@ class Request(SObject):
     cookies = None
     session = None
     content = None
+    plain_content = None
     flag_redirect = None
     http_status_code = "202 SUCCESS"
     http_extra = None
@@ -32,6 +37,7 @@ class Request(SObject):
         self.cookies = HTTPCookie(self)
         self.session = Session(self)
         self.content = {"content": []}
+        self.plain_content = ""
         self.exec_args = {}
         self.http_extra = {}
         self.POST = {}
@@ -48,12 +54,31 @@ class Request(SObject):
         self.cookies.save()
 
     def get_content(self):
+        if self.plain_content:
+            return self.plain_content
         content = {}
         for key in self.content:
             content[key] = u"\n".join(self.content[key])
         return content
 
-    def save(self, Content, Name="content"):
+    def render_final(self):
+        if self.plain_content:
+            return self.plain_content
+        dirs = [os.path.join(self.get_exec_path(), "templates")]
+        k = Kitchen(dirs, [".mako"])
+        file = k.get("index")
+
+        t = Template(filename=file, module_directory=os.path.join(
+            config.get_tmp(), "tmpl_cache"))
+        return t.render(**self.get_content())
+
+    def save(self, Content, Name="content", plain=False):
+        if plain:
+            if self.plain_content:
+                self.plain_content += Content
+            else:
+                self.plain_content = Content
+            return
         if Name not in self.content:
             self.content[Name] = []
         self.content[Name].append(Content)
@@ -86,7 +111,7 @@ class Request(SObject):
                            "get_route", {"request": self,
                                          "controller": Controller,
                                          "action": Action, "args": args})
-        return routes.values()[0]
+        return routes.values()[0] or u"/"
 
     def route(self, controller, action, args={}):
         return self.get_route(controller, action, args)

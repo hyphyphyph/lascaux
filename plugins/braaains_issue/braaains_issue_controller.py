@@ -15,6 +15,32 @@ class Braaains_IssueController(Controller):
         self.save(self.render("list", {"project": project,
                                        "issues": [i for i in project.issues]}))
 
+    def view(self, id):
+        issue = self.db.get(model.Issue, id)
+
+        def init_comment_form():
+            return CommentForm(self.route("view", {"id": id}))
+
+        comment_form = init_comment_form()
+        if self.POST:
+            if "submit_comment" in self.POST:
+                comment_form.ingest(self.POST)
+                if comment_form.validates():
+                    comment = model.IssueComment()
+                    comment.issue_id = issue.id
+                    comment.user_uuid = self.user.uuid
+                    comment.title = comment_form.title.value
+                    comment.body = comment_form.body.value
+                    comment.created = int(time.time())
+                    self.db.add(comment)
+                    self.db.flush()
+                    comment_form = init_comment_form()
+        self.save(comment_form.render(), "comment_form")
+        self.save(self.render("comments", {"issue": issue,
+                                           "comments": issue.comments}),
+                  "comments")
+        self.save(self.render("issue", {"issue": issue}))
+
     def new(self, project_id):
         project = self.db.get(model.Project, project_id)
         form = NewIssueForm(self.route("new", {"project_id": project_id}))

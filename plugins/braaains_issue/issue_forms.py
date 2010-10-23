@@ -19,3 +19,12 @@ class NewIssueForm(Form):
 
     def validate(self):
         self.type.value = int(self.type.value)
+
+
+class CommentForm(Form):
+
+    __order__ = ["title", "body", "submit_comment"]
+
+    title = Text(title="Title", required=True)
+    body = Text(title="Body", rows=8, cols=128)
+    submit_comment = Button(title="Post Comment")

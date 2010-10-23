@@ -1,3 +1,4 @@
+<a href="${controller.route("braaains_project", "list")}">Back to Projects</a>
 <h1>Issues for ${project.title}</h1>
 <a href="${controller.route("new", dict(project_id=project.id))}">Create Issue</a>
 % if not issues:

@@ -32,6 +32,7 @@ class BaseServer(SObject):
             return self.handle_error_serve("404", Request)
 
     def handle_static_serve(self, Request):
+        Request.simple_content = True
         path = self._get_static_path(Request.URI)
         if not path:
             self.handle_serve_error("404", Request)
@@ -39,7 +40,7 @@ class BaseServer(SObject):
         file = open(path, "r")
         content = file.read()
         file.close()
-        Request.save(content)
+        Request.save(content, plain=True)
         logger.info("Serving static file %s via %s" % (path, Request.URI))
         return Request
 

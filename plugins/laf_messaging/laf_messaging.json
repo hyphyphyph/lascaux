@@ -1,0 +1,7 @@
+{
+    "title": "LAF Messaging",
+    "description": "Lost and Found Messaging",
+    "routes": {
+        "inbox": {"action": "inbox"}
+    }
+}

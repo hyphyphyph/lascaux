@@ -2,6 +2,7 @@
     "title": "LAF",
     "description": "Lost and Found",
     "routes": {
-        "laf": {"action": "index"}
+        "i/lost": {"action": "new_lost"},
+        "i/found": {"action": "new_found"}
     }
 }

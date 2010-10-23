@@ -83,6 +83,15 @@ class Request(SObject):
             self.content[Name] = []
         self.content[Name].append(Content)
 
+    def set_content(self, content, plain=False):
+        """
+        Pretty low-level...  Gotta say, dude.
+        """
+        if plain:
+            self.plain_content = content
+        else:
+            self.content = content
+
     def redirect(self, Where, Code="302"):
         pass
 

@@ -3,6 +3,8 @@
     "description": "Lost and Found",
     "routes": {
         "i/lost": {"action": "new_lost"},
-        "i/found": {"action": "new_found"}
+        "i/found": {"action": "new_found"},
+
+        "laf/ajax/get_groups": {"action": "ajax_get_groups"}
     }
 }

@@ -1,5 +1,10 @@
 import time
 
+try:
+    import json
+except:
+    import simplejson as json
+
 from lascaux import Controller
 
 from lascaux.model import LafItem, LafItemGroup
@@ -46,3 +51,10 @@ class LafController(Controller):
                 item = self._new_item(form)
                 return self.redirect("new_found")
         self.save(form.render())
+
+    def ajax_get_groups(self):
+        groups = self.db.find(LafItemGroup)
+        groups_ = {}
+        for group in groups:
+            groups_[group.id] = {"name": group.name}
+        return json.dumps(groups_)

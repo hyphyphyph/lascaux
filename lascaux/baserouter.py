@@ -30,6 +30,8 @@ class BaseRouter(SObject):
             Request.URI = return_.where or "/"
             Request.set_http_code(return_.code)
             Request.headers["Location"] = Request.URI
+        elif isinstance(return_, basestring):
+            Request.set_content(return_, plain=True)
         return return_
 
     def get_route(self, controller, action, args={}):

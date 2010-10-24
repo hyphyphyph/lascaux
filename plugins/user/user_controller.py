@@ -36,16 +36,15 @@ class UserController(Controller):
                 redirect = {"redirect": None}
                 self.hook("user_register", {"user": user,
                                             "redirect": redirect})
+                
+                user.login(self.request)
+                self.hook("user_login", {"user": user})
                 if redirect["redirect"]:
                     return redirect["redirect"]
                 self.save(self.render("register_success", {
                     "username": user.username,
                     "email": user.email
                 }))
-                print user.uuid
-                user.login(self.request)
-                self.hook("user_login", {"user": user})
-                return self.redirect("home")
             else:
                 self.save(form.render(), "form")
         else:

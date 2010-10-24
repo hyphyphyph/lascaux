@@ -120,4 +120,5 @@ class LafController(Controller):
             setattr(form, char["attr"], Text(title=char["attr"]))
             form.__order__.append(char["attr"])
         form.carbonize()
-        self.save(form.render())
+        self.save(form.render(), "form_content")
+        self.save(self.render("quiz", {"characteristics": chars}))

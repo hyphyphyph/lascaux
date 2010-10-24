@@ -12,6 +12,8 @@
         "did/you/lose/a/{group:*}": {"action": "quiz"},
 
         "laf/ajax/get_groups/{term:*}": {"action": "ajax_get_groups"},
+
+        "send_message": {"action": "send_message"},
         
         "": {"action": "welcome"}
     }

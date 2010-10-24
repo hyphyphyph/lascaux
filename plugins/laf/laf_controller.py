@@ -15,6 +15,14 @@ from lascaux.model import LafItem, LafItemGroup, LafLocation, \
 from .item_forms import NewItemForm
 
 
+class ContactForm(Form):
+
+    __order__ = ["body", "send"]
+
+    body = Text(title="Message", required=True, rows="16", cols="64")
+    send = Button(title="Send Message")
+
+
 class LafController(Controller):
 
     def _new_item(self, form):
@@ -120,6 +128,7 @@ class LafController(Controller):
         return json.dumps(groups_)
 
     def quiz(self, group):
+        self.save("form_mode", "lost")
         group = self.db.find(LafItemGroup, LafItemGroup.name == group).one()
         items = group.items
         chars = []
@@ -135,7 +144,7 @@ class LafController(Controller):
                 setattr(form, char["attr"], Text(title=char["attr"]))
                 form.__order__.append(char["attr"])
         form.__order__.append("submit")
-        form.submit = Button(title="Narrow down results")
+        form.submit = Button(title="Narrow down the results...")
         form.carbonize()
 
         if self.POST:
@@ -144,7 +153,6 @@ class LafController(Controller):
         for char in chars:
             attr = char["attr"]
             value = getattr(form, char["attr"]).value
-            print attr, value
             if value:
                 chars_ = self.db.find(LafChar,
                                       LafChar.attr == attr,
@@ -161,9 +169,14 @@ class LafController(Controller):
         sorted(result_ids, key=sort_by_score)
         final_results = [results[r[0]]["object"] for r in result_ids]
         self.save(form.render(), "form_content")
+        contact_form = ContactForm(self.route("send_message", {"group": group.name}))
+        self.save(contact_form.render(), "contact_form")
         self.save(self.render("quiz", {"group": group,
                                        "characteristics": chars,
                                        "results": final_results}))
+
+    def send_message(self):
+        self.save(self.render("sent"))
 
     def welcome(self):
         self.save(self.render("welcome"))

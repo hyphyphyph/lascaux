@@ -7,5 +7,6 @@ ${form_content}
 % if len(results):
     <h2>We've found ${len(results)} matches.</h2>
     <p>When you think you might have found your <strong>${group.name}</strong>, send a message to the finders.</p>
-    ## ${contact_form}
+    <hr />
+    ${contact_form}
 % endif

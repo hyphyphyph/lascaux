@@ -74,7 +74,7 @@ class Widget(SObject):
             if type(value) is int:
                 self.value = unicode(value)
             else:
-                self.value = type(value.decode("utf-8"))
+                self.value = value.decode("utf-8")
         else:
             self.value = u""
 

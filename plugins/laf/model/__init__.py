@@ -47,16 +47,7 @@ class LafChar(object):
 
     id = Int(primary=True)
     attr = Unicode()
-
-
-class LafCharProp(object):
-
-    __export_to_model__ = True
-    __storm_table__ = "characteristic_property"
-
-    id = Int(primary=True)
     value = Unicode()
-    characteristic_id = Int()
 
 
 class LafItemChar(object):
@@ -82,5 +73,4 @@ def setup():
                                            LafItemChar.characteristic_id,
                                            LafChar.id)
 
-    LafChar.properties = ReferenceSet(LafChar.id,
-                                      LafCharProp.characteristic_id)
+    LafItemGroup.items = ReferenceSet(LafItemGroup.id, LafItem.group_id)

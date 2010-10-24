@@ -17,6 +17,8 @@ class Form(SObject):
     env = None
 
     def __init__(self, action="/", method=None, properties=None, env=None):
+        if not self.__order__:
+            self.__order__ = []
         self._form = self
         self._action = action
         self.env = env or Environment()
@@ -24,9 +26,17 @@ class Form(SObject):
             self._method = method
         if properties:
             self._properties = properties or {}
+        self.carbonize()
+        self.init()
+
+    def carbonize(self):
         for widget in self.list_widgets():
             setattr(self, widget.name, copy.copy(getattr(self, widget.name)))
-        self.init()
+
+    def erase(self):
+        for widget in self.list_widgets():
+            delattr(self, widget.name)
+        self.__order__ = []
 
     def init(self):
         pass

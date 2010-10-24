@@ -5,9 +5,13 @@ try:
 except:
     import simplejson as json
 
+from petrified import Form
+from petrified.widgets import *
+
 from lascaux import Controller
 
-from lascaux.model import LafItem, LafItemGroup, WorkflowSet, Setting
+from lascaux.model import LafItem, LafItemGroup, LafLocation, \
+     WorkflowSet, Setting
 from .item_forms import NewItemForm
 
 
@@ -17,7 +21,7 @@ class LafController(Controller):
         def new_item():
             setting = self.db.get(Setting, u"laf_item_workflow_set_id")
             workflowset = self.db.get(WorkflowSet, int(setting.value))
-            group_name = form.group.value.strip().lower()
+            group_name = form.group.value.strip(u" ").lower()
             group = self.db.find(LafItemGroup,
                                  LafItemGroup.name == group_name).one()
             if not group:
@@ -25,15 +29,28 @@ class LafController(Controller):
                 group.name = group_name
                 self.db.add(group)
                 self.db.flush()
+
+            # Create the item
             item = LafItem()
             item.title = form.title.value
             item.kind = form.mode
+            # If the user is already logged in, we can manage this straight away.
             if self.user:
                 setattr(item, "uuid_%s" % form.mode, self.user.uuid)
+                item.workflow_state_id = workflowset.initial().next.id
+            else:
+                item.workflow_state_id = workflowset.initial().id
             item.created = int(time.time())
-            item.workflow_state_id = workflowset.initial().id
             item.group_id = group.id
-            self.db.add(item)
+            item = self.db.add(item)
+
+            # Create the location
+            location = LafLocation()
+            location.place = form.place.value
+            location.date_start = int(form.when_start.value)
+            location.date_end = int(form.when_end.value)
+            location = item.locations.add(location)
+
             self.db.flush()
             self.db.commit()
             return item
@@ -77,5 +94,16 @@ class LafController(Controller):
         return json.dumps(groups_)
 
     def quiz(self, group):
-        item = self.db.get(LafItem, id)
-        
+        group = self.db.find(LafItemGroup, LafItemGroup.name == group).one()
+        chars = []
+        for item in group.items:
+            for char in item.characteristics:
+                chars.append({"id": char.id,
+                              "attr": char.attr,
+                              "value": char.value})
+        form = Form(self.route("quiz", {"group": group.name}))
+        for char in chars:
+            setattr(form, char["attr"], Text(title=char["attr"]))
+            form.__order__.append(char["attr"])
+        form.carbonize()
+        self.save(form.render())

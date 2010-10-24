@@ -1,0 +1,109 @@
+@font-face {
+	font-family: 'DesyrelRegular';
+	src: url('../fonts/desyrel-webfont.eot');
+	src: local('☺'), url('../fonts/desyrel-webfont.woff') format('woff'), url('../fonts/desyrel-webfont.ttf') format('truetype'), url('../fonts/desyrel-webfont.svg#webfontfotxpUe5') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+html, body { height: 100%; }
+#wrapper {
+   min-height: 100%;
+   position: relative;
+}
+.container {
+    margin: 0 auto;
+    position: relative;
+    width: 960px;
+}
+
+
+/* HEADER */
+#header {
+    xbackground: #bd9e85;
+    xbackground: -moz-linear-gradient(top, #cab19c, #ac8769);
+    xbackground: -webkit-gradient(linear, left top, left bottom, from(#cab19c), to(#ac8769));
+    background: #73443d;
+    background: -moz-linear-gradient(top, #e9a981, #a96c49);
+    background: -webkit-gradient(linear, left top, left bottom, from(#e9a981), to(#a96c49));
+    
+    height: 25px;
+}
+
+/* BODY */
+#body {
+    border-top: 1px solid #321809;
+    padding-bottom: 80px;
+}
+
+
+.selectType {
+    float: left;
+    margin: -25px 0 0;
+    position: relative;
+    overflow: hidden;    
+    width: 100%;
+    z-index: 100;
+}
+.selectType span {
+    font-family: "DesyrelRegular", sans-serif;
+    line-height: 24px;
+    height: 24px;
+    position: absolute;
+    left: -330px;
+}
+.selectType ul {
+    text-align:center;
+    
+    clear: left;
+    float: left;
+    height: 25px;
+    position: relative;
+    left:50%;
+}
+.selectType li {
+    line-height: 25px;
+    
+    display: block;
+    float: left;
+    height: 25px;
+    position: relative;
+    right: 50%;
+    width: 200px;
+}
+.selectType a {
+    color: #321809;
+    
+    display:block;
+    xmargin:0 0 0 1px;
+    xpadding: 3px 10px;
+}
+.selectType a:hover {
+}
+.selectType .active {
+    background: #fff;
+    border-left: 1px solid #321809;
+    border-right: 1px solid #321809;
+    border-bottom: 1px solid #fff;
+    x-webkit-border-top-left-radius: 10px;
+    x-webkit-border-top-right-radius: 10px;
+    x-moz-border-radius-topleft: 10px;
+    x-moz-border-radius-topright: 10px;
+    xborder-top-left-radius: 10px;
+    xborder-top-right-radius: 10px;
+}
+#centeredmenu ul li a.active:hover {
+    color:#fff;
+    background:#000;
+    font-weight:bold;
+}
+
+
+/* FOOTER */
+#footer {
+    height: 30px;
+    margin-top: 50px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}

@@ -1,0 +1,11 @@
+body {
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 20px;
+}
+
+a { text-decoration: none; }
+
+h1, h2, h3, h4 {
+    font-weight: normal;
+}

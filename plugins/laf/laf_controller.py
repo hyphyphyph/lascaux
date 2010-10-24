@@ -14,8 +14,6 @@ from lascaux.model import LafItem, LafItemGroup, LafLocation, \
      WorkflowSet, Setting
 from .item_forms import NewItemForm
 
-from storm.locals import Select
-
 
 class LafController(Controller):
 
@@ -69,7 +67,7 @@ class LafController(Controller):
                 self.item = item
                 self.save(self.render("thanks", {"item": item}))
                 return
-        self.save(form.render(self.render("new_item")))
+        self.save(form.render(self.render("new_item", {"form": form})))
 
     def new_lost(self):
         form = NewItemForm(self.route("new_lost"))

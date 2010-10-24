@@ -4,7 +4,7 @@
     disabled_ = disabled and ' disabled="disabled"' or ""
     options_ = id_+classes_+disabled_
 %>
-<div class="button">
+<div class="widget button">
     <input type="submit" name="${name}"${options_}${title and ' value="%s"' % title or ""} />
     % if description:
         <div class="description">

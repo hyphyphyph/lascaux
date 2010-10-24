@@ -9,7 +9,7 @@
     disabled_ = disabled and ' disabled="disabled"' or ""
     options_ = id_+classes_+size_+disabled_+readonly_
 %>
-<div class="password${error and " error" or ""}">
+<div class="widget password${error and " error" or ""}">
     % if error:
         <div class="error_message">
             ${error_message}

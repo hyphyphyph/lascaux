@@ -9,11 +9,11 @@ class NewItemForm(Form):
 
     mode = None
 
-    group = Text(title="What is it?", required=True)
-    picture = File(title="Photo")
-    place = Text(title="Where?")
-    when_start = Text(title="When?")
-    when_end = Text(title="When?")
+    group = Text(title="I lost", required=True, value="6576546754654")
+    picture = File(title="Pictures?")
+    place = Text(title="Search a place")
+    when_start = Text(title="From")
+    when_end = Text(title="To")
     title = Text(title="Title", required=True)
     submit = Button(title="Post it!")
 
@@ -22,4 +22,4 @@ class NewItemForm(Form):
         self.group.title = self.mode == "found" and \
                            "What did you find?" or \
                            self.mode == "lost" and \
-                           "What did you lose?" or self.group.title
+                           "I lost..." or self.group.title

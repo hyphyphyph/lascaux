@@ -64,7 +64,7 @@ class LafController(Controller):
                     self.session["last_created_item_id"] = item.id
                     return self.redirect("user", "register")
                 self.item = item
-        self.save(form.render(self.render("new_item")))
+        self.save(form.render(self.render("new_item", {"form": form})))
 
     def new_lost(self):
         form = NewItemForm(self.route("new_lost"))

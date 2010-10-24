@@ -2,14 +2,14 @@ import os.path
 
 from libel import sl
 
-from lascaux import SObject, Controller
+from lascaux import SObject
 from lascaux.app import get_manager
 
 
 def get_resource(resource, plugin=None):
-    if issubclass(plugin.__class__, Controller) and \
-       Controller in plugin.__class__.__bases__:
-        plugin = plugin.name
+    # if issubclass(plugin.__class__, Controller) and \
+    #    Controller in plugin.__class__.__bases__:
+    #     plugin = plugin.name
     m = get_manager(init=True)
     extension = os.path.splitext(resource)[1]
     dirs = []

@@ -4,13 +4,15 @@ from petrified.widgets import *
 
 class NewItemForm(Form):
 
-    __order__ = ["title", "group", "pic", "submit"]
+    __order__ = ["group", "picture", "where", "when", "title", "submit"]
 
     mode = None
 
     title = Text(title="Title", required=True)
     group = Text(title="What is it?", required=True)
-    pic = File(title="Photo", path="/tmp")
+    picture = File(title="Photo")
+    where = Text(title="Where?")
+    when = Text(title="When?")
     submit = Button(title="Post it!")
 
     def setup(self, mode):

@@ -35,6 +35,7 @@ class LafController(Controller):
     def new_lost(self):
         form = NewItemForm(self.route("new_lost"))
         form.setup(u"lost")
+        self.add_js("new_item")
         if self.POST:
             form.ingest(self.POST)
             if form.validates():
@@ -45,6 +46,7 @@ class LafController(Controller):
     def new_found(self):
         form = NewItemForm(self.route("new_found"))
         form.setup(u"found")
+        self.add_js("new")
         if self.POST:
             form.ingest(self.POST)
             if form.validates():
@@ -52,9 +54,10 @@ class LafController(Controller):
                 return self.redirect("new_found")
         self.save(form.render())
 
-    def ajax_get_groups(self):
+    def ajax_get_groups(self, term):
         groups = self.db.find(LafItemGroup)
         groups_ = {}
         for group in groups:
-            groups_[group.id] = {"name": group.name}
+            if group.name.startswith(term.lower()):
+                groups_[group.id] = {"name": group.name}
         return json.dumps(groups_)

@@ -36,7 +36,7 @@ class Request(SObject):
         self.headers = HTTPHeader(self)
         self.cookies = HTTPCookie(self)
         self.session = Session(self)
-        self.content = {"content": []}
+        self.content = {"content": [], "head_style": [], "head_script": []}
         self.plain_content = ""
         self.exec_args = {}
         self.http_extra = {}

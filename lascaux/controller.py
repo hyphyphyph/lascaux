@@ -9,6 +9,7 @@ import libel
 from lascaux import SObject, Redirect
 from lascaux.config import config
 from lascaux.util import parse_route_to_regex
+from lascaux.helpers import get_resource
 
 
 class Controller(SObject):
@@ -64,12 +65,16 @@ class Controller(SObject):
         return k.get(Name)
 
     def get_js(self, Name):
-        return self.get_template(Name, [self.get_exec_path(), "scripts",
-                                        self.path, "script"], [".js"])
+        return self.get_template(Name, [os.path.join(self.get_exec_path(),
+                                                     "scripts"),
+                                        os.path.join(self.path, "scripts")],
+                                 [".js"])
 
     def get_css(self, Name):
-        return self.get_template(Name, [self.get_exec_path(), "styles",
-                                        self.path, "styles"], [".css"])
+        return self.get_template(Name, [os.path.join(self.get_exec_path(),
+                                                     "styles"),
+                                        os.path.join(self.path, "styles")],
+                                 [".css"])
 
     def render(self, File, Data=None):
         Data = Data or {}
@@ -97,3 +102,11 @@ class Controller(SObject):
 
     def hook(self, hook, data={}):
         return self.request.hook(hook, data, self)
+
+    def add_css(self, name):
+        resource = get_resource("%s.css" % name, self.name)
+        self.save(resource, "head_style")
+
+    def add_js(self, name):
+        resource = get_resource("%s.js" % name, self.name)
+        self.save(resource, "head_script")

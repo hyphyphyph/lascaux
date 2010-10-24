@@ -5,6 +5,6 @@
         "i/lost": {"action": "new_lost"},
         "i/found": {"action": "new_found"},
 
-        "laf/ajax/get_groups": {"action": "ajax_get_groups"}
+        "laf/ajax/get_groups/{term:*}": {"action": "ajax_get_groups"}
     }
 }

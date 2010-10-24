@@ -24,8 +24,16 @@
                     <div class="selectType">
                         <span>You are a...</span>
                         <ul>
-                            <li class="active"><a href="" class="loser-form">Loser</a></li>
-                            <li><a href="" class="finder-form">Finder</a></li>
+                            % if form_mode == "lost":
+                                <li class="active"><a href="/i/lost" class="loser-form">Loser</a></li>
+                                <li><a href="/i/found" class="finder-form">Finder</a></li>
+                            % elif form_mode == "found":
+                                <li><a href="/i/lost" class="loser-form">Loser</a></li>
+                                <li class="active"><a href="/i/found" class="finder-form">Finder</a></li>
+                            % else:
+                                <li><a href="/i/lost" class="loser-form">Loser</a></li>
+                                <li><a href="/i/found" class="finder-form">Finder</a></li>
+                            % endif
                         </ul>
                     </div>
                     ${content}

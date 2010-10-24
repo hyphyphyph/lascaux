@@ -69,6 +69,7 @@ class LafController(Controller):
         self.save(form.render(self.render("new_item", {"form": form})))
 
     def new_lost(self):
+        self.save("lost", "form_mode")
         form = NewItemForm(self.route("new_lost"))
         form.setup(u"lost")
         return_ = self._new_item(form)
@@ -76,6 +77,7 @@ class LafController(Controller):
             return return_
 
     def new_found(self):
+        self.save("found", "form_mode")
         form = NewItemForm(self.route("new_found"))
         form.setup(u"found")
         return_ = self._new_item(form)

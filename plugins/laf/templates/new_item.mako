@@ -9,23 +9,12 @@
         <span class="step-number">2</span>
         <div class="step-form">
             <h2>When &amp; where did you lose your object?</h2>
-            <div class="widget textfield">
-                <label for="">Search place</label>
-                <input type="text" name="" value="Put an address" id="searchLocation" />
-                <input type="hidden" name="" value="" id="locationLat" />
-                <input type="hidden" name="" value="" id="locationLng" />
-            </div>
-            <img src="/images/map.jpg" style="margin-left: 145px;" />
+            <input type="text" name="place" value="Put an address" />
+            <div class="map"><img src="/images/map.jpg" alt="" /></div>
             <div class="date">
                 <p>Date</p>
-                <div class="widget textfield">
-                    <label for="">From</label>
-                    <input type="text" name="" value="" class="datepicker" />
-                </div>
-                <div class="widget textfield">
-                    <label for="">To</label>
-                    <input type="text" name="" value="" class="datepicker" />
-                </div>
+                <input type="text" name="when_start" />
+                <input type="text" name="when_end" />
             </div>
         </div>
     </fieldset>
@@ -49,10 +38,12 @@
         </fieldset>
     % endif
     <fieldset>
+        <div class="widget button">
             % if form.mode == "found":
-                <input type="submit" class="button" value="Found It!" />
+                <input type="submit" value="Found It!" />
             % else:
-                <input type="submit" class="button" value="Lost It!" />
+                <input type="submit" value="Lost It!" />
             % endif
+        </div>
     </fieldset>
 </form>

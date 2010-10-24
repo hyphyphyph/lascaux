@@ -2,7 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
     <head>
-        <title>Lost & Found</title>
+        <title>max find it</title>
         <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
         <meta http-equiv="Content-Style-Type" content="text/css" />
         <link rel="stylesheet" type="text/css" href="/style.css" />

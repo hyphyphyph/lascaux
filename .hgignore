@@ -5,10 +5,8 @@ syntax: regexp
 ^include/
 ^tmp/
 main.py
-^public/
 ^instlatte/
 ^libel/
-^petrified/
 
 syntax: glob
 *.pyc

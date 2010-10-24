@@ -47,7 +47,7 @@ class LafController(Controller):
                     self.session["last_created_item_id"] = item.id
                     return self.redirect("user", "register")
                 self.item = item
-        self.save(form.render())
+        self.save(form.render(self.render("new_item")))
 
     def new_lost(self):
         form = NewItemForm(self.route("new_lost"))
@@ -75,3 +75,7 @@ class LafController(Controller):
             if group.name.startswith(term.lower()):
                 groups_[group.id] = {"name": group.name}
         return json.dumps(groups_)
+
+    def quiz(self, group):
+        item = self.db.get(LafItem, id)
+        

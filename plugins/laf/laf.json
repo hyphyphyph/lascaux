@@ -7,6 +7,8 @@
 
         "gee/thanks/{id:#}": {"action": "post_register"},
 
+        "didyou/lose/a/{group:*}": {"action": "quiz"},
+
         "laf/ajax/get_groups/{term:*}": {"action": "ajax_get_groups"}
     }
 }

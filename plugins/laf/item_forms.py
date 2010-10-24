@@ -9,7 +9,7 @@ class NewItemForm(Form):
 
     mode = None
 
-    group = Text(title="I lost", required=True, value="6576546754654")
+    group = Text(title="I lost", required=True, value="laptop, camera, purse")
     picture = File(title="Pictures?")
     place = Text(title="Search a place")
     when_start = Text(title="From")

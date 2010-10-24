@@ -80,8 +80,12 @@
     width: 550px;
 }
 .lostAndFoundForm .map img { border: 1px solid #837264; width: 100%; }
-.lostAndFoundForm .date { float: left; }
-.lostAndFoundForm .date p { float: left; width: 140px; }
+.lostAndFoundForm .date { 
+    float: left; 
+    padding: 40px 20px;
+    margin: 0 0 0 120px;
+}
+.lostandfoundform .date p { font-weight: bold; }
 .lostAndFoundForm .date .widget + .widget { margin-left: 10px; }
 .lostAndFoundForm .date .widget label { width: 50px; }
 .lostAndFoundForm .date .widget input { margin-left: 10px; width: 170px; }

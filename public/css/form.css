@@ -84,7 +84,14 @@
     float: left;
     height: 28px;
     width: 30px;
+.lostAndFoundForm #group_entry label {width: 200px; line-height: 48px;}
+.lostAndFoundForm #group_entry input {
+    width: 450px;
+    font-size: 20px;
+    line-height: 48px;
+    padding: 10px;
 }
+
 
 .lostAndFoundForm .map {
     border: 1px solid #837264;
@@ -94,8 +101,12 @@
     width: 550px;
 }
 .lostAndFoundForm .map img { border: 1px solid #837264; width: 100%; }
-.lostAndFoundForm .date { float: left; }
-.lostAndFoundForm .date p { float: left; width: 140px; }
+.lostAndFoundForm .date { 
+    float: left; 
+    padding: 40px 20px;
+    margin: 0 0 0 120px;
+}
+.lostandfoundform .date p { font-weight: bold; }
 .lostAndFoundForm .date .widget + .widget { margin-left: 10px; }
 .lostAndFoundForm .date .widget label { width: 50px; }
 .lostAndFoundForm .date .widget input { margin-left: 10px; width: 170px; }
@@ -103,6 +114,8 @@
 .lostAndFoundForm .char-set { clear: both; overflow: hidden; width: 850px; }
 .lostAndFoundForm .char-set + .char-set { margin-top: 10px; }
 .lostAndFoundForm .char-set .widget input { width: 450px; }
+.lostAndFoundForm .widget { float: left; }
+.lostAndFoundForm .widget input { width: 520px; }
 .lostAndFoundForm .char-set .widget + .widget input { margin-left: 10px; width: 240px; }
 .lostAndFoundForm .char-set label { display: none; }
 

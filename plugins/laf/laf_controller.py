@@ -32,7 +32,6 @@ class LafController(Controller):
 
             # Create the item
             item = LafItem()
-            item.title = form.title.value
             item.kind = form.mode
             # If the user is already logged in, we can manage this straight away.
             if self.user:

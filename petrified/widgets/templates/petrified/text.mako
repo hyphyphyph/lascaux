@@ -20,7 +20,7 @@
         <label for="${id or name}">${title}</label>
     % endif
     % if not rows:
-        <input type="text" name="${name}"${options_}${value and ' value="%s"'%value or ""} />
+        <input type="text" name="${name}"${options_}${value and u' value="%s"' % value or ""} />
     % else:
         <textarea name="${name}"${options_}>${value or ""|n}</textarea>
     % endif

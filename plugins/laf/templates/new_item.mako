@@ -9,24 +9,12 @@
         <span class="step-number">2</span>
         <div class="step-form">
             <h2>When &amp; where did you lose your object?</h2>
-            <div class="widget textfield">
-                <label for="">Search place</label>
-                <input type="text" name="" value="Put an address" id="searchLocation" />
-                <input type="hidden" name="" value="" id="locationLat" />
-                <input type="hidden" name="" value="" id="locationLng" />
-                <span class="errorLocating">!</span>
-            </div>
-            <div class="map" id="map"></div>
+            <input type="text" name="place" value="Put an address" />
+            <div class="map"><img src="/images/map.jpg" alt="" /></div>
             <div class="date">
                 <p>Date</p>
-                <div class="widget textfield">
-                    <label for="">From</label>
-                    <input type="text" name="" value="" />
-                </div>
-                <div class="widget textfield">
-                    <label for="">To</label>
-                    <input type="text" name="" value="" />
-                </div>
+                <input type="text" name="when_start" />
+                <input type="text" name="when_end" />
             </div>
         </div>
     </fieldset>

@@ -63,7 +63,6 @@ html, body { height: 100%; }
 }
 .selectType li {
     line-height: 25px;
-    
     display: block;
     float: left;
     height: 25px;

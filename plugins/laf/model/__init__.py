@@ -74,3 +74,8 @@ def setup():
                                            LafChar.id)
 
     LafItemGroup.items = ReferenceSet(LafItemGroup.id, LafItem.group_id)
+
+    LafChar.items = ReferenceSet(LafChar.id,
+                                 LafItemChar.characteristic_id,
+                                 LafItemChar.item_id,
+                                 LafItem.id)

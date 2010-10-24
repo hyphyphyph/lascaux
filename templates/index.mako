@@ -3,11 +3,9 @@
     <head>
         <title>Maxfindit</title>
     	<meta charset="UTF-8" />
-        <meta name="viewport" content="user-scalable=no" />
         <link rel="stylesheet" type="text/css" href="/css/style.css" />
         <link rel="stylesheet" type="text/css" href="/css/smoothness/jquery-ui-1.8.5.custom.css" />
         <link rel="icon" type="image/x-icon" href="favicon.ico">
-        <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
         <script type="text/javascript" src="/js/jquery-1.4.3.min.js"></script>
         <script type="text/javascript" src="/js/jquery-ui-1.8.5.custom.min.js"></script>
         <script type="text/javascript" src="/js/library.js"></script>

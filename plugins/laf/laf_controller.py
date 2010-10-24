@@ -51,21 +51,22 @@ class LafController(Controller):
             location.date_end = int(form.when_end.value)
             location = item.locations.add(location)
 
-            for i in xrange(
-                int(self.POST.get("characteristics_highest_index"))+1):
-                if self.POST.get("char_attr_%s" % i) and \
-                   self.POST.get("char_val_%s" % i):
-                    attr = self.POST.get("char_attr_%s" % i).decode("utf-8")
-                    value = self.POST.get("char_val_%s" % i).decode("utf-8")
-                    char = self.db.find(LafChar,
-                                        LafChar.attr == attr,
-                                        LafChar.value == value).one()
-                    if not char:
-                        char = LafChar()
-                        char.attr = attr
-                        char.value = value
-                    self.db.add(char)
-                    item.characteristics.add(char)
+            if self.POST.get("characteristics_highest_index") != None:
+                for i in xrange(
+                    int(self.POST.get("characteristics_highest_index"))+1):
+                    if self.POST.get("char_attr_%s" % i) and \
+                       self.POST.get("char_val_%s" % i):
+                        attr = self.POST.get("char_attr_%s" % i).decode("utf-8")
+                        value = self.POST.get("char_val_%s" % i).decode("utf-8")
+                        char = self.db.find(LafChar,
+                                            LafChar.attr == attr,
+                                            LafChar.value == value).one()
+                        if not char:
+                            char = LafChar()
+                            char.attr = attr
+                            char.value = value
+                        self.db.add(char)
+                        item.characteristics.add(char)
 
             self.db.flush()
             self.db.commit()
@@ -81,7 +82,7 @@ class LafController(Controller):
                     return self.redirect("user", "register")
                 self.item = item
                 self.save(self.render("thanks", {"item": item}))
-                return
+                return True
         self.save(form.render(self.render("new_item", {"form": form})))
 
     def new_lost(self):
@@ -90,7 +91,7 @@ class LafController(Controller):
         form.setup(u"lost")
         return_ = self._new_item(form)
         if return_:
-            return return_
+            return self.redirect("quiz", {"group": self.item.group.name})
 
     def new_found(self):
         self.save("found", "form_mode")
@@ -104,10 +105,7 @@ class LafController(Controller):
         if "last_created_item_id" in self.session:
             self.session.unset("last_created_item_id")
         item = self.db.get(LafItem, id)
-        if item.kind == "found":
-            self.save(self.render("thanks_finder", {"item": item}))
-        else:
-            self.save(self.render("thanks_loser", {"item": item}))
+        self.save(self.render("thanks", {"item": item}))
 
     def thanks(self, id):
         item = self.db.get(LafItem, id)
@@ -129,11 +127,43 @@ class LafController(Controller):
             for char in item.characteristics:
                 chars.append({"id": char.id,
                               "attr": char.attr,
-                              "value": char.value})
+                              "value": char.value,
+                              "object": char})
         form = Form(self.route("quiz", {"group": group.name}))
         for char in chars:
-            setattr(form, char["attr"], Text(title=char["attr"]))
-            form.__order__.append(char["attr"])
+            if char["attr"] not in form.__order__:
+                setattr(form, char["attr"], Text(title=char["attr"]))
+                form.__order__.append(char["attr"])
+        form.__order__.append("submit")
+        form.submit = Button(title="Narrow down results")
         form.carbonize()
-        self.save(form.render())
-        self.save(self.render("quiz", {"characteristics": chars}))
+
+        if self.POST:
+            form.ingest(self.POST)
+        results = {}
+        for char in chars:
+            attr = char["attr"]
+            value = getattr(form, char["attr"]).value
+            print attr, value
+            if value:
+                chars_ = self.db.find(LafChar,
+                                      LafChar.attr == attr,
+                                      LafChar.value == value)
+                for char_ in chars_:
+                    for item in char_.items:
+                        if item.id not in results:
+                            results[item.id] = {"score": 0, "object": item}
+                        results[item.id]["score"] += 1
+
+        result_ids = [(r, results[r]["score"]) for r in results]
+        def sort_by_score(k):
+            return k[1]
+        sorted(result_ids, key=sort_by_score)
+        final_results = [results[r[0]]["object"] for r in result_ids]
+        self.save(form.render(), "form_content")
+        self.save(self.render("quiz", {"group": group,
+                                       "characteristics": chars,
+                                       "results": final_results}))
+
+    def welcome(self):
+        self.save(self.render("welcome"))

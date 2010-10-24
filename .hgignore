@@ -7,7 +7,6 @@ syntax: regexp
 main.py
 ^instlatte/
 ^libel/
-^.
 
 syntax: glob
 *.pyc

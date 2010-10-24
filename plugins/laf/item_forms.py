@@ -8,11 +8,11 @@ class NewItemForm(Form):
 
     mode = None
 
-    title = Text(title="Title", required=True)
     group = Text(title="What is it?", required=True)
     picture = File(title="Photo")
     where = Text(title="Where?")
     when = Text(title="When?")
+    title = Text(title="Title", required=True, description="Hello")
     submit = Button(title="Post it!")
 
     def setup(self, mode):

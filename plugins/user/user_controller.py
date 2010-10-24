@@ -36,7 +36,6 @@ class UserController(Controller):
                 redirect = {"redirect": None}
                 self.hook("user_register", {"user": user,
                                             "redirect": redirect})
-                
                 user.login(self.request)
                 self.hook("user_login", {"user": user})
                 if redirect["redirect"]:

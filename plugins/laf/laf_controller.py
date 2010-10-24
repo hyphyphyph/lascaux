@@ -14,6 +14,8 @@ from lascaux.model import LafItem, LafItemGroup, LafLocation, \
      WorkflowSet, Setting
 from .item_forms import NewItemForm
 
+from storm.locals import Select
+
 
 class LafController(Controller):
 
@@ -36,7 +38,8 @@ class LafController(Controller):
             item.kind = form.mode
             # If the user is already logged in, we can manage this straight away.
             if self.user:
-                setattr(item, "uuid_%s" % form.mode, self.user.uuid)
+                setattr(item, "uuid_%s" % (form.mode == "found" and "finder" or
+                                           "loser"), self.user.uuid)
                 item.workflow_state_id = workflowset.initial().next.id
             else:
                 item.workflow_state_id = workflowset.initial().id
@@ -64,6 +67,8 @@ class LafController(Controller):
                     self.session["last_created_item_id"] = item.id
                     return self.redirect("user", "register")
                 self.item = item
+                self.save(self.render("thanks", {"item": item}))
+                return
         self.save(form.render(self.render("new_item")))
 
     def new_lost(self):
@@ -83,7 +88,15 @@ class LafController(Controller):
     def post_register(self, id):
         if "last_created_item_id" in self.session:
             self.session.unset("last_created_item_id")
-        return "Thanks %s" % id
+        item = self.db.get(LafItem, id)
+        if item.kind == "found":
+            self.save(self.render("thanks_finder", {"item": item}))
+        else:
+            self.save(self.render("thanks_loser", {"item": item}))
+
+    def thanks(self, id):
+        item = self.db.get(LafItem, id)
+        self.save(self.render("thanks", {"item": item}))
 
     def ajax_get_groups(self, term):
         groups = self.db.find(LafItemGroup)
@@ -95,8 +108,9 @@ class LafController(Controller):
 
     def quiz(self, group):
         group = self.db.find(LafItemGroup, LafItemGroup.name == group).one()
+        items = group.items
         chars = []
-        for item in group.items:
+        for item in items:
             for char in item.characteristics:
                 chars.append({"id": char.id,
                               "attr": char.attr,

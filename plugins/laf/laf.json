@@ -5,7 +5,9 @@
         "i/lost": {"action": "new_lost"},
         "i/found": {"action": "new_found"},
 
-        "gee/thanks/{id:#}": {"action": "post_register"},
+        "thanks/{id:#}": {"action": "post_register"},
+        "thanks/loser/{id:#}": {"action": "thanks"},
+        "thanks/finder/{id:#}": {"action": "thanks"},
 
         "didyou/lose/a/{group:*}": {"action": "quiz"},
 

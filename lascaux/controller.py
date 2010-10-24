@@ -85,7 +85,7 @@ class Controller(SObject):
         if File:
             t = Template(filename=File, module_directory=os.path.join(
                 config.get_tmp(), "tmpl_cache"))
-            return t.render(**Data)
+            return t.render(**Data).decode("utf-8")
         return u""
 
     def route(self, Controller, Action=None, Args={}):

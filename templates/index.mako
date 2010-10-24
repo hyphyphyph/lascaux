@@ -25,14 +25,14 @@
                         <span>You are a...</span>
                         <ul>
                             % if form_mode == "lost":
-                                <li class="active"><a href="/i/lost" class="loser-form">Loser</a></li>
-                                <li><a href="/i/found" class="finder-form">Finder</a></li>
+                                <li class="active"><a href="/i/lost" class="loser-form">I'm a Loser</a></li>
+                                <li><a href="/i/found" class="finder-form">I'm a Finder</a></li>
                             % elif form_mode == "found":
-                                <li><a href="/i/lost" class="loser-form">Loser</a></li>
-                                <li class="active"><a href="/i/found" class="finder-form">Finder</a></li>
+                                <li><a href="/i/lost" class="loser-form">I'm a Loser</a></li>
+                                <li class="active"><a href="/i/found" class="finder-form">I'm a Finder</a></li>
                             % else:
-                                <li><a href="/i/lost" class="loser-form">Loser</a></li>
-                                <li><a href="/i/found" class="finder-form">Finder</a></li>
+                                <li><a href="/i/lost" class="loser-form">I'm a Loser</a></li>
+                                <li><a href="/i/found" class="finder-form">I'm a Finder</a></li>
                             % endif
                         </ul>
                     </div>

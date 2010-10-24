@@ -11,7 +11,7 @@ from petrified.widgets import *
 from lascaux import Controller
 
 from lascaux.model import LafItem, LafItemGroup, LafLocation, \
-     WorkflowSet, Setting
+     LafChar, WorkflowSet, Setting
 from .item_forms import NewItemForm
 
 
@@ -50,6 +50,22 @@ class LafController(Controller):
             location.date_start = int(form.when_start.value)
             location.date_end = int(form.when_end.value)
             location = item.locations.add(location)
+
+            for i in xrange(
+                int(self.POST.get("characteristics_highest_index"))+1):
+                if self.POST.get("char_attr_%s" % i) and \
+                   self.POST.get("char_val_%s" % i):
+                    attr = self.POST.get("char_attr_%s" % i).decode("utf-8")
+                    value = self.POST.get("char_val_%s" % i).decode("utf-8")
+                    char = self.db.find(LafChar,
+                                        LafChar.attr == attr,
+                                        LafChar.value == value).one()
+                    if not char:
+                        char = LafChar()
+                        char.attr = attr
+                        char.value = value
+                    self.db.add(char)
+                    item.characteristics.add(char)
 
             self.db.flush()
             self.db.commit()
@@ -119,5 +135,5 @@ class LafController(Controller):
             setattr(form, char["attr"], Text(title=char["attr"]))
             form.__order__.append(char["attr"])
         form.carbonize()
-        self.save(form.render(), "form_content")
+        self.save(form.render())
         self.save(self.render("quiz", {"characteristics": chars}))

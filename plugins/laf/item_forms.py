@@ -19,4 +19,4 @@ class NewItemForm(Form):
         self.group.title = self.mode == "found" and \
                            "What did you find?" or \
                            self.mode == "lost" and \
-                           "I lost..." or self.group.title
+                           "What did you lose?" or self.group.title

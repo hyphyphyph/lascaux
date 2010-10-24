@@ -73,6 +73,14 @@
 }
 
 
+.lostAndFoundForm #group_entry label {width: 200px; line-height: 48px;}
+.lostAndFoundForm #group_entry input {
+    width: 450px;
+    font-size: 20px;
+    line-height: 48px;
+    padding: 10px;
+}
+
 
 .lostAndFoundForm .map {
     float: left;

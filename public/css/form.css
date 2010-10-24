@@ -45,10 +45,9 @@
 
 .lostAndFoundForm .step-form { float: left; width: 850px; }
 .lostAndFoundForm h2 { font-size: 20px; font-weight: bold; line-height: 30px; height: 30px; margin-bottom: 10px;  }
+.lostAndFoundForm .widget { float: left; }
 .lostAndFoundForm .widget label, .lostAndFoundForm .widget input { float: left; }
-.lostAndFoundForm .widget + .widget {
-    xmargin-top: 10px;
-}
+.lostAndFoundForm .widget input { width: 520px; }
 
 .lostAndFoundForm label {
     line-height: 30px;
@@ -79,31 +78,54 @@
     font-size: 20px;
     line-height: 48px;
     padding: 10px;
+.lostAndFoundForm .where .errorLocating { display: none; }
+.lostAndFoundForm .where .error input { border-right: none; width: 490px; }
+.lostAndFoundForm .where .error .errorLocating { 
+    background: red;
+    border: 1px solid #837264;
+    color: white;
+    line-height: 28px;
+    text-align: center;
+    display: inline-block;
+    float: left;
+    height: 28px;
+    width: 30px;
 }
 
 
-.lostAndFoundForm .map {
+
+
+
+\.lostAndFoundForm .map {
+    border: 1px solid #837264;
     float: left;
+    height: 300px;
     margin: 10px 0 10px 140px;
     width: 550px;
 }
 .lostAndFoundForm .map img { border: 1px solid #837264; width: 100%; }
-.lostAndFoundForm .date { 
-    float: left; 
-    padding: 40px 20px;
-    margin: 0 0 0 120px;
-}
-.lostandfoundform .date p { font-weight: bold; }
+.lostAndFoundForm .date { float: left; }
+.lostAndFoundForm .date p { float: left; width: 140px; }
 .lostAndFoundForm .date .widget + .widget { margin-left: 10px; }
 .lostAndFoundForm .date .widget label { width: 50px; }
 .lostAndFoundForm .date .widget input { margin-left: 10px; width: 170px; }
 
 .lostAndFoundForm .char-set { clear: both; overflow: hidden; width: 850px; }
 .lostAndFoundForm .char-set + .char-set { margin-top: 10px; }
-.lostAndFoundForm .widget { float: left; }
-.lostAndFoundForm .widget input { width: 520px; }
+.lostAndFoundForm .char-set .widget input { width: 450px; }
 .lostAndFoundForm .char-set .widget + .widget input { margin-left: 10px; width: 240px; }
 .lostAndFoundForm .char-set label { display: none; }
 
-.lostAndFoundForm .help { float: left; width: 220px; }
-.lostAndFoundForm .help p { display: none; }
+.lostAndFoundForm .actions { float: left; margin-left: 10px; }
+.lostAndFoundForm .actions a { 
+    background: url(../images/sprite.png) no-repeat -30px 0;
+    text-indent: -9999px;
+    display: block;
+    float: left;
+    height: 30px;
+    width: 30px;
+}
+.lostAndFoundForm .actions .add { background-position: -30px -60px; }
+.lostAndFoundForm .actions .add:hover { background-position: -60px -60px; }
+.lostAndFoundForm .actions .delete { background-position: -30px 0; }
+.lostAndFoundForm .actions .delete:hover { background-position: -60px 0; }

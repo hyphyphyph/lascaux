@@ -12,7 +12,7 @@ class NewItemForm(Form):
     picture = File(title="Photo")
     where = Text(title="Where?")
     when = Text(title="When?")
-    title = Text(title="Title", required=True, description="Hello")
+    title = Text(title="Title", required=True)
     submit = Button(title="Post it!")
 
     def setup(self, mode):

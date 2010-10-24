@@ -14,13 +14,12 @@ from lascaux.session import SessionStore
 class JsonFileSessStore(SessionStore):
 
     def save(self, Session):
-        if Session:
-            if not os.path.isdir(config["session"]["store_path"]):
-                libel.mkdir(config["session"]["store_path"])
-            file = open(os.path.join(config["session"]["store_path"],
-                                     Session.uuid), "w+")
-            file.write(json.dumps(Session))
-            file.close()
+        if not os.path.isdir(config["session"]["store_path"]):
+            libel.mkdir(config["session"]["store_path"])
+        file = open(os.path.join(config["session"]["store_path"],
+                                 Session.uuid), "w+")
+        file.write(json.dumps(Session))
+        file.close()
 
     def load(self, Session):
         try:

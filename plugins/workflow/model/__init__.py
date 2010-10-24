@@ -31,6 +31,11 @@ class WorkflowSet(object):
                 ids.append(state)
         return states
 
+    def initial(self):
+        for state in self.states:
+            if state.initial:
+                return state
+
                 
 class WorkflowState(object):
 

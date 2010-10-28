@@ -1,0 +1,8 @@
+{
+    "title": "Setting",
+    "description": "General Settings Manager",
+    "routes": { 
+        "admin/settings": {"action": "index"},
+        "admin/settings/new": {"action": "new"}
+    }
+}

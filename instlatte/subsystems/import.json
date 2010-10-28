@@ -1,0 +1,6 @@
+{
+    "name": "import",
+    "title": "Import",
+    "description": "Subsystem that simply imports the plugin and makes it available.",
+    "package": "import"
+}

@@ -43,6 +43,10 @@ class Session(dict, SObject):
     def set(self, Key, Value):
         self[Value] = Value
 
+    def unset(self, key):
+        if key in self:
+            del self[key]
+
 
 class SessionStore(SObject):
 

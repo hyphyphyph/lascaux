@@ -32,11 +32,18 @@ class UserController(Controller):
                 user.created = int(time.time())
                 self.db.add(user)
                 self.db.flush()
+                self.db.commit()
+                redirect = {"redirect": None}
+                self.hook("user_register", {"user": user,
+                                            "redirect": redirect})
+                user.login(self.request)
+                self.hook("user_login", {"user": user})
+                if redirect["redirect"]:
+                    return redirect["redirect"]
                 self.save(self.render("register_success", {
                     "username": user.username,
                     "email": user.email
                 }))
-                return True
             else:
                 self.save(form.render(), "form")
         else:
@@ -70,6 +77,7 @@ class UserController(Controller):
         self.save(self.render("home"))
 
     def logout(self):
-        user = self.db.get(User, self.request.session["user_uuid"])
-        user.logout(self.request)
+        user = self.db.get(User, self.request.session.get("user_uuid"))
+        if user:
+            user.logout(self.request)
         return self.redirect("login")

@@ -4,11 +4,6 @@ syntax: regexp
 ^lib/
 ^include/
 ^tmp/
-main.py
-^public/
-^instlatte/
-^libel/
-^petrified/
 
 syntax: glob
 *.pyc

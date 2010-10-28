@@ -2,17 +2,9 @@
     "title": "Lascaux User Plugin",
     "description": "Contains basic stuff for user registration and login.",
     "routes": {
-        "register": {
-            "action": "register"
-        },
-        "login": {
-            "action": "login"
-        },
-        "logout": {
-            "action": "logout"
-        },
-        "user/home": {
-            "action": "home"
-        }
+        "register": {"action": "register"},
+        "login": {"action": "login"},
+        "logout": {"action": "logout"},
+        "user/home": {"action": "home"}
     }
 }

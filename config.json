@@ -1,3 +1,13 @@
 {
-    "apps": ["lascaux_app"]
+    "app_packages": ["lascaux_app"],
+    "subsystem_config": {
+        "plugin": {
+            "enabled": {
+                "workflow": false,
+                "lascaux": true,
+                "user": false,
+                "setting": false
+            }
+        }
+    }
 }

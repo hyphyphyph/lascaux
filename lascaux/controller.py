@@ -2,14 +2,14 @@ import os.path
 import weakref
 
 from crepehat import Kitchen
+import libel
 from mako.template import Template
 
-import libel
-
-from lascaux import SObject, Redirect
-from lascaux.config import config
-from lascaux.util import parse_route_to_regex
-from lascaux.helpers import get_resource
+from lascaux.sys import SObject
+from lascaux.locals import Redirect
+# from lascaux.config import config
+# from lascaux.util import parse_route_to_regex
+# from lascaux.helpers import get_resource
 
 
 class Controller(SObject):

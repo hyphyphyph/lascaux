@@ -26,25 +26,27 @@ class Manager(SObject):
     def __init__(self, config=dict()):
         self.subsystems = SelectionList(list())
         self.config = config or {"enabled": dict()}
+        if 'enabled' not in self.config:
+            self.config['enabled'] = {}
 
     def add_subsystem(self, package_dir, config=dict()):
         """
         Adds a subsystem to the manager.  Give the absolute directory
         of the Python package containing the subsytem.
         """
-        config = config or dict()
-        m = subsystem.MetaSubsystem(package_dir=package_dir,
-                                    config=config)
+        m = subsystem.MetaSubsystem(package_dir=package_dir)
+        c = config or self.config.get("subsystem_config", {}).get(m.name, [])
+        m.set_config(c)
         self.subsystems.append(m)
         logger.info(u"added subsystem '%s'" % m.name)
-        if m.name not in self.config["enabled"]:
+        if m.name not in self.config.get("enabled", []):
             self.enable_subsystem(m)
         else:
             if self.config["enabled"][m.name]:
                 logger.info(u"'%s' already enabled. Leaving alone." % m.name)
             else:
                 logger.info(u"'%s' forcefully disabled." % m.name)
-        
+
     def init(self):
         self.init_subsystems()
         self.init_subsystem_plugins()
@@ -58,7 +60,7 @@ class Manager(SObject):
         for subsystem in self.subsystems:
             if self.is_subsystem_enabled(subsystem):
                 subsystem.init_plugins()
-            
+
     def is_subsystem_enabled(self, subsystem):
         if not isinstance(subsystem, basestring):
             subsystem = subsystem.name
@@ -83,7 +85,7 @@ class Manager(SObject):
         """
         subsystem.load(manager=self)
 
-    def list_enabled_subsystems(self):
+    def get_enabled_subsystems_list(self):
         return [s for s in self.subsystems
                 if self.is_subsystem_enabled(s)]
 

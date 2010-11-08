@@ -39,8 +39,8 @@ class Task(object):
 
     def _get_plugins_by_name(self, name):
         plugins = list()
-        for subsystem in self._manager.list_enabled_subsystems():
-            for plugin in subsystem.list_enabled_plugins():
+        for subsystem in self._manager.get_enabled_subsystems_list():
+            for plugin in subsystem.get_enabled_plugins_list():
                 if plugin.name == name:
                     plugins.append(plugin)
         return plugins
@@ -56,8 +56,12 @@ class Task(object):
                     if not subsystem:
                         raise ValueError(
              u"Subsystem '%s' can't be found within the available subsystems.")
-                map(plugins.append, subsystem.list_enabled_plugins())
-                map(plugin_names.add, subsystem.list_enabled_plugin_names())
+                map(plugins.append, subsystem.get_enabled_plugins_list())
+                map(plugin_names.add, subsystem.get_enabled_plugin_names_list())
+        else:
+            for subsystem in self._manager.get_enabled_subsystems_list():
+                map(plugins.append, subsystem.get_enabled_plugins_list())
+                map(plugin_names.add, subsystem.get_enabled_plugin_names_list())
         if self._sel_plugins is not None:
             for plugin in self._sel_plugins:
                 if isinstance(plugin, basestring):

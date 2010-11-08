@@ -1,6 +1,0 @@
-{
-    "name": "lascaux_server",
-    "title": "Lascaux Server",
-    "description": "Lascaux server subsystem",
-    "package": "server"
-}

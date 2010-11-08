@@ -1,6 +1,0 @@
-{
-    "name": "lascaux_plugin",
-    "title": "Lascaux Plugin",
-    "description": "Lascaux plugin subsystem",
-    "package": "plugin"
-}

@@ -41,8 +41,10 @@ class MetaSubsystem(SObject):
     def __init__(self, package_dir, config=dict()):
         self.package_dir = package_dir
         self.name = os.path.basename(package_dir)
-        self.config = config or dict()
+        self.set_config(config)
 
+    def set_config(self, config):
+        self.config = config or dict()
         if "enabled" not in self.config:
             self.config["enabled"] = dict()
 
@@ -90,11 +92,11 @@ class MetaSubsystem(SObject):
                                  plugin.name)
         return status
 
-    def list_enabled_plugin_names(self):
+    def get_enabled_plugin_names_list(self):
         return [p.name for p in self.instance.plugins
                 if self.instance.is_plugin_enabled(p)]
 
-    def list_enabled_plugins(self):
+    def get_enabled_plugins_list(self):
         return [p for p in self.instance.plugins
                 if self.instance.is_plugin_enabled(p)]
 
@@ -103,7 +105,7 @@ class MetaSubsystem(SObject):
             return getattr(self.instance, u"task_%s" % command)(**args)
         else:
             return self.instance.execute_task(command, args, task)
-        
+
 
 class Subsystem(SObject):
 
@@ -162,7 +164,7 @@ class Subsystem(SObject):
             else:
                 logger.info(u"'%s' forcefully disabled" % plugin.name)
 
-    def init_plugin(self):
+    def init_plugin(self, plugin):
         """
         Should do the very minimal amount required to initialize a plugin.
         Generally, this would be loding config files and the like.
@@ -171,6 +173,6 @@ class Subsystem(SObject):
         Returns True for success, False for failure.
         """
         return True
-    
+
     def execute_task(self, command, args=dict(), task=None):
         pass

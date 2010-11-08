@@ -1,11 +1,7 @@
-import sys
-if __name__ == "__main__":
-    sys.path.append(".")
-import glob
+if __name__ == "__main__": import sys; sys.path.append(".")
 import unittest
 
-from lascaux.sobject import SObject
-from instlatte.manager import Manager
+import lascaux.config
 
 
 class TestManagerInit(unittest.TestCase):
@@ -19,4 +15,3 @@ class TestManagerInit(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

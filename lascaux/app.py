@@ -1,8 +1,10 @@
 import os.path
 
-import instlatte
-
 from lascaux.sobject import SObject
+from lascaux.logger import logger
+
+
+logger = logger(__name__)
 
 
 class App(SObject):
@@ -13,3 +15,6 @@ class App(SObject):
     def __init__(self, env):
         self.env = env
         self.self = self
+        logger.info(u"initialized main app instance %s" % id(self))
+
+        self.env.instlatte_manager.execute('init_system')

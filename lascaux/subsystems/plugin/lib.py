@@ -27,4 +27,7 @@ def get_plugin_dirs():
     return list(dirs)
 
 def get_plugin_names():
-    return map(os.path.basename, get_plugin_dirs())
+    return map(get_plugin_name, get_plugin_dirs())
+
+def get_plugin_name(plugin):
+    return os.path.basename(plugin)

@@ -3,9 +3,10 @@ import glob
 
 import instlatte
 
+from lascaux.subsystems.plugin.lib import get_plugin_dirs, get_plugin_name
+
 from lascaux.util import parse_config
 from lascaux.sys import logger
-import lascaux
 
 
 logger = logger(__name__)
@@ -14,15 +15,11 @@ logger = logger(__name__)
 class PluginSubsystem(instlatte.Subsystem):
 
     def discover_plugins(self):
-        for app in lascaux.app_packages:
-            path = os.path.join(os.path.dirname(app.__file__),
-                                'plugins', '*', '*.json')
-        for config_file in glob.glob(path):
-            name = os.path.splitext(os.path.basename(config_file))[0]
+        for dir_ in get_plugin_dirs():
             p = self.new_plugin(
-                name=name,
-                package_dir=os.path.dirname(config_file),
-                entry_module='%s_controller' % name)
+                name=get_plugin_name(dir_),
+                package_dir=dir_,
+                entry_module='%s_controller' % get_plugin_name(dir_))
             logger.info(u"%s: discovered plugin '%s'" % (self.meta.name, p.name))
             self.add_plugin(p)
 

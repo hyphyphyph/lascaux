@@ -57,14 +57,24 @@ class Manager(SObject):
             subsystem = self.get_subsystem(init_queue[0])
             if self.is_subsystem_enabled(subsystem):
                 init_queue.pop(0)
-                if not self.init_subsystem(subsystem):
+                def log_callback():
+                    logger.info(
+                    u"performing subsystem initialization for '%s'..." %
+                        subsystem.name)
+                if not self.init_subsystem(subsystem, log_callback):
                     init_queue.append(subsystem.name)
+                    logger.info(
+                    u"postponing subsystem initialization for '%s'" %
+                        subsystem.name)
+                else:
+                    logger.info(u"initialized subsystem '%s'" %
+                                subsystem.name)
 
-    def init_subsystem(self, subsystem):
+    def init_subsystem(self, subsystem, log_callback=None):
         """
         Instantiates the subsystem entry into the given MetaSubsystem.
         """
-        return subsystem.init(manager=self)
+        return subsystem.init(manager=self, log_callback=log_callback)
 
     def init_subsystem_plugins(self):
         for subsystem in self.subsystems:

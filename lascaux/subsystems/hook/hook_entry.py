@@ -7,16 +7,46 @@ import lascaux
 from lascaux.util import parse_config, SUPPORTED_CONFIG_EXTENSIONS
 from lascaux.hook import Hook
 from lascaux.sys import logger
-logger = logger(__name__)
 
 import instlatte
 
 
+logger = logger(__name__)
+
+
 class HookSubsystem(instlatte.Subsystem):
 
-    def discover_plugins(self):
+    def _get_hook_sources(self):
+        sources = list()
+        # TODO: I'd like MetaSubsystem to has a __getattr__ type override
+        #       that will echo through to the instance if appropriate.
+        for plugin in self.manager.get_subsystem('plugin').instance.get_plugins():
+            sources.append(plugin.package_dir)
+        for app in lascaux.app_packages:
+            sources.append(os.path.dirname(os.path.abspath(app.__file__)))
+        sources.append(lascaux.__lib_path__)
+        return [os.path.join(s, 'hooks') for s in sources]
+
+    def init(self, log_callback=None):
+        # Hooks come from plugins so we need the plugin subsystem
+        # to be initialized first.
         if not self.manager.is_subsystem_loaded('plugin'):
             return False
+        if log_callback:
+            log_callback()
+        return self.discover_plugins()
+
+    def discover_plugins(self):
+        for source in self._get_hook_sources():
+            for h in [h for h in glob.glob(os.path.join(source, '*.py'))
+                      if not os.path.basename(h).startswith('_')]:
+                name = os.path.basename(os.path.splitext(h)[0])
+                p = self.new_plugin(
+                    name=name,
+                    package_dir=os.path.dirname(h),
+                    entry_module=name)
+                self.add_plugin(p)
+                logger.info(u"discovered hook '%s'" % name)
         return True
 
     def get_sources(self):

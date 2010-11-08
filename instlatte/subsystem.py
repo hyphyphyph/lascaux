@@ -57,7 +57,7 @@ class MetaSubsystem(SObject):
     def _get_module_name(self, name):
         return u"%s_entry" % name
 
-    def init(self, manager=None):
+    def init(self, manager=None, log_callback=None):
         """
         Return True to signal removal from the init queue;
         return False to leave in the queue and try again later.
@@ -72,7 +72,7 @@ class MetaSubsystem(SObject):
             class_ = getattr(module, class_)
             instance = class_(meta=self, manager=manager)
             self.set_instance(instance)
-            if self.instance.discover_plugins():
+            if self.instance.init(log_callback):
                 logger.info(u"loaded subsystem '%s'", self.name)
                 self.is_loaded = True
             else:
@@ -124,6 +124,8 @@ class Subsystem(SObject):
         self.meta = weakref.proxy(meta)
         self.plugins = SelectionList(list())
 
+    def init(self, log_callback=None):
+        return self.discover_plugins()
 
     def discover_plugins(self):
         """
@@ -142,7 +144,7 @@ class Subsystem(SObject):
         if not isinstance(plugin, basestring):
             plugin = plugin.name
         self.meta.config["enabled"][plugin] = True
-        logger.info(u"enabled '%s'" % plugin)
+        logger.info(u"enabled %s plugin '%s'" % (self.__module__, plugin))
 
     def disable_plugin(self, plugin):
         if not isinstance(plugin, basestring):
@@ -157,6 +159,9 @@ class Subsystem(SObject):
         p.package_dir = package_dir
         p.entry_module = entry_module
         return p
+
+    def get_plugins(self):
+        return self.plugins
 
     def add_plugin(self, plugin):
         self.plugins.append(plugin)

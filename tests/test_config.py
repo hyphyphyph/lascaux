@@ -1,16 +1,13 @@
 if __name__ == "__main__": import sys; sys.path.append(".")
 import unittest
 
-import lascaux.config
+from lascaux.config import Config
 
 
 class TestManagerInit(unittest.TestCase):
 
-    def setUp(self):
-        pass
-
     def runTest(self):
-        pass
+        Config()
 
 
 if __name__ == "__main__":

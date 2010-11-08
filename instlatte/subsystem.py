@@ -57,7 +57,11 @@ class MetaSubsystem(SObject):
     def _get_module_name(self, name):
         return u"%s_entry" % name
 
-    def load(self, manager=None):
+    def init(self, manager=None):
+        """
+        Return True to signal removal from the init queue;
+        return False to leave in the queue and try again later.
+        """
         dot_path = self.determine_dot_path(self.package_dir)
         dot_path = '%s.%s' % (dot_path, self._get_module_name(self.name))
         module = __import__(dot_path)
@@ -68,16 +72,17 @@ class MetaSubsystem(SObject):
             class_ = getattr(module, class_)
             instance = class_(meta=self, manager=manager)
             self.set_instance(instance)
-            logger.info(u"loaded subsystem '%s'", self.name)
-            self.loaded = True
-            self.instance.discover_plugins()
-            return True
+            if self.instance.discover_plugins():
+                logger.info(u"loaded subsystem '%s'", self.name)
+                self.is_loaded = True
+            else:
+                return False
         except AttributeError as e:
             logger.error(u"%s'%s'  %s'%s'" % (u"could not load subsystem ",
                                               self.name,
                                               u"no class named ", class_))
             raise e
-        return False
+        return True
 
     def init_plugins(self):
         status = list()

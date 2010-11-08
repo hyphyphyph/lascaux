@@ -22,6 +22,7 @@ class PluginSubsystem(instlatte.Subsystem):
                 entry_module='%s_controller' % get_plugin_name(dir_))
             logger.info(u"%s: discovered plugin '%s'" % (self.meta.name, p.name))
             self.add_plugin(p)
+        return True
 
     def init_plugin(self, plugin):
         try:

@@ -86,7 +86,7 @@ class Task(object):
                 subsystems[plugin.subsystem.name] = plugin.subsystem
         returns = list()
         for subsystem in subsystems.values():
-            logger.info(u"asking subsystem %s to execute %s" %
+            logger.info(u"asking subsystem '%s' to execute %s" %
                         (subsystem.name, command))
             return_ = subsystem.execute_task(command=command, args=args, task=self)
             if return_:

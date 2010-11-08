@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 
 import os.path
@@ -52,19 +53,9 @@ class Manager(SObject):
         self.init_subsystem_plugins()
 
     def init_subsystems(self):
-        init_queue = [s.name for s in self.subsystems]
-        while init_queue:
-            subsystem = self.get_subsystem(init_queue[0])
+        for subsystem in self.subsystems:
             if self.is_subsystem_enabled(subsystem):
-                init_queue.pop(0)
-                if not self.init_subsystem(subsystem):
-                    init_queue.append(subsystem.name)
-
-    def init_subsystem(self, subsystem):
-        """
-        Instantiates the subsystem entry into the given MetaSubsystem.
-        """
-        return subsystem.init(manager=self)
+                self.load_subsystem(subsystem)
 
     def init_subsystem_plugins(self):
         for subsystem in self.subsystems:
@@ -88,6 +79,12 @@ class Manager(SObject):
             subsystem = subsystem.name
         self.config["enabled"][subsystem] = False
         logger.info(u"disabled %s" % subsystem)
+
+    def load_subsystem(self, subsystem):
+        """
+        Instantiates the subsystem entry into the given MetaSubsystem.
+        """
+        subsystem.load(manager=self)
 
     def get_enabled_subsystems_list(self):
         return [s for s in self.subsystems

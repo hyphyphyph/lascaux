@@ -14,6 +14,11 @@ import instlatte
 
 class HookSubsystem(instlatte.Subsystem):
 
+    def discover_plugins(self):
+        if not self.manager.is_subsystem_loaded('plugin'):
+            return False
+        return True
+
     def get_sources(self):
         sources = []
         obj = lascaux.SObject()

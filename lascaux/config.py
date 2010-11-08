@@ -17,8 +17,9 @@ logger = logger(__name__)
 class Config(dict, SObject):
     def __init__(self):
         self.m = instlattesetup.new_plugin_manager()
+        self.refresh()
 
-    def reload(self):
+    def refresh(self):
         sources = set()
         map(sources.add, [p.package_dir for p in
                          self.m.get_enabled_subsystems_list()[0]. \
@@ -54,6 +55,3 @@ class Config(dict, SObject):
 
     def get_tmp(self):
         return self["paths"]["tmp"]
-
-config = Config()
-config.reload()

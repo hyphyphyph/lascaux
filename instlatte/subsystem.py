@@ -59,7 +59,7 @@ class MetaSubsystem(SObject):
 
     def load(self, manager=None):
         dot_path = self.determine_dot_path(self.package_dir)
-        dot_path = u"%s.%s" % (dot_path, self._get_module_name(self.name))
+        dot_path = '%s.%s' % (dot_path, self._get_module_name(self.name))
         module = __import__(dot_path)
         for fragment in dot_path.split(".")[1:]:
             module = getattr(module, fragment)
@@ -156,7 +156,11 @@ class Subsystem(SObject):
     def add_plugin(self, plugin):
         self.plugins.append(plugin)
         if not plugin.name in self.meta.config["enabled"]:
-            self.enable_plugin(plugin)
+            if 'only_enabled' in self.meta.config and \
+               self.meta.config['only_enabled']:
+                self.disable_plugin(plugin)
+            else:
+                self.enable_plugin(plugin)
         else:
             if self.meta.config["enabled"][plugin.name]:
                 logger.info(u"'%s' already enabled. leaving alone" %

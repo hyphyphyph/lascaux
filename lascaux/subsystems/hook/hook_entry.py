@@ -6,13 +6,13 @@ from libel import sl
 import lascaux
 from lascaux.util import parse_config, SUPPORTED_CONFIG_EXTENSIONS
 from lascaux.hook import Hook
-from lascaux import logger
+from lascaux.sys import logger
 logger = logger(__name__)
 
 import instlatte
 
 
-class HookSubsystem(instlatte.SubSystem):
+class HookSubsystem(instlatte.Subsystem):
 
     def get_sources(self):
         sources = []

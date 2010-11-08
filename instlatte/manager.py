@@ -38,7 +38,7 @@ class Manager(SObject):
         c = config or self.config.get("subsystem_config", {}).get(m.name, [])
         m.set_config(c)
         self.subsystems.append(m)
-        logger.info(u"added subsystem '%s'" % m.name)
+        logger.info(u"[+] added subsystem '%s'" % m.name)
         if m.name not in self.config.get("enabled", []):
             self.enable_subsystem(m)
         else:
@@ -71,7 +71,7 @@ class Manager(SObject):
         if not isinstance(subsystem, basestring):
             subsystem = subsystem.name
         self.config["enabled"][subsystem] = True
-        logger.info(u"enabled %s" % subsystem)
+        logger.info(u"enabled subsystem '%s'" % subsystem)
 
     def disable_subsystem(self, subsystem):
         if not isinstance(subsystem, basestring):

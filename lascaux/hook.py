@@ -1,15 +1,13 @@
 import os.path
 
-from mako.template import Template
 import libel
 from crepehat import Kitchen
+from mako.template import Template
 
-from lascaux import config
-
-from lascaux import SObject
+# from lascaux.sys import SObject
 
 
-class Hook(SObject):
+class Hook(object):
 
     path = None
     controller = None

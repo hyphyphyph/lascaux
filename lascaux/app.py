@@ -17,4 +17,4 @@ class App(SObject):
         self.self = self
         logger.info(u"initialized main app instance %s" % id(self))
 
-        self.env.instlatte_manager.execute('init_system')
+        # self.env.instlatte_manager.execute('__load_enabled_plugins__')

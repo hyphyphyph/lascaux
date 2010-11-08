@@ -13,12 +13,14 @@ logger = logger(__name__)
 class Environment(SObject):
 
     app_packages = set()
+    config = None
 
-    def __init__(self):
+    def __init__(self, config=None):
         self.app_packages = set()
+        self.config = config or lascaux.__config__
 
     def init(self):
-        self.instlatte_manager = Manager(config=lascaux.__config__)
+        self.instlatte_manager = Manager(config=self.config)
         for ss in instlattesetup.get_subsystems_list():
             self.instlatte_manager.add_subsystem(ss)
         self.instlatte_manager.init()

@@ -52,3 +52,5 @@ class Config(dict):
 
     def get_tmp(self):
         return self["paths"]["tmp"]
+
+config = Config()

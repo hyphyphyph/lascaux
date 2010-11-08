@@ -3,6 +3,7 @@ import os.path
 import glob
 
 from instlatte import Manager
+from lascaux.config import config
 import lascaux
 
 
@@ -17,6 +18,7 @@ def get_subsystem_sources():
 
 
 def new_manager():
-    m = Manager(lascaux.__config__.get('instlatte', dict()))
+    m = Manager(config.get('instlatte', dict()))
+    map(m.add_subsystem, get_subsystem_sources())
     m.init()
     return m

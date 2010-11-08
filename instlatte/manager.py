@@ -35,7 +35,7 @@ class Manager(SObject):
         of the Python package containing the subsytem.
         """
         m = subsystem.MetaSubsystem(package_dir=package_dir)
-        c = config or self.config.get("subsystem_config", {}).get(m.name, [])
+        c = config or self.config.get("subsystems", {}).get(m.name, dict())
         m.set_config(c)
         self.subsystems.append(m)
         logger.info(u"[+] added subsystem '%s'" % m.name)

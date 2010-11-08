@@ -2,10 +2,9 @@ import weakref
 import mimetypes
 import os.path
 
-from libel import sl
+from lascaux.sys import SObject, logger
 
-from lascaux import SObject
-from lascaux import logger
+
 logger = logger(__name__)
 
 

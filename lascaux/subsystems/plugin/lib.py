@@ -7,9 +7,10 @@ import lascaux
 
 def is_plugin_enabled(plugin):
     try:
-        enabled = lascaux.__config__['subsystem_config'] \
+        enabled = lascaux.__config__['instlatte'] \
+                                    ['subsystems'] \
                                     ['plugin'] \
-                                    ['enabled'] \
+                                    ['enabled_plugins'] \
                                     [plugin]
     except:
         enabled = None

@@ -6,7 +6,7 @@ from instlatte import Manager
 import lascaux
 
 
-def get_subsystems_list():
+def get_subsystem_sources():
     subsystems = set()
     for dir_ in [os.path.join(lascaux.__lib_path__, 'subsystems')]:
         for f in [f for f in glob.glob(os.path.join(dir_, "*", "*.py"))
@@ -16,10 +16,7 @@ def get_subsystems_list():
     return list(subsystems)
 
 
-def new_plugin_manager():
-    m = Manager(lascaux.__config__)
-    p = os.path.join(lascaux.__lib_path__, 'subsystems', 'plugin')
-    if os.path.isdir(p):
-        m.add_subsystem(p)
+def new_manager():
+    m = Manager(lascaux.__config__.get('instlatte', dict()))
     m.init()
     return m

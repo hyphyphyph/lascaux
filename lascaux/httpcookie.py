@@ -4,23 +4,23 @@ try: # Python 3
 except: # Python 2
     import Cookie as http_cookies
 
-from lascaux import SObject
+from lascaux.sys import SObject
 
 
 class HTTPCookie(dict, SObject):
 
     request = None
 
-    def __init__(self, Request):
-        self.request = weakref.proxy(Request)
+    def __init__(self, request):
+        self.request = weakref.proxy(request)
 
-    def set(self, Key, Value):
-        self[str(Key)] = Value
+    def set(self, key, value):
+        self[str(key)] = value
 
-    def load(self, RAW):
-        if RAW:
+    def load(self, raw):
+        if raw:
             cookie = http_cookies.SimpleCookie()
-            cookie.load(RAW)
+            cookie.load(raw)
             for key in cookie:
                 self[key] = cookie[key].value
 

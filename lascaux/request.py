@@ -1,21 +1,28 @@
 import os.path
 import weakref
+import time
 
 from libel import sl
 
-from lascaux import SObject, config
+from lascaux.sys import SObject, logger, config
 from lascaux.httpheader import HTTPHeader
 from lascaux.httpcookie import HTTPCookie
-from lascaux.session import Session
+# from lascaux.session import Session
 
 from crepehat import Kitchen
 from mako.template import Template
 
 
+logger = logger(__name__)
+
+
 class Request(SObject):
 
+    _init_time = None
+    _close_time = None
+
     app = None
-    URI = None
+    uri = None
     headers = None
     cookies = None
     session = None
@@ -27,30 +34,32 @@ class Request(SObject):
     exec_plugin = None
     exec_route = None
     exec_args = None
-    POST = None
+    post = None
     config = None
 
-    def __init__(self, App, URI):
-        self.app = weakref.proxy(App)
-        self.URI = URI
+    def __init__(self, app, uri):
+        self._init_time = time.time()
+        self.app = weakref.proxy(app)
+        self.uri = uri
         self.headers = HTTPHeader(self)
         self.cookies = HTTPCookie(self)
-        self.session = Session(self)
-        self.content = {"content": [], "head_style": [], "head_script": []}
+        # self.session = Session(self)
+        self.content = dict(content=list(),
+                            head_style=list(),
+                            head_script=list())
         self.plain_content = ""
-        self.exec_args = {}
-        self.http_extra = {}
-        self.POST = {}
-        self.config = {
-            "cookie": {
-                "output_domain": True,
-                "output_path": True,
-                "http_only": True
-            }
-        }
+        self.exec_args = dict()
+        self.http_extra = dict()
+        self.post = dict()
+        self.config = dict(cookie=dict(output_domain=True,
+                                       output_path=True,
+                                       http_only=True))
 
     def close(self):
-        self.session.save()
+        self._close_time = time.time()
+        logger.info(u'%s milliseconds' % ((self._close_time -
+                                   self._init_time) * 1000))
+        # self.session.save()
         self.cookies.save()
 
     def get_content(self):
@@ -72,16 +81,16 @@ class Request(SObject):
             config.get_tmp(), "tmpl_cache"))
         return t.render(**self.get_content())
 
-    def save(self, Content, Name="content", plain=False):
+    def save(self, content, name="content", plain=False):
         if plain:
             if self.plain_content:
-                self.plain_content += Content
+                self.plain_content += content
             else:
-                self.plain_content = Content
+                self.plain_content = content
             return
-        if Name not in self.content:
-            self.content[Name] = []
-        self.content[Name].append(Content)
+        if name not in self.content:
+            self.content[name] = []
+        self.content[name].append(content)
 
     def set_content(self, content, plain=False):
         """
@@ -92,11 +101,11 @@ class Request(SObject):
         else:
             self.content = content
 
-    def redirect(self, Where, Code="302"):
+    def redirect(self, where, code="302"):
         pass
 
-    def set_http_code(self, Code):
-        self.http_status_code = Code
+    def set_http_code(self, code):
+        self.http_status_code = code
 
     def get_http_code(self):
         return str(self.http_status_code)
@@ -107,14 +116,14 @@ class Request(SObject):
             headers.append((header, str(self.headers[header])))
         return headers
 
-    def set_domain(self, Domain):
-        self.http_extra["domain"] = Domain
+    def set_domain(self, domain):
+        self.http_extra["domain"] = domain
 
     def get_domain(self):
         return self.http_extra.get("domain")
 
-    def get_route(self, Controller, Action, Args={}):
-        args = Args or {}
+    def get_route(self, controller, action, args=dict()):
+        args = args or dict()
         m = self.app.manager
         routes = m.execute(m.select("subsystem", sl.EQUALS("lascaux_router")),
                            "get_route", {"request": self,

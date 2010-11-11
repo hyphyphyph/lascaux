@@ -47,7 +47,6 @@ class MetaSubsystem(SObject):
 
     def set_config(self, config):
         self.config = config or dict()
-        print config
         if "enabled_plugins" not in self.config:
             self.config["enabled_plugins"] = dict()
 

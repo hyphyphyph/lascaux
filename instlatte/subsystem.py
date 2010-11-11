@@ -16,6 +16,8 @@ class MetaPlugin(object):
     package_dir = None
     entry_module = u"__init__"
     config = dict()
+    class_ = None
+    instance = None
 
     subsystem = None
 
@@ -90,10 +92,10 @@ class MetaSubsystem(SObject):
             if self.instance.is_plugin_enabled(plugin):
                 if self.instance.init_plugin(plugin):
                     status.append(True)
-                    logger.info(u"initialized plugin '%s'" % plugin.name)
+                    logger.info(u"[+] initialized plugin '%s'" % plugin.name)
                 else:
                     status.append(False)
-                    logger.error(u"failed to initialize plugin '%s'" %
+                    logger.error(u"[!] failed to initialize plugin '%s'" %
                                  plugin.name)
         return status
 

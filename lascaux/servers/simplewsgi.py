@@ -9,10 +9,13 @@ from wsgiref.simple_server import make_server
 import libel
 
 from lascaux.baseserver import BaseServer
-from lascaux import config, logger
+from lascaux.sys import logger
+
+#from lascaux.request import Request
+#from lascaux import config
+
+
 logger = logger(__name__)
-from lascaux.request import Request
-from lascaux import config
 
 
 class SimpleWSGIServer(BaseServer):

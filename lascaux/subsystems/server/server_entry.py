@@ -47,3 +47,8 @@ class ServerSubsystem(instlatte.Subsystem):
                 plugin.class_ = symbol
                 return True
         return False
+
+    def task_start_server(self, app):
+        server = self.meta.get_enabled_plugins_list()[0]
+        instance = server.class_()
+        instance.start(app)

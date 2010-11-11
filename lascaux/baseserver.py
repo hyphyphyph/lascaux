@@ -2,7 +2,7 @@ import weakref
 import mimetypes
 import os.path
 
-from lascaux.sys import SObject, logger
+from lascaux.sys import SObject, logger, config
 
 
 logger = logger(__name__)
@@ -12,36 +12,39 @@ class BaseServer(SObject):
 
     app = None
 
-    def init_server(self, App):
-        self.app = weakref.proxy(App)
+    def start(self, app):
+        self.app = weakref.proxy(app)
+        logger.info("started %s server on %s:%s  servering forever..." %
+                    (self.__class__,
+                     config["server"]["host"], config["server"]["port"]))
 
-    def handle_request(self, Request):
-        if self._get_static_path(Request.URI):
-            return self.handle_static_serve(Request)
-        elif self.app.find_route(Request):
-            if Request.flag_redirect:
-                return self.handle_redirect_serve(Request)
-            self.app.exec_route(Request)
-            if Request.flag_redirect:
-                return self.handle_redirect_serve(Request)
-            return Request
-        elif Request.flag_redirect:
-            return self.handle_redirect_serve(Request)
+    def handle_request(self, request):
+        if self._get_static_path(request.uri):
+            return self.handle_static_serve(request)
+        elif self.app.find_route(request):
+            if request.flag_redirect:
+                return self.handle_redirect_serve(request)
+            self.app.exec_route(request)
+            if request.flag_redirect:
+                return self.handle_redirect_serve(request)
+            return request
+        elif request.flag_redirect:
+            return self.handle_redirect_serve(request)
         else:
-            return self.handle_error_serve("404", Request)
+            return self.handle_error_serve("404", request)
 
-    def handle_static_serve(self, Request):
-        Request.simple_content = True
-        path = self._get_static_path(Request.URI)
+    def handle_static_serve(self, request):
+        request.simple_content = True
+        path = self._get_static_path(request.URI)
         if not path:
-            self.handle_serve_error("404", Request)
-        Request.headers.set("Content-type", mimetypes.guess_type(path)[0])
+            self.handle_serve_error("404", request)
+        request.headers.set("Content-type", mimetypes.guess_type(path)[0])
         file = open(path, "r")
         content = file.read()
         file.close()
-        Request.save(content, plain=True)
-        logger.info("Serving static file %s via %s" % (path, Request.URI))
-        return Request
+        request.save(content, plain=True)
+        logger.info("Serving static file %s via %s" % (path, request.URI))
+        return request
 
     def _get_static_path(self, URI):
         plugins = self.app.manager.select("subsystem",
@@ -64,11 +67,11 @@ class BaseServer(SObject):
                     return path
         return False
 
-    def handle_redirect_serve(self, Request):
-        return Request
+    def handle_redirect_serve(self, request):
+        return request
 
-    def handle_error_serve(self, Code, Request):
+    def handle_error_serve(self, Code, request):
         if Code == "404":
-            Request.set_http_code("404 NOT FOUND")
-            Request.save("Error 404, not found.")
-        return Request
+            request.set_http_code("404 NOT FOUND")
+            request.save("Error 404, not found.")
+        return request

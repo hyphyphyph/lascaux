@@ -12,29 +12,27 @@ from lascaux.baseserver import BaseServer
 from lascaux.sys import logger
 
 #from lascaux.request import Request
-#from lascaux import config
+from lascaux.sys import config
 
 
 logger = logger(__name__)
 
 
 class SimpleWSGIServer(BaseServer):
-    def init_server(self, App):
-        BaseServer.init_server(self, App)
+    def start(self, app):
+        BaseServer.start(self, app)
         # Silences standard output from simple_server
         class quiet_handler(wsgiref.simple_server.WSGIRequestHandler):
             def log_message(self, format, *args):
                 pass
         server = make_server(config["server"]["host"],
                              int(config["server"]["port"]),
-                             self,
-                             handler_class = quiet_handler)
-        logger.info("Started SimpleWSGI server on %s:%s. \
-                     Servering forever... (and ever and ever and ever)" % (
-            config["server"]["host"], config["server"]["port"]))
+                             self, handler_class=quiet_handler)
         server.serve_forever()
 
     def __call__(self, environ, start_response):
+        print "1234"
+        return
         return self.handle_request(environ=environ,
                             start_response=start_response)
 

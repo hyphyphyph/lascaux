@@ -1,37 +1,33 @@
-from lascaux.model import create_store
-from lascaux import SObject, Redirect
+from lascaux.sys import SObject
 
 
 class BaseRouter(SObject):
-    def __init__(self):
+
+    def find_route(self, app, request):
         pass
 
-    def find_route(self, App, Request):
-        pass
-
-    def exec_route(self, App, Request):
-        instance = Request.exec_plugin["__class__"](Request)
-        instance.db = create_store()
-        method = getattr(instance, Request.exec_route["action"])
-        App.hook("pre_exec", {"app": App,
-                              "request": Request,
+    def exec_route(self, app, request):
+        instance = request.exec_plugin["__class__"](request)
+        method = getattr(instance, request.exec_route["action"])
+        app.hook("pre_exec", {"app": app,
+                              "request": request,
                               "controller": instance,
-                              "method": Request.exec_route["action"],
-                              "args": Request.exec_args})
-        return_ = method(**Request.exec_args)
-        App.hook("post_exec", {"app": App,
-                              "request": Request,
+                              "method": request.exec_route["action"],
+                              "args": request.exec_args})
+        return_ = method(**request.exec_args)
+        app.hook("post_exec", {"app": app,
+                              "request": request,
                               "controller": instance,
-                              "method": Request.exec_route["action"],
-                              "args": Request.exec_args,
+                              "method": request.exec_route["action"],
+                              "args": request.exec_args,
                               "return_": return_})
         if isinstance(return_, Redirect):
-            Request.flag_redirect = True
-            Request.URI = return_.where or "/"
-            Request.set_http_code(return_.code)
-            Request.headers["Location"] = Request.URI
+            request.flag_redirect = True
+            request.URI = return_.where or "/"
+            request.set_http_code(return_.code)
+            request.headers["Location"] = request.URI
         elif isinstance(return_, basestring):
-            Request.set_content(return_, plain=True)
+            request.set_content(return_, plain=True)
         return return_
 
     def get_route(self, controller, action, args={}):

@@ -1,5 +1,0 @@
-{
-    "name": "lascaux_simple_router",
-    "title": "Simple Router",
-    "description": "Simple router without i18n and only uses *, # and $ wildcard matching."
-}

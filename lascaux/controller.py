@@ -35,13 +35,14 @@ class Controller(SObject):
             self.cookies = self.request.cookies
             self.session = self.request.session
 
-    def __get_static_dirs__(self):
+    @classmethod
+    def get_static_dirs(cls, meta):
         dirs = []
-        for dir in (["", "public"],
+        for dir_ in (["", "public"],
                     ["styles", "styles"],
                     ["scripts", "scripts"]):
-            dirs.append([os.path.join("plugins", self.name, dir[0]),
-                         os.path.join(self.path, dir[1])])
+            dirs.append([os.path.join("plugins", meta.name, dir_[0]),
+                         os.path.join(meta.package_dir, dir_[1])])
         return dirs
 
 

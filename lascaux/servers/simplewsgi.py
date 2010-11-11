@@ -34,7 +34,7 @@ class SimpleWSGIServer(BaseServer):
         return self.handle_request(environ=environ,
                                    start_response=start_response)
 
-    def process_request(self, environ, start_response):
+    def handle_request(self, environ, start_response):
         uri = environ.get("PATH_INFO")
         request = Request(self.app.get_root(), uri)
         request.cookies.load(environ.get("HTTP_COOKIE"))
@@ -61,10 +61,10 @@ class SimpleWSGIServer(BaseServer):
             request.POST = form_values
         else:
             request.POST = False
-        request = BaseServer.process_request(self, request)
+        request = BaseServer.handle_request(self, request)
         request.close()
         start_response(request.get_http_code(), request.get_http_headers())
         if request.flag_redirect:
             return [""]
         content = request.render()
-        return [content.encode('utf-8')]
+        return [content]

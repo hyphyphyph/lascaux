@@ -47,5 +47,18 @@ class RouterSubsystem(instlatte.Subsystem):
             if type(symbol) == type(BaseRouter) and \
                BaseRouter in symbol.__bases__:
                 plugin.class_ = symbol
+                plugin.instance = symbol()
                 return True
         return False
+
+    def task_find_route(self, app, request):
+        returns = list()
+        for plugin in self.meta.get_enabled_plugins_list():
+            returns.append(plugin.instance.find_route(app, request))
+        return True in returns
+
+    def task_exec_route(self, app, request):
+        for plugin in self.meta.get_enabled_plugins_list():
+            return_ = append(plugin.instance.exec_route(request))
+            if return_:
+                return return_

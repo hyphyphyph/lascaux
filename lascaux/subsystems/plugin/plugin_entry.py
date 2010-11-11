@@ -49,3 +49,6 @@ class PluginSubsystem(instlatte.Subsystem):
         plugin.class_ = class_
         plugin.class_.config = plugin.plugin_config
 
+    def task_get_static_dirs(self, dirs):
+        for plugin in self.meta.get_enabled_plugins_list():
+            dirs += plugin.class_.get_static_dirs(plugin)

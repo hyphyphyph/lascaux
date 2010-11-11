@@ -77,13 +77,13 @@ class Request(SObject):
         """
         if self.plain_content:
             return self.plain_content
-        dirs = [os.path.abspath(os.path.join(os.path.dirname(p.__file__)),
-                                'templates') for p in lascaux.app_packages]
+        dirs = [os.path.abspath(os.path.join(os.path.dirname(p.__file__),
+                                'templates')) for p in lascaux.app_packages]
         k = Kitchen(dirs, ['.mako'])
         file_ = k.get(self.render_template)
         t = Template(filename=file_, module_directory=os.path.join(
             config.get_tmp(), 'tmpl_cache'))
-        return t.render(**self.dump_content())
+        return t.render(**self.dump_content()).encode('utf-8')
 
     def save(self, content, name='content', plain=False):
         if plain:

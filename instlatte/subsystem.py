@@ -103,6 +103,7 @@ class MetaSubsystem(SObject):
         return [p.name for p in self.instance.plugins
                 if self.instance.is_plugin_enabled(p)]
 
+    # TODO: get rid of the _list in this and the above name
     def get_enabled_plugins_list(self):
         return [p for p in self.instance.plugins
                 if self.instance.is_plugin_enabled(p)]

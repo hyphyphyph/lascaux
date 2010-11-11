@@ -45,18 +45,6 @@ class Controller(SObject):
         return dirs
 
 
-    def save(self, Content, Name="content"):
-        if self.request:
-            if self.content:
-                for key in self.content:
-                    self.request.save(self.content[key], key)
-                self.content = {}
-            self.request.save(Content, Name)
-        else:
-            if Name not in self.content:
-                self.content[Name] = []
-            self.content[Name].append(Content)
-
     def get_template(self, Name, Dirs=None, Extensions=None):
         Dirs = Dirs or [os.path.join(self.get_exec_path(), "templates"),
                         os.path.join(self.path, "templates")]

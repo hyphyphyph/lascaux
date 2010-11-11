@@ -18,7 +18,7 @@ class BaseServer(SObject):
                     (self.__class__,
                      config["server"]["host"], config["server"]["port"]))
 
-    def handle_request(self, request):
+    def process_request(self, request):
         if self._get_static_path(request.uri):
             return self.handle_static_serve(request)
         elif self.app.find_route(request):

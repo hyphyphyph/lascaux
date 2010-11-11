@@ -4,6 +4,7 @@ import time
 
 from libel import sl
 
+import lascaux
 from lascaux.sys import SObject, logger, config
 from lascaux.httpheader import HTTPHeader
 from lascaux.httpcookie import HTTPCookie
@@ -28,6 +29,7 @@ class Request(SObject):
     session = None
     content = None
     plain_content = None
+    render_template = 'index'
     flag_redirect = None
     http_status_code = "202 SUCCESS"
     http_extra = None
@@ -58,30 +60,32 @@ class Request(SObject):
     def close(self):
         self._close_time = time.time()
         logger.info(u'%s milliseconds' % ((self._close_time -
-                                   self._init_time) * 1000))
+                                           self._init_time) * 1000))
         # self.session.save()
         self.cookies.save()
 
-    def get_content(self):
-        if self.plain_content:
-            return self.plain_content
-        content = {}
+    def dump_content(self):
+        content = dict()
         for key in self.content:
-            content[key] = u"\n".join(self.content[key])
+            content[key] = u'\n'.join(self.content[key])
         return content
 
-    def render_final(self):
+    def render(self):
+        """
+        returns a unicode of the request's content.  if not plain
+        content, it renders through the active main template.
+        """
         if self.plain_content:
             return self.plain_content
-        dirs = [os.path.join(self.get_exec_path(), "templates")]
-        k = Kitchen(dirs, [".mako"])
-        file = k.get("index")
+        dirs = [os.path.abspath(os.path.join(os.path.dirname(p.__file__)),
+                                'templates') for p in lascaux.app_packages]
+        k = Kitchen(dirs, ['.mako'])
+        file_ = k.get(self.render_template)
+        t = Template(filename=file_, module_directory=os.path.join(
+            config.get_tmp(), 'tmpl_cache'))
+        return t.render(**self.dump_content())
 
-        t = Template(filename=file, module_directory=os.path.join(
-            config.get_tmp(), "tmpl_cache"))
-        return t.render(**self.get_content())
-
-    def save(self, content, name="content", plain=False):
+    def save(self, content, name='content', plain=False):
         if plain:
             if self.plain_content:
                 self.plain_content += content

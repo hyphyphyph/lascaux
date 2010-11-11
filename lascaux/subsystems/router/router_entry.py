@@ -59,6 +59,6 @@ class RouterSubsystem(instlatte.Subsystem):
 
     def task_exec_route(self, app, request):
         for plugin in self.meta.get_enabled_plugins_list():
-            return_ = append(plugin.instance.exec_route(request))
+            return_ = plugin.instance.exec_route(app, request)
             if return_:
                 return return_

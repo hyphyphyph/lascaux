@@ -26,7 +26,9 @@ class PluginSubsystem(instlatte.Subsystem):
 
     def init_plugin(self, plugin):
         try:
-            parse_config(os.path.join(plugin.package_dir, '%s.json' % plugin.name))
+            config = parse_config(os.path.join(plugin.package_dir,
+                                               '%s.json' % plugin.name))
+            plugin.plugin_config = config
             return True
         except Exception, e:
             raise e
@@ -44,3 +46,6 @@ class PluginSubsystem(instlatte.Subsystem):
             module = getattr(module, fragment)
         class_name = '%sController' % plugin.name.title().replace('_', '')
         class_ = getattr(module, class_name)
+        plugin.class_ = class_
+        plugin.class_.config = plugin.plugin_config
+

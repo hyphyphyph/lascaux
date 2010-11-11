@@ -6,16 +6,18 @@ from lascaux.baserouter import BaseRouter
 
 class SimpleRouter(BaseRouter):
 
-    def find_route(self, App, Request):
-        plugins = App.manager.select("subsystem", sl.EQUALS("lascaux_plugin"))
+    def find_route(self, app, request):
+        plugins = app.manager.get_subsystem('plugin')
+        plugins = plugins.get_enabled_plugins_list()
         for plugin in plugins:
-            plugin_ = plugin["__class__"]
-            for route in plugin_.routes:
+            routes = plugin.plugin_config.get('routes', dict())
+            for route_name in routes:
+                route = routes[route_name]['simple']
                 regex = self._get_regex(route)
-                match = regex.match(Request.URI)
+                match = regex.match(request.uri)
                 if match:
-                    Request.exec_plugin = plugin
-                    Request.exec_route = plugin_.routes[route]
+                    request.exec_plugin = plugin
+                    request.exec_route = routes[route_name]
                     args = {}
                     for fragment in route.split("/"):
                         if fragment.startswith("{") and fragment.endswith("}"):
@@ -25,13 +27,13 @@ class SimpleRouter(BaseRouter):
                                                   [len(args)])
                             else:
                                 args[name] = unicode(match.groups()[len(args)])
-                    Request.exec_args = args
+                    request.exec_args = args
                     return True
         return False
 
-    def _get_regex(self, Route):
+    def _get_regex(self, route):
         regex_fragments = [""]
-        for fragment in Route.split("/"):
+        for fragment in route.split("/"):
             if fragment.startswith("{") and fragment.endswith("}"):
                 name, type = fragment[1:-1].split(":")
                 if type == "*":

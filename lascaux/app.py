@@ -17,6 +17,8 @@ class App(SObject):
         self.manager = new_manager()
         logger.info(u"initialized main app instance %s" % id(self))
         self.manager.execute('__load_enabled_plugins__')
+
+    def start(self):
         self.manager.execute('start_server', dict(app=self))
 
     def get_root(self):

@@ -2,16 +2,14 @@
     "title": "Lascaux Base Plugin",
     "description": "Contains examples of all basic functionality in Lascaux.",
     "routes": {
-        "lascaux_index":
+        "lascaux_index": {
             "simple": "lascaux/index",
             "description": "Example of a basic route (with i18n) mapping to a controller action.",
             "action": "home",
-            "i18n": {
-                "fr_CA": "lascaux/maison"
-            }
+            "i18n": {"fr_CA": "lascaux/maison"}
         },
         "lascaux_view": {
-            "simple": "lascaux/view/{id:#},
+            "simple": "lascaux/view/{id:#}",
             "description": "Something",
             "action": "view"
         }

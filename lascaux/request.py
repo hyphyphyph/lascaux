@@ -42,7 +42,7 @@ class Request(SObject):
     def __init__(self, app, uri):
         self._init_time = time.time()
         self.app = weakref.proxy(app)
-        self.uri = uri
+        self.uri = uri.startswith('/') and uri or u'/%s' % uri
         self.headers = HTTPHeader(self)
         self.cookies = HTTPCookie(self)
         # self.session = Session(self)

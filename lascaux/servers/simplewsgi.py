@@ -31,10 +31,8 @@ class SimpleWSGIServer(BaseServer):
         server.serve_forever()
 
     def __call__(self, environ, start_response):
-        print "1234"
-        return
         return self.handle_request(environ=environ,
-                            start_response=start_response)
+                                   start_response=start_response)
 
     def handle_request(self, environ, start_response):
         uri = environ.get("PATH_INFO")

@@ -47,8 +47,9 @@ class MetaSubsystem(SObject):
 
     def set_config(self, config):
         self.config = config or dict()
-        if "enabled" not in self.config:
-            self.config["enabled"] = dict()
+        print config
+        if "enabled_plugins" not in self.config:
+            self.config["enabled_plugins"] = dict()
 
     def set_instance(self, instance):
         self.instance = instance
@@ -139,19 +140,19 @@ class Subsystem(SObject):
     def is_plugin_enabled(self, plugin):
         if not isinstance(plugin, basestring):
             plugin = plugin.name
-        return plugin in self.meta.config["enabled"] and \
-               self.meta.config["enabled"][plugin] or False
+        return plugin in self.meta.config["enabled_plugins"] and \
+               self.meta.config["enabled_plugins"][plugin] or False
 
     def enable_plugin(self, plugin):
         if not isinstance(plugin, basestring):
             plugin = plugin.name
-        self.meta.config["enabled"][plugin] = True
+        self.meta.config["enabled_plugins"][plugin] = True
         logger.info(u"enabled %s plugin '%s'" % (self.__module__, plugin))
 
     def disable_plugin(self, plugin):
         if not isinstance(plugin, basestring):
             plugin = plugin.name
-        self.meta.config["enabled"][plugin] = False
+        self.meta.config["enabled_plugins"][plugin] = False
         logger.info(u"disabled '%s'" % plugin)
 
     def new_plugin(self, name, package_dir, entry_module=u"__init__"):
@@ -167,14 +168,14 @@ class Subsystem(SObject):
 
     def add_plugin(self, plugin):
         self.plugins.append(plugin)
-        if not plugin.name in self.meta.config["enabled"]:
+        if not plugin.name in self.meta.config["enabled_plugins"]:
             if 'only_enabled' in self.meta.config and \
                self.meta.config['only_enabled']:
                 self.disable_plugin(plugin)
             else:
                 self.enable_plugin(plugin)
         else:
-            if self.meta.config["enabled"][plugin.name]:
+            if self.meta.config["enabled_plugins"][plugin.name]:
                 logger.info(u"'%s' already enabled. leaving alone" %
                             plugin.name)
             else:

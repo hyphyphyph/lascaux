@@ -9,6 +9,11 @@
                     "user": false,
                     "setting": false
                 }
+            },
+            "server": {
+                "enabled_plugins": {
+                    "simplewsgi": true
+                }
             }
         }
     }

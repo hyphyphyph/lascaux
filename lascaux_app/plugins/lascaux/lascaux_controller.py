@@ -3,6 +3,9 @@ from lascaux.locals import Controller
 
 
 class LascauxController(Controller):
+    def home(self):
+        pass
+
     def view(self, id):
         pass
         # if self.POST:

@@ -4,7 +4,7 @@
         <title>Lascaux Framework</title>
     	<meta charset="utf-8" />
         <link rel="icon" type="image/x-icon" href="favicon.ico">
-        <link rel="stylesheet" type="text/css" href="/css/style.css" />
+        <link rel="stylesheet" type="text/css" href="/style.css" />
         ${head_style}
         ${head_script}
     </head>

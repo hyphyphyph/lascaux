@@ -17,7 +17,8 @@ class App(SObject):
         self.manager = new_manager()
         logger.info(u"initialized main app instance %s" % id(self))
         self.manager.execute('__load_enabled_plugins__')
-
+        self.hook('app_init', dict(message="Hello There"))
+        
     def start(self):
         self.manager.execute('start_server', dict(app=self))
 
@@ -26,3 +27,8 @@ class App(SObject):
         while self_ is not self.self:
             self_ = self.self
         return self_
+
+    def hook(self, hook, *argc, **argv):
+        return self.manager.execute('exec_hook', dict(hook=hook, app=self,
+                                                      argc=argc, argv=argv),
+                                    subsystems=['hook'])

@@ -23,12 +23,16 @@ class BaseServer(SObject):
                      config["server"]["host"], config["server"]["port"]))
 
     def handle_request(self, request):
+        logger.info(u'handling french request: %s' % id(request))
         request.static_path = self._get_static_path(request.uri)
         if request.static_path:
             return self.handle_static_serve(request)
         elif self.find_route(request):
             if request.flag_redirect:
                 return self.handle_redirect_serve(request)
+            logger.info(u"serving executable request %s -> %s.%s()" %
+                        (request.uri, request.exec_plugin.class_,
+                         request.exec_route['action']))
             self.exec_route(request)
             if request.flag_redirect:
                 return self.handle_redirect_serve(request)
@@ -36,6 +40,9 @@ class BaseServer(SObject):
         elif request.flag_redirect:
             return self.handle_redirect_serve(request)
         else:
+            # TODO: why is request.uri for favicon
+            #       /lascaux/favicon.ico instead of /favicon.ico ?
+            logger.info(u'serving 404 -> %s' % request.uri)
             return self.handle_error_serve("404", request)
 
     def find_route(self, request):

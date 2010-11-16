@@ -1,4 +1,4 @@
-from lascaux import Hook
+from lascaux.locals import Hook
 
 
 class Welcome(Hook):

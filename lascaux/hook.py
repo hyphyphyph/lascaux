@@ -1,24 +1,17 @@
+import weakref
 import os.path
 
 import libel
 from crepehat import Kitchen
 from mako.template import Template
 
-# from lascaux.sys import SObject
-
 
 class Hook(object):
 
-    path = None
-    controller = None
-    db = None
-    request = None
+    app = None
 
-    def __init__(self, request=None, controller=None):
-        self.request = request or None
-        self.controller = controller or None
-        if self.controller:
-            self.db = controller.db
+    def __init__(self, app):
+        self.app = weakref.proxy(app.get_root())
 
     def get_template(self, name, dirs=None, extensions=None):
         dirs = dirs or [os.path.join(self.get_exec_path(), "templates"),

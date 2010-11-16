@@ -39,9 +39,8 @@ class BaseServer(SObject):
             return self.handle_error_serve("404", request)
 
     def find_route(self, request):
-        return self.app.manager.execute('find_route', dict(app=self.app,
-                                                           request=request),
-                                        subsystems=['router'])
+        return True in self.app.manager.execute('find_route', dict(
+            app=self.app, request=request), subsystems=['router']) or False
 
     def exec_route(self, request):
         return self.app.manager.execute('exec_route', dict(app=self.app,

@@ -10,8 +10,14 @@ class LascauxController(Controller):
         self.request.session['greeting'] = u'Hello World'
         self.request.session['byebye'] = u'Bye!'
 
+    def new(self):
+        if self.POST:
+            print self.POST.get('name')
+            return
+        self.save(self.render('new'))
+
     def view(self, id):
-        pass
+        self.render()
         # if self.POST:
         #     store = create_store()
         #     user = User()
@@ -30,6 +36,3 @@ class LascauxController(Controller):
         #             </div>
         #         </form>
         #     """)
-
-    def form(self):
-        pass

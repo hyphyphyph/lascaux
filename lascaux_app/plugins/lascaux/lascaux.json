@@ -13,9 +13,9 @@
             "description": "Something",
             "action": "view"
         },
-        "lascaux_form": {
-            "simple": "lascaux/form",
-            "action": "form"
+        "lascaux_new": {
+            "simple": "lascaux/new",
+            "action": "new"
         }
     }
 }

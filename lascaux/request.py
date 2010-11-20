@@ -65,7 +65,7 @@ class Request(SObject):
 
     def dump_content(self):
         content = dict()
-        # TODO: Where should this go ?
+        # TODO: where should this go ?
         if config['debug'] and 'debug' not in self.content:
             self.content['debug'] = u''
         for key in self.content:

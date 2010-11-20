@@ -57,7 +57,8 @@ class SimpleWSGIServer(BaseServer):
                     form_values[name] = os.path.join(dir_, filename)
                 # anything "normal"
                 else:
-                    form_values[name] = form_data[name].value
+                    # TODO: should this be hard-coded ?
+                    form_values[name] = form_data[name].value.decode('utf-8')
             request.POST = form_values
         else:
             request.POST = False

@@ -5,9 +5,9 @@ from crepehat import Kitchen
 import libel
 from mako.template import Template
 
-from lascaux.sys import SObject
+import lascaux
+from lascaux.sys import SObject, config
 from lascaux.locals import Redirect
-# from lascaux.config import config
 # from lascaux.util import parse_route_to_regex
 # from lascaux.helpers import get_resource
 
@@ -24,16 +24,18 @@ class Controller(SObject):
     cookies = None
     session = None
 
-    def __init__(self, Request=None):
+    def __init__(self, request=None):
         self.content = ""
         self.POST = {}
         if not self.__class__.routes:
             self.__class__.routes = self.config["routes"]
-        if Request:
-            self.request = Request
+        if request:
+            self.request = request
             self.POST = self.request.POST
             self.cookies = self.request.cookies
             self.session = self.request.session
+            self.path = self.request.exec_plugin.package_dir
+            self.save = self.request.save
 
     @classmethod
     def get_static_dirs(cls, meta):
@@ -46,12 +48,13 @@ class Controller(SObject):
         return dirs
 
 
-    def get_template(self, Name, Dirs=None, Extensions=None):
-        Dirs = Dirs or [os.path.join(self.get_exec_path(), "templates"),
-                        os.path.join(self.path, "templates")]
-        Extensions = Extensions or [".mako"]
-        k = Kitchen(Dirs, Extensions)
-        return k.get(Name)
+    def get_template(self, name, dirs=None, extensions=None):
+        dirs = dirs or [os.path.join(os.path.dirname(a.__file__), 'templates')
+                        for a in lascaux.app_packages]
+        dirs.append(os.path.join(self.path, 'templates'))
+        extensions = extensions or ['.mako']
+        k = Kitchen(dirs, extensions)
+        return k.get(name)
 
     def get_js(self, Name):
         return self.get_template(Name, [os.path.join(self.get_exec_path(),
@@ -59,35 +62,34 @@ class Controller(SObject):
                                         os.path.join(self.path, "scripts")],
                                  [".js"])
 
-    def get_css(self, Name):
-        return self.get_template(Name, [os.path.join(self.get_exec_path(),
+    def get_css(self, name):
+        return self.get_template(name, [os.path.join(self.get_exec_path(),
                                                      "styles"),
                                         os.path.join(self.path, "styles")],
                                  [".css"])
 
-    def render(self, File, Data=None):
-        Data = Data or {}
-        Data["controller"] = self
-        libel.merge_dict(Data, self.request.get_content())
-        if not os.path.isfile(File):
-            File = self.get_template(File)
-        if File:
-            t = Template(filename=File, module_directory=os.path.join(
+    def render(self, file, data=None):
+        data = data or {}
+        data["controller"] = self
+        if not os.path.isfile(file):
+            file = self.get_template(file)
+        if file:
+            t = Template(filename=file, module_directory=os.path.join(
                 config.get_tmp(), "tmpl_cache"))
-            return t.render(**Data).decode("utf-8")
+            return t.render(**data).decode("utf-8")
         return u""
 
-    def route(self, Controller, Action=None, Args={}):
-        if type(Action) is dict or Action is None:
-            Args = Action
-            Action = Controller
-            Controller = self
-        if Controller is self:
-            Controller = self.name
-        return self.request.get_route(Controller, Action, Args)
+    def route(self, controller, action=None, args={}):
+        if type(action) is dict or action is None:
+            args = action
+            action = controller
+            controller = self
+        if controller is self:
+            controller = self.name
+        return self.request.get_route(controller, action, args)
 
-    def redirect(self, Controller, Action=None, Args={}):
-        return Redirect(self.route(Controller, Action, Args))
+    def redirect(self, controller, action=None, args={}):
+        return Redirect(self.route(controller, action, args))
 
     def hook(self, hook, data={}):
         return self.request.hook(hook, data, self)

@@ -1,0 +1,1 @@
+instlatte.task.Task.execute() should return a dict, not a list

@@ -54,7 +54,7 @@ class MetaSubsystem(SObject):
         self.instance = instance
 
     def _get_class_name(self, name):
-        return u"%sSubsystem" % name.replace("_", "").title()
+        return u"%sSubsystem" % name.title().replace("_", "")
 
     def _get_module_name(self, name):
         return u"%s_entry" % name

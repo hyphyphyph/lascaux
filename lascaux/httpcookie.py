@@ -22,7 +22,12 @@ class HTTPCookie(dict, SObject):
             cookie = http_cookies.SimpleCookie()
             cookie.load(raw)
             for key in cookie:
-                self[key] = cookie[key].value
+                self[key] = self._clean_value(cookie[key].value)
+
+    def _clean_value(self, value):
+        if value in ('None'):
+            return None
+        return value
 
     def save(self):
         if self:

@@ -18,7 +18,7 @@ class App(SObject):
         logger.info(u"initialized main app instance %s" % id(self))
         self.manager.execute('__load_enabled_plugins__')
         self.hook('app_init', dict(message="Hello There"))
-        
+
     def start(self):
         self.manager.execute('start_server', dict(app=self))
 

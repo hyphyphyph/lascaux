@@ -12,6 +12,10 @@
             "simple": "lascaux/view/{id:#}",
             "description": "Something",
             "action": "view"
+        },
+        "lascaux_form": {
+            "simple": "lascaux/form",
+            "action": "form"
         }
     }
 }

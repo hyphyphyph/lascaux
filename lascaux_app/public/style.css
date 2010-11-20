@@ -1,3 +1,55 @@
 body {
     background: #fff;
+    margin: 0;
 }
+
+.lascaux {font-family: verdana;}
+.lascaux.debug-panel {
+    position: absolute;
+    left: 0; bottom: 0;
+    width: 100%;
+}
+.lascaux.debug-panel .header {
+    background: #eee;
+    background: -webkit-gradient(linear, left top, left bottom, from(#eee), to(#ddd));
+    border-top: 2px solid rgba(0, 0, 0, 0.15);
+    border-bottom: 1px solid #ccc;
+    padding: 8px;
+    overflow: hidden;
+    -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
+}
+.lascaux.debug-panel.expanded .header {
+    -webkit-box-shadow: 0 0 64px rgba(0, 0, 0, 0.25);
+}
+.lascaux.debug-panel .header h2 {
+    margin: 0 8px 0 0;
+    font-size: 12px;
+    color: #39ace6;
+    float: left;
+    text-shadow: 0 1px 0 #fff;
+}
+.lascaux.debug-panel .header .actions {float: left;}
+.lascaux.debug-panel .header .actions ul {
+    list-style-type: none;
+    margin: 0; padding: 0;
+}
+.lascaux.debug-panel .header .actions li {
+    font-size: 10px;
+    line-height: 16px;
+    cursor: pointer;
+}
+.lascaux.debug-panel .header .actions li:before {content: '['}
+.lascaux.debug-panel .header .actions li:after {content: ']'}
+.lascaux.debug-panel .header .actions .hide {display: none;}
+.lascaux.debug-panel.expanded .header .actions .show {display: none;}
+.lascaux.debug-panel.expanded .header .actions .hide {display: inline;}
+.lascaux.debug-panel .body {
+    position: relative;
+    z-index: 1;
+    font-family: monospace;
+    padding: 16px;
+    background: #fff;
+    display: none;
+    white-space: pre;
+}
+.lascaux.debug-panel.expanded .body {display: block;}

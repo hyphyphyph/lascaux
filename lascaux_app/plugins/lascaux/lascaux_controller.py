@@ -4,7 +4,11 @@ from lascaux.locals import Controller
 
 class LascauxController(Controller):
     def home(self):
-        pass
+        # writing data to a cookie is easy
+        self.request.cookies['remember_my_name'] = True
+        # let's save some things to session
+        self.request.session['greeting'] = u'Hello World'
+        self.request.session['byebye'] = u'Bye!'
 
     def view(self, id):
         pass
@@ -26,3 +30,6 @@ class LascauxController(Controller):
         #             </div>
         #         </form>
         #     """)
+
+    def form(self):
+        pass

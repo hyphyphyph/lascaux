@@ -115,7 +115,10 @@ class Manager(SObject):
                 return subsystem
         return False
 
-    def execute(self, command, args=dict(), plugins=list(), subsystems=list()):
+    def execute(self, command, args=dict(), plugin=None, plugins=list(),
+                subsystem=None, subsystems=list()):
         args = args or dict()
+        plugins = plugin and [plugin] or plugins
+        subsystems = subsystem and [subsystem] or subsystems
         task = Task(plugins=plugins, subsystems=subsystems, manager=self)
         return task.execute(command, args)

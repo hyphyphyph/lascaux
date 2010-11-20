@@ -2,6 +2,8 @@
     "title": "Lascaux Framework",
     "version": "2.0",
 
+    "debug": true,
+
     "server": {
         "server": "simplewsgi",
         "host": "0.0.0.0",
@@ -25,5 +27,10 @@
     "security": {
         "salt": "salt",
         "pepper": "pepper"
+    },
+    "cookie": {
+        "output_domain": true,
+        "output_path": true,
+        "http_only": true
     }
 }

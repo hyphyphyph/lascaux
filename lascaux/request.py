@@ -8,7 +8,7 @@ import lascaux
 from lascaux.sys import SObject, logger, config
 from lascaux.httpheader import HTTPHeader
 from lascaux.httpcookie import HTTPCookie
-# from lascaux.session import Session
+from lascaux.session import Session
 
 from crepehat import Kitchen
 from mako.template import Template
@@ -45,7 +45,7 @@ class Request(SObject):
         self.uri = uri.startswith('/') and uri or u'/%s' % uri
         self.headers = HTTPHeader(self)
         self.cookies = HTTPCookie(self)
-        # self.session = Session(self)
+        self.session = Session(self)
         self.content = dict(content=list(),
                             head_style=list(),
                             head_script=list())
@@ -53,20 +53,24 @@ class Request(SObject):
         self.exec_args = dict()
         self.http_extra = dict()
         self.post = dict()
-        self.config = dict(cookie=dict(output_domain=True,
-                                       output_path=True,
-                                       http_only=True))
+        self.config = config
 
     def close(self):
         self._close_time = time.time()
         logger.info(u'%s milliseconds' % ((self._close_time -
                                            self._init_time) * 1000))
-        # self.session.save()
+        self.session.save()
         self.cookies.save()
+        self.hook('request_close')
 
     def dump_content(self):
         content = dict()
+        # TODO: Where should this go ?
+        if config['debug'] and 'debug' not in self.content:
+            self.content['debug'] = u''
         for key in self.content:
+            if key == 'debug' and not config['debug']:
+                pass
             content[key] = u'\n'.join(self.content[key])
         return content
 
@@ -98,12 +102,15 @@ class Request(SObject):
 
     def set_content(self, content, plain=False):
         """
-        Pretty low-level...  Gotta say, dude.
+        pretty low-level...  Gotta say, dude.
         """
         if plain:
             self.plain_content = content
         else:
             self.content = content
+
+    def debug(self, title, content):
+        self.save(u'%s: %s' % (title, content), name='debug')
 
     def redirect(self, where, code="302"):
         pass
@@ -138,5 +145,7 @@ class Request(SObject):
     def route(self, controller, action, args={}):
         return self.get_route(controller, action, args)
 
-    def hook(self, hook, data={}, controller=None):
-        return self.app.hook(hook, data, controller=controller, request=self)
+    def hook(self, hook, *argc, **argv):
+        if 'request' not in argv:
+            argv['request'] = self
+        return self.app.hook(hook, *argc, **argv)

@@ -107,6 +107,7 @@ class MetaSubsystem(SObject):
     def get_enabled_plugins_list(self):
         return [p for p in self.instance.plugins
                 if self.instance.is_plugin_enabled(p)]
+    get_enabled_plugins = get_enabled_plugins_list
 
     def execute_task(self, command, args=dict(), task=None):
         if hasattr(self.instance, u"task_%s" % command):

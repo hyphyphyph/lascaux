@@ -4,6 +4,7 @@ syntax: regexp
 ^lib/
 ^include/
 ^tmp/
+^braaains/
 
 syntax: glob
 *.pyc

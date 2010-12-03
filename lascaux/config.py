@@ -19,10 +19,11 @@ class Config(dict):
 
     def refresh(self):
         sources = list()
-        map(sources.append, [os.path.abspath(os.path.dirname(p.__file__))
-                             for p in lascaux.app_packages])
-        map(sources.append, get_plugin_dirs())
+        sources.extend([os.path.abspath(os.path.dirname(p.__file__))
+                        for p in lascaux.app_packages])
+        sources.extend(get_plugin_dirs())
         sources.append(lascaux.__lib_path__)
+        sources.reverse()
         merge_dict(lascaux.__config__, self)
         for source in sources:
             for c in glob.glob(os.path.join(source, 'config', '*.*')):

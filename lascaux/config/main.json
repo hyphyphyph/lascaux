@@ -28,6 +28,7 @@
         "salt": "salt",
         "pepper": "pepper"
     },
+
     "cookie": {
         "output_domain": true,
         "output_path": true,

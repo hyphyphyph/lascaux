@@ -1,3 +1,7 @@
+if __name__ == "__main__":
+    import sys
+    sys.path.append('.')
+
 import os.path
 import glob
 
@@ -6,14 +10,8 @@ from lascaux.sys import SObject
 from lascaux.lib.instlatte_setup import new_manager
 
 
-__manager__ = None
-
-
 def get_manager():
-    global __manager__
-    if not __manager__:
-        __manager__ = new_manager()
-    return __manager__
+    return new_manager()
 
 
 def get_sources(package):
@@ -53,5 +51,6 @@ def setup_models(models):
     return models[1]
 
 
-def setup(package):
-    return setup_models(get_models(get_sources(package)))
+for app in lascaux.app_packages:
+    for model in setup_models(get_models(get_sources(app))):
+        globals()[model.__name__] = model

@@ -1,5 +1,5 @@
 {
-    "app_packages": ["lascaux_app"],
+    "app_packages": ["lascaux_app", "braaains"],
     "instlatte": {
         "subsystems": {
             "plugin": {

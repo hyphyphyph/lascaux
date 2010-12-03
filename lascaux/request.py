@@ -5,13 +5,14 @@ import time
 from libel import sl
 
 import lascaux
-from lascaux.sys import SObject, logger, config
+from lascaux.sys import SObject, logger
 from lascaux.httpheader import HTTPHeader
 from lascaux.httpcookie import HTTPCookie
 from lascaux.session import Session
 
 from crepehat import Kitchen
 from mako.template import Template
+from storm.locals import create_database, Store
 
 
 logger = logger(__name__)
@@ -39,6 +40,8 @@ class Request(SObject):
     post = None
     config = None
 
+    _db_store = None
+
     def __init__(self, app, uri):
         self._init_time = time.time()
         self.app = weakref.proxy(app)
@@ -53,7 +56,7 @@ class Request(SObject):
         self.exec_args = dict()
         self.http_extra = dict()
         self.post = dict()
-        self.config = config
+        self.config = app.config
 
     def close(self):
         self._close_time = time.time()
@@ -66,10 +69,10 @@ class Request(SObject):
     def dump_content(self):
         content = dict()
         # TODO: where should this go ?
-        if config['debug'] and 'debug' not in self.content:
+        if self.config['debug'] and 'debug' not in self.content:
             self.content['debug'] = u''
         for key in self.content:
-            if key == 'debug' and not config['debug']:
+            if key == 'debug' and not self.config['debug']:
                 pass
             content[key] = u'\n'.join(self.content[key])
         return content
@@ -86,7 +89,7 @@ class Request(SObject):
         k = Kitchen(dirs, ['.mako'])
         file_ = k.get(self.render_template)
         t = Template(filename=file_, module_directory=os.path.join(
-            config.get_tmp(), 'tmpl_cache'))
+            self.config.get_tmp(), 'tmpl_cache'))
         return t.render(**self.dump_content()).encode('utf-8')
 
     def save(self, content, name='content', plain=False):
@@ -149,3 +152,18 @@ class Request(SObject):
         if 'request' not in argv:
             argv['request'] = self
         return self.app.hook(hook, *argc, **argv)
+
+    def _init_db_store(self):
+        if not self._db_store:
+            c = self.config
+            db = create_database("%s://%s:%s@%s%s/%s" %
+                                 (c["database"]["interface"],
+                                  c["database"]["username"],
+                                  c["database"]["password"],
+                                  c["database"]["host"],
+                                  c["database"]["port"] and \
+                                  ":%s" % c["database"]["port"] or "",
+                                  c["database"]["database"]))
+            self._db_store = Store(db)
+        return self._db_store
+    db = property(_init_db_store)

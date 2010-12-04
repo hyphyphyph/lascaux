@@ -1,5 +1,5 @@
 from lascaux.locals import Controller
-from lascaux_app.model import store, LascauxApp
+from lascaux.model import *
 
 
 class LascauxController(Controller):

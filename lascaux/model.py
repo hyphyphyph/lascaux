@@ -53,4 +53,5 @@ def setup_models(models):
 
 for app in lascaux.app_packages:
     for model in setup_models(get_models(get_sources(app))):
-        globals()[model.__name__] = model
+        if hasattr(model, '__export_to_model__') and model.__export_to_model__:
+            globals()[model.__name__] = model

@@ -53,7 +53,7 @@ class BaseServer(SObject):
         return self.app.manager.execute('exec_route', dict(app=self.app,
                                                            request=request),
                                         subsystems=['router'])
-        
+
     def handle_static_serve(self, request):
         request.simple_content = True
         if not request.static_path:
@@ -72,8 +72,8 @@ class BaseServer(SObject):
 
     def _get_static_path(self, uri):
         dirs = list()
-        for dir_ in (["", "public"], 
-                    ["styles", "styles"], 
+        for dir_ in (["", "public"],
+                    ["styles", "styles"],
                     ["scripts", "scripts"]):
             for app in lascaux.app_packages:
                 dirs.append([dir_[0], os.path.abspath(os.path.join(
@@ -88,6 +88,7 @@ class BaseServer(SObject):
                 uri_ = uri[len(dir_[0]):]
                 path = os.path.join(dir_[1], *filter(lambda s: s,
                                                      uri_.split("/")))
+                print path
                 if os.path.isfile(path):
                     return path
         return False

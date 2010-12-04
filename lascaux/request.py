@@ -5,7 +5,7 @@ import time
 from libel import sl
 
 import lascaux
-from lascaux.sys import SObject, logger
+from lascaux.sys import SObject, logger, config
 from lascaux.httpheader import HTTPHeader
 from lascaux.httpcookie import HTTPCookie
 from lascaux.session import Session
@@ -53,10 +53,10 @@ class Request(SObject):
                             head_style=list(),
                             head_script=list())
         self.plain_content = ""
+        self.force_plain_content = None
         self.exec_args = dict()
         self.http_extra = dict()
         self.post = dict()
-        self.config = app.config
 
     def close(self):
         self._close_time = time.time()
@@ -69,10 +69,10 @@ class Request(SObject):
     def dump_content(self):
         content = dict()
         # TODO: where should this go ?
-        if self.config['debug'] and 'debug' not in self.content:
+        if config['debug'] and 'debug' not in self.content:
             self.content['debug'] = u''
         for key in self.content:
-            if key == 'debug' and not self.config['debug']:
+            if key == 'debug' and not config['debug']:
                 pass
             content[key] = u'\n'.join(self.content[key])
         return content
@@ -82,18 +82,22 @@ class Request(SObject):
         returns a unicode of the request's content.  if not plain
         content, it renders through the active main template.
         """
-        if self.plain_content:
+        if self.force_plain_content or self.plain_content:
             return self.plain_content
         dirs = [os.path.abspath(os.path.join(os.path.dirname(p.__file__),
                                 'templates')) for p in lascaux.app_packages]
         k = Kitchen(dirs, ['.mako'])
         file_ = k.get(self.render_template)
         t = Template(filename=file_, module_directory=os.path.join(
-            self.config.get_tmp(), 'tmpl_cache'))
+            config.get_tmp(), 'tmpl_cache'))
         return t.render(**self.dump_content()).encode('utf-8')
 
-    def save(self, content, name='content', plain=False):
+    def save(self, content, name='content', plain=False, force_plain=True):
         if plain:
+            if force_plain in (True, False) and \
+               self.force_plain_content == None:
+                self.force_plain_content = True
+            self.force_plain_content = True
             if self.plain_content:
                 self.plain_content += content
             else:
@@ -155,15 +159,14 @@ class Request(SObject):
 
     def _init_db_store(self):
         if not self._db_store:
-            c = self.config
             db = create_database("%s://%s:%s@%s%s/%s" %
-                                 (c["database"]["interface"],
-                                  c["database"]["username"],
-                                  c["database"]["password"],
-                                  c["database"]["host"],
-                                  c["database"]["port"] and \
+                                 (config["database"]["interface"],
+                                  config["database"]["username"],
+                                  config["database"]["password"],
+                                  config["database"]["host"],
+                                  config["database"]["port"] and \
                                   ":%s" % c["database"]["port"] or "",
-                                  c["database"]["database"]))
+                                  config["database"]["database"]))
             self._db_store = Store(db)
         return self._db_store
     db = property(_init_db_store)

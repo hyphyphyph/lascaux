@@ -73,8 +73,12 @@ class Form(WidgetMirror):
     def check_validates(self):
         return True
 
+    def render(self):
+        pass
+
     def __str__(self):
-        # TODO: find the file
-        t = Template(filename=file_, module_directory=os.path.join(
-            config.get_tmp(), 'tmpl_cache'))
-        rendered = t.render(form=self, widgets=form.widgets).encode('utf-8')
+        # # TODO: find the file
+        # t = Template(filename=file_, module_directory=os.path.join(
+        #     config.get_tmp(), 'tmpl_cache'))
+        # rendered = t.render(form=self, widgets=form.widgets).encode('utf-8')
+        return unicode(self.name)

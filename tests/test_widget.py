@@ -23,6 +23,13 @@ class TestWidget(unittest.TestCase):
         widget.validate()
         self.assertEqual(widget.value, u'')
         self.assertTrue(widget.error)
+
+    def test_render(self):
+        widget = Widget(name='first_name')
+        self.assertEqual(widget.render(),
+                         '<input type="hidden" name="first_name" />')
+        self.assertEqual(unicode(widget),
+                         '<input type="hidden" name="first_name" />')
         
 
 if __name__ == "__main__":

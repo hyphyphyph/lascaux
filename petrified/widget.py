@@ -66,5 +66,9 @@ class Widget(WidgetMirror):
             self.error = True
         return self.error
 
-    def __str__(self):
+    def render(self):
         self._rendered = True
+        return u'<input type="hidden" name="%s" />' % self.name
+
+    def __str__(self):
+        return self.render()

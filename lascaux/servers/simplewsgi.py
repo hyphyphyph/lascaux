@@ -11,7 +11,7 @@ import libel
 from lascaux.baseserver import BaseServer
 from lascaux.sys import logger
 
-from lascaux.request import Request
+from lascaux.request import Request, MakoRenderer
 from lascaux.sys import config
 
 
@@ -19,12 +19,15 @@ logger = logger(__name__)
 
 
 class SimpleWSGIServer(BaseServer):
+
     def start(self, app):
         BaseServer.start(self, app)
+
         # Silences standard output from simple_server
         class quiet_handler(wsgiref.simple_server.WSGIRequestHandler):
             def log_message(self, format, *args):
                 pass
+
         server = make_server(config["server"]["host"],
                              int(config["server"]["port"]),
                              self, handler_class=quiet_handler)
@@ -47,7 +50,7 @@ class SimpleWSGIServer(BaseServer):
         start_response(request.get_http_code(), request.get_http_headers())
         if request.flag_redirect:
             return [""]
-        content = request.render()
+        content = MakoRenderer(request).render()
         return [content]
         
     def _extract_POST_from_environ(self, environ, request):

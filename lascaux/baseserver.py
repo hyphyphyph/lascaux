@@ -85,7 +85,6 @@ class BaseServer(SObject):
                 uri_ = uri[len(dir_[0]):]
                 path = os.path.join(dir_[1], *filter(lambda s: s,
                                                      uri_.split("/")))
-                print path
                 if os.path.isfile(path):
                     return path
         return False

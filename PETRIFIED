@@ -1,0 +1,13 @@
+form = Form("/action")
+form.first_name = TextField()
+form.last_name = TextField()
+form.submit = SubmitButton()
+form.renderable()
+
+${form.open()}
+${form.first_name}
+${form}
+
+form = Form("/action").submit()
+print form.first_name
+form.renderable()

@@ -33,7 +33,8 @@ class Config(dict):
                         merge_dict(self, config)
                         logger.debug(u"loaded config %s" % c)
                     except Exception, e:
-                        logger.error(u"failed to laod config %s" % c)
+                        logger.error(u"failed to load config %s" % c)
+                        raise e
         for c in glob.glob(os.path.join(lascaux.__exec_path__, 'config.*')):
             if os.path.splitext(c)[1] in SUPPORTED_CONFIG_EXTENSIONS:
                 config = parse_config(c)

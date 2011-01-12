@@ -24,22 +24,29 @@ class Request(SObject):
     _close_time = None
 
     app = None
-    uri = None
+    config = None
+    final_template = 'index'
+    
+    # Request State
     headers = None
+    http_status_code = "202 SUCCESS"
+    http_extra = None
     cookies = None
     session = None
     content = None
     plain_content = None
-    render_template = 'index'
+    force_plain_content = False
+    
+    # Exec Information
+    uri = None
     flag_redirect = None
-    http_status_code = "202 SUCCESS"
-    http_extra = None
+    
     exec_plugin = None
     exec_route = None
     exec_args = None
     POST = False
-    config = None
 
+    db = None # Maps to Storm store
     _db_store = None
 
     def __init__(self, app, uri):
@@ -57,40 +64,6 @@ class Request(SObject):
         self.exec_args = dict()
         self.http_extra = dict()
 
-    def close(self):
-        self._close_time = time.time()
-        logger.info(u'%s milliseconds' % ((self._close_time -
-                                           self._init_time) * 1000))
-        self.session.save()
-        self.cookies.save()
-        self.hook('request_close')
-
-    def dump_content(self):
-        content = dict()
-        # TODO: where should this go ?
-        if config['debug'] and 'debug' not in self.content:
-            self.content['debug'] = u''
-        for key in self.content:
-            if key == 'debug' and not config['debug']:
-                pass
-            content[key] = u'\n'.join(self.content[key])
-        return content
-
-    def render(self):
-        """
-        returns a unicode of the request's content.  if not plain
-        content, it renders through the active main template.
-        """
-        if self.force_plain_content or self.plain_content:
-            return self.plain_content
-        dirs = [os.path.abspath(os.path.join(os.path.dirname(p.__file__),
-                                'templates')) for p in lascaux.app_packages]
-        k = Kitchen(dirs, ['.mako'])
-        file_ = k.get(self.render_template)
-        t = Template(filename=file_, module_directory=os.path.join(
-            config.get_tmp(), 'tmpl_cache'))
-        return t.render(**self.dump_content()).encode('utf-8')
-
     def save(self, content, name='content', plain=False, force_plain=True):
         if plain:
             if force_plain in (True, False) and \
@@ -106,6 +79,29 @@ class Request(SObject):
             self.content[name] = []
         self.content[name].append(content)
 
+    def route(self, controller, action, args=dict()):
+        return self.get_route(controller, action, args)
+
+    def debug(self, title, content):
+        self.save(u'%s: %s' % (title, content), name='debug')
+
+    def redirect(self, where, code="302"):
+        pass
+
+    def hook(self, hook, *argc, **argv):
+        if 'request' not in argv:
+            argv['request'] = self
+        return self.app.hook(hook, *argc, **argv)
+
+
+    def close(self):
+        self._close_time = time.time()
+        logger.info(u'%s milliseconds' % ((self._close_time -
+                                           self._init_time) * 1000))
+        self.session.save()
+        self.cookies.save()
+        self.hook('request_close')
+
     def set_content(self, content, plain=False):
         """
         pretty low-level...  Gotta say, dude.
@@ -114,12 +110,6 @@ class Request(SObject):
             self.plain_content = content
         else:
             self.content = content
-
-    def debug(self, title, content):
-        self.save(u'%s: %s' % (title, content), name='debug')
-
-    def redirect(self, where, code="302"):
-        pass
 
     def set_http_code(self, code):
         self.http_status_code = code
@@ -148,14 +138,6 @@ class Request(SObject):
                                          "action": Action, "args": args})
         return routes.values()[0] or u"/"
 
-    def route(self, controller, action, args={}):
-        return self.get_route(controller, action, args)
-
-    def hook(self, hook, *argc, **argv):
-        if 'request' not in argv:
-            argv['request'] = self
-        return self.app.hook(hook, *argc, **argv)
-
     def _init_db_store(self):
         if not self._db_store:
             db = create_database("%s://%s:%s@%s%s/%s" %
@@ -169,3 +151,37 @@ class Request(SObject):
             self._db_store = Store(db)
         return self._db_store
     db = property(_init_db_store)
+    
+    
+class MakoRenderer(object):
+
+    request = None
+    final_template = None
+
+    def __init__(self, request):
+        self.request = request
+        self.final_template = config['system']['mako']['final_template']
+
+    def get_content(self):
+        content = dict()
+        if config['debug'] and 'debug' not in self.request.content:
+            self.request.content['debug'] = u''
+        for key in self.request.content:
+            if key == 'debug' and not config['debug']:
+                pass
+            content[key] = u'\n'.join(self.request.content[key])
+        return content
+    
+    def render(self):
+        r = self.request
+        if r.force_plain_content or r.plain_content:
+            return r.plain_content
+        dirs = [os.path.abspath(
+                    os.path.join(os.path.dirname(p.__file__), 
+                                 config['system']['mako']['directory']))
+                for p in lascaux.app_packages]
+        k = Kitchen(dirs, config['system']['mako']['extensions'])
+        file_ = k.get(self.final_template)
+        t = Template(filename=file_, module_directory=os.path.join(
+            config.get_tmp(), config['system']['mako']['cache_dir']))
+        return t.render(**self.get_content()).encode('utf-8')

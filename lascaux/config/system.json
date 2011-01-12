@@ -6,6 +6,12 @@
                 ["styles", "styles"],
                 ["scripts", "scripts"]
             ]
+        },
+        "mako": {
+            "final_template": "index",
+            "directory": "templates",
+            "cache_dir": "tmpl_cache",
+            "extensions": [".mako"]
         }
     }
 }

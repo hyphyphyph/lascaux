@@ -22,6 +22,8 @@ class WidgetMirror(object):
                                  (self.__class__.__name__, name))
 
     def __setattr__(self, name, value):
+        if name == "started":
+            print self.__dict__
         if self.is_widget_mode and name not in self.__dict__:
             value.name = name
             if name not in [w.name for w in self.widgets]:

@@ -23,27 +23,26 @@ class BaseServer(SObject):
                      config["server"]["host"], config["server"]["port"]))
 
     def handle_request(self, request):
-        logger.info(u'handling french request: %s' % id(request))
-        request.static_path = self._get_static_path(request.uri)
+        request.static_path = self.get_static_path(request.uri)
         if request.static_path:
-            return self.handle_static_serve(request)
+            return self.serve_static(request)
         elif self.find_route(request):
             if request.flag_redirect:
-                return self.handle_redirect_serve(request)
+                return self.serve_redirect(request)
             logger.info(u"serving executable request %s -> %s.%s()" %
                         (request.uri, request.exec_plugin.class_,
                          request.exec_route['action']))
             self.exec_route(request)
             if request.flag_redirect:
-                return self.handle_redirect_serve(request)
+                return self.serve_redirect(request)
             return request
         elif request.flag_redirect:
-            return self.handle_redirect_serve(request)
+            return self.serve_redirect(request)
         else:
             # TODO: why is request.uri for favicon
             #       /lascaux/favicon.ico instead of /favicon.ico ?
             logger.info(u'serving 404 -> %s' % request.uri)
-            return self.handle_error_serve("404", request)
+            return self.serve_error("404", request)
 
     def find_route(self, request):
         return True in self.app.manager.execute('find_route', dict(
@@ -54,14 +53,14 @@ class BaseServer(SObject):
                                                            request=request),
                                         subsystems=['router'])
 
-    def handle_static_serve(self, request):
+    def serve_static(self, request):
         request.simple_content = True
         if not request.static_path:
-            path = self._get_static_path(request.uri)
+            path = self.get_static_path(request.uri)
         else:
             path = request.static_path
         if not path:
-            self.handle_serve_error("404", request)
+            self.serve_error("404", request)
         request.headers.set("Content-type", mimetypes.guess_type(path)[0])
         file_ = open(path, "r")
         content = file_.read()
@@ -70,11 +69,9 @@ class BaseServer(SObject):
         logger.info("serving static file %s -> %s" % (path, request.uri))
         return request
 
-    def _get_static_path(self, uri):
+    def get_static_path(self, uri):
         dirs = list()
-        for dir_ in (["", "public"],
-                    ["styles", "styles"],
-                    ["scripts", "scripts"]):
+        for dir_ in config['system']['baseserver']['static_serve_directories']:
             for app in lascaux.app_packages:
                 dirs.append([dir_[0], os.path.abspath(os.path.join(
                     os.path.dirname(app.__file__), dir_[1]))])
@@ -93,11 +90,11 @@ class BaseServer(SObject):
                     return path
         return False
 
-    def handle_redirect_serve(self, request):
+    def serve_redirect(self, request):
         return request
 
-    def handle_error_serve(self, Code, request):
-        if Code == "404":
+    def serve_error(self, code, request):
+        if code == "404":
             request.set_http_code("404 NOT FOUND")
             request.save("Error 404, not found.")
         return request

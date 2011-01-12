@@ -37,7 +37,7 @@ class Request(SObject):
     exec_plugin = None
     exec_route = None
     exec_args = None
-    post = None
+    POST = False
     config = None
 
     _db_store = None
@@ -56,7 +56,6 @@ class Request(SObject):
         self.force_plain_content = None
         self.exec_args = dict()
         self.http_extra = dict()
-        self.post = dict()
 
     def close(self):
         self._close_time = time.time()

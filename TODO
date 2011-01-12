@@ -1,2 +1,5 @@
+RENAME:
+    lascaux.app.App.get_root() > _get_root()
+
 instlatte.task.Task.execute() should return a dict, not a list
 What is HTTP_ACCEPT_CHARSET ?

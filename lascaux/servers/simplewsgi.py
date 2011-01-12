@@ -41,27 +41,7 @@ class SimpleWSGIServer(BaseServer):
         request.session.load()
         request.set_domain(environ.get("HTTP_HOST"))
         if environ["REQUEST_METHOD"] == "POST":
-            form_data = cgi.FieldStorage(fp=environ["wsgi.input"],
-                                         environ=environ)
-            form_values = {}
-            for name in form_data:
-                # type=file
-                if form_data[name].filename:
-                    dir_ = os.path.join(config["paths"]["tmp"],
-                                        str(uuid.uuid1()))
-                    filename = form_data[name].filename
-                    libel.mkdir(dir_)
-                    file = open(os.path.join(dir_, filename), "wb")
-                    file.write(form_data[name].file.read())
-                    file.close()
-                    form_values[name] = os.path.join(dir_, filename)
-                # anything "normal"
-                else:
-                    # TODO: should this be hard-coded ?
-                    form_values[name] = form_data[name].value.decode('utf-8')
-            request.POST = form_values
-        else:
-            request.POST = False
+            self._extract_post_from_environ(environ, request)
         request = BaseServer.handle_request(self, request)
         request.close()
         start_response(request.get_http_code(), request.get_http_headers())
@@ -69,3 +49,23 @@ class SimpleWSGIServer(BaseServer):
             return [""]
         content = request.render()
         return [content]
+        
+    def _extract_POST_from_environ(self, environ, request):
+        form_data = cgi.FieldStorage(fp=environ["wsgi.input"], environ=environ)
+        form_values = {}
+        for name in form_data:
+            # type==file
+            if form_data[name].filename:
+                dir_ = os.path.join(config["paths"]["tmp"],
+                                    str(uuid.uuid1()))
+                filename = form_data[name].filename
+                libel.mkdir(dir_)
+                file = open(os.path.join(dir_, filename), "wb")
+                file.write(form_data[name].file.read())
+                file.close()
+                form_values[name] = os.path.join(dir_, filename)
+            # anything "normal"
+            else:
+                # TODO: should the encoding be hard-coded ?
+                form_values[name] = form_data[name].value.decode('utf-8')
+        request.POST = form_values

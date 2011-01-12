@@ -1,11 +1,11 @@
 {
     "instlatte": {
         "subsystems": {
-            "plugin": {"sources": ["plugins"]},
+            "plugin": { "sources": ["plugins"] },
             "server": {},
             "router": {},
             "hook": {},
-            "sess_store": {"sources": ["sess_stores"]}
+            "sess_store": { "sources": ["sess_stores"] }
         }
     }
 }

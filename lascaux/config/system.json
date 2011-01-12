@@ -1,0 +1,11 @@
+{
+    "system": {
+        "baseserver": {
+            "static_serve_directories": [
+                ["", "public"],
+                ["styles", "styles"],
+                ["scripts", "scripts"]
+            ]
+        }
+    }
+}

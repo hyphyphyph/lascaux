@@ -1,9 +1,7 @@
 import weakref
 
-from petrified.widgetmirror import WidgetMirror
 
-
-class Widget(WidgetMirror):
+class Widget(object):
 
     _form = None
     _rendered = False
@@ -16,7 +14,7 @@ class Widget(WidgetMirror):
     required = False
     disabled = False
     value = None
-    error = None
+    error = False
     error_message = None
 
     def __init__(self, title=u'', value=None, required=False,
@@ -32,35 +30,15 @@ class Widget(WidgetMirror):
         self.name = name
         self.error_message = error_message or u"You have to enter a value."
 
-    def __getattr__(self, name):
-        if name == 'value':
-            print "123"
-            if self.error == None:
-                self.validate()
-        return self.__dict__[name]
-
-    def set_form_object(self, form):
-        self._form = weakref.proxy(form.get_root_object())
-
-    def get_form_object(self):
-        return self._form.get_root_object()
-
-    def render(self, markup=None):
-        return markup or u''
-
-    def ingest_POST(self, POST):
-        self.error = None
-        if self.name in POST:
-            if type(POST.get(self.name)) is int:
-                self.value = unicode(POST.get(self.name))
+    def submit(self, values):
+        if self.name in values:
+            if type(values.get(self.name)) is int:
+                self.value = unicode(values.get(self.name))
             else:
-                self.value = POST.get(self.name).decode('utf-8')
-        else:
-            self.value = u''
+                self.value = values.get(self.name).decode('utf-8')
+        self.validate()
 
     def validate(self):
-        if self.value == None:
-            self.value = u''
         self.error = False
         if self.required and not self.value:
             self.error = True
@@ -70,5 +48,14 @@ class Widget(WidgetMirror):
         self._rendered = True
         return u'<input type="hidden" name="%s" />' % self.name
 
+    def is_rendered(self):
+        return self._rendered
+
+    def set_form(self, form):
+        self._form = weakref.proxy(form.get_root_object())
+
     def __str__(self):
         return self.render()
+
+    def __call__(self):
+        return self.value

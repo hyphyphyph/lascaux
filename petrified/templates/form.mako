@@ -1,4 +1,4 @@
-%if not form.started:
+%if not form.is_open():
 <%
     final_attributes = list()
     for key in form.attributes:
@@ -8,7 +8,7 @@
 <form method="${form.method}" action="${form.action}"${final_attributes}>
 %endif
 %if not only_header:
-    %for widget in form.get_widgets_to_render():
+    %for widget in form.get_unrendered_widgets():
         ${widget}
     %endfor
 </form>

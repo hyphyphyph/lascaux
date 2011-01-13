@@ -5,7 +5,10 @@
         id_ = id and ' id="%s"' % id or ""
     classes_ = classes and ' class="%s"' % classes or ""
     rows_ = rows and ' rows="%s"' % rows or ""
-    cols_ = cols and ' cols="%s"' % cols or ""
+    if rows:
+        cols_ = cols and ' cols="%s"' % cols or ""
+    else:
+        cols_ = cols and ' size="%s"' % cols or ""
     readonly_ = readonly and ' readonly="readonly"' or ""
     disabled_ = disabled and ' disabled="disabled"' or ""
     options_ = id_+classes_+rows_+cols_+disabled_+readonly_

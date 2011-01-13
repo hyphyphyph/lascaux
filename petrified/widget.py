@@ -8,7 +8,7 @@ class Widget(object):
 
     name = None
     id = None
-    classes= None
+    classes = None
     title = None
     desc = None
     required = False
@@ -48,11 +48,28 @@ class Widget(object):
         self._rendered = True
         return u'<input type="hidden" name="%s" />' % self.name
 
+    def export(self):
+        return {
+            "name": self.name,
+            "id": self.id,
+            "classes": self.classes,
+            "title": self.title,
+            "desc": self.desc,
+            "required": self.required,
+            "disabled": self.disabled,
+            "value": self.value,
+            "error": self.error,
+            "error_message": self.error_message
+        }
+
     def is_rendered(self):
         return self._rendered
 
     def set_form(self, form):
         self._form = weakref.proxy(form.get_root_object())
+
+    def get_form(self):
+        return self._form
 
     def __str__(self):
         return self.render()

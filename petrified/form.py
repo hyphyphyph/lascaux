@@ -43,7 +43,7 @@ class Form(Mirror):
     def submit(self, values):
         self.make_accessible()
         for widget in self.widgets:
-            widget.ingest(post.get(widget.name))
+            widget.ingest(values.get(widget.name))
 
     def _validates(self):
         validates = True
@@ -75,16 +75,16 @@ class Form(Mirror):
     widgets = property(get_widgets)
 
     def get_unrendered_widgets(self):
-        return [w['value'] for w in self.get_mirrored_attributes() 
+        return [w['value'] for w in self.get_mirrored_attributes()
                 if not w['value'].is_rendered()]
     unrendered_widgets = property(get_unrendered_widgets)
 
-    def _on_new_setattr(self, name, widget):
+    def _on_setattr(self, name, widget):
         if widget.__class__ == Widget or \
            Widget in widget.__class__.__bases__:
             widget.name = name
             widget.set_form(self)
-        
+
     def get_root_object(self):
         form = self._form
         while form._form != form:
@@ -93,3 +93,10 @@ class Form(Mirror):
 
     def is_open(self):
         return self._opened
+
+    def get_widget_template_dirs(self):
+        return [os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                             'widgets', 'templates'))]
+
+    def get_widget_template_extensions(self):
+        return ['.mako']

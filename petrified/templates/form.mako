@@ -8,7 +8,7 @@
 <form method="${form.method}" action="${form.action}"${final_attributes}>
 %endif
 %if not only_header:
-    %for widget in form.get_unrendered_widgets():
+    %for widget in form.unrendered_widgets:
         ${widget}
     %endfor
 </form>

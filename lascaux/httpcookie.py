@@ -1,37 +1,38 @@
 import weakref
-try: # Python 3
+try: 
+    # Python 3
     import http.cookies as http_cookies
-except: # Python 2
+except: 
+    # Python 2
     import Cookie as http_cookies
 
-from lascaux.sys import SObject
+from lascaux import config
 
 
-class HTTPCookie(dict, SObject):
+class HttpCookie(dict):
 
-    request = None
+    reqres = None
 
-    def __init__(self, request):
-        self.request = weakref.proxy(request)
+    def __init__(self, reqres):
+        self.reqres = weakref.proxy(reqres)
 
-    def set(self, key, value):
-        self[str(key)] = value
-
-    def load(self, raw):
-        if raw:
+    def eat(self, dough):
+        """ Dough is so much better than the baked version anyway... """
+        if dough:
             cookie = http_cookies.SimpleCookie()
-            cookie.load(raw)
+            cookie.load(dough)
             for key in cookie:
-                self[key] = self._clean_value(cookie[key].value)
+                self[key] = self._clean(cookie[key].value)
 
-    def _clean_value(self, value):
-        if value in ('None'):
-            return None
-        return value
-
-    def save(self):
+    def bake(self):
         if self:
             cookie = http_cookies.SimpleCookie()
             for key in self:
-                cookie[key] = self[key]
-            self.request.headers.set("Set-cookie", cookie.output(header=""))
+                cookie[str(key)] = self[key]
+            self.reqres.headers['Set-cookie'] = cookie.output(header='')
+
+    def _clean(self, value):
+        """ Normalizes some values to be more pythonic... """
+        if value in ('None'):
+            return None
+        return value

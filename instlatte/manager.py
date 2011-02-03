@@ -2,123 +2,83 @@
 
 import os.path
 import glob
+
 try:
     import json
 except:
     import simplejson as json
 
-from libel import SelectionList, sl
-
-from instlatte.sobject import SObject
-from instlatte import subsystem
-from instlatte import logger
-from instlatte.task import Task
+from instlatte.logger import logger
+from instlatte.subsystem import Subsystem
+from instlatte.lib.sentient import Sentient
+from instlatte.lib.default_config import default_config
 
 
 logger = logger(__name__)
 
 
-class Manager(SObject):
+class Manager(Sentient):
 
-    subsystems = SelectionList(list())
     config = dict()
+    subsystems = list()
 
     def __init__(self, config=dict()):
-        self.subsystems = SelectionList(list())
-        self.config = config or {"enabled": dict()}
-        if 'enabled' not in self.config:
-            self.config['enabled'] = {}
+        self.subsystems = list()
+        self.config = self._get_default_config(config)
 
-    def add_subsystem(self, package_dir, config=dict()):
-        """
-        Adds a subsystem to the manager.  Give the absolute directory
-        of the Python package containing the subsytem.
-        """
-        m = subsystem.MetaSubsystem(package_dir=package_dir)
-        c = config or self.config.get("subsystems", {}).get(m.name, dict())
-        m.set_config(c)
-        self.subsystems.append(m)
-        logger.info(u"[+] added subsystem '%s'" % m.name)
-        if m.name not in self.config.get("enabled", []):
-            self.enable_subsystem(m)
-        else:
-            if self.config["enabled"][m.name]:
-                logger.info(u"'%s' already enabled. Leaving alone." % m.name)
-            else:
-                logger.info(u"'%s' forcefully disabled." % m.name)
-
-    def init(self):
+    def setup(self):
+        self.find_subsystems()
         self.init_subsystems()
-        self.init_subsystem_plugins()
 
-    def init_subsystems(self):
-        init_queue = [s.name for s in self.subsystems]
-        while init_queue:
-            subsystem = self.get_subsystem(init_queue[0])
-            if self.is_subsystem_enabled(subsystem):
-                init_queue.pop(0)
-                def log_callback():
-                    logger.info(
-                    u"performing subsystem initialization for '%s'..." %
-                        subsystem.name)
-                if not self.init_subsystem(subsystem, log_callback):
-                    init_queue.append(subsystem.name)
-                    logger.info(
-                    u"postponing subsystem initialization for '%s'" %
-                        subsystem.name)
-                else:
-                    logger.info(u"initialized subsystem '%s'" %
-                                subsystem.name)
-
-    def init_subsystem(self, subsystem, log_callback=None):
-        """
-        Instantiates the subsystem entry into the given MetaSubsystem.
-        """
-        return subsystem.init(manager=self, log_callback=log_callback)
-
-    def init_subsystem_plugins(self):
+    def execute(self, cmd, *args, **kwargs):
         for subsystem in self.subsystems:
-            if self.is_subsystem_enabled(subsystem):
-                subsystem.init_plugins()
-
-    def is_subsystem_enabled(self, subsystem):
-        if not isinstance(subsystem, basestring):
-            subsystem = subsystem.name
-        return subsystem in self.config["enabled"] and \
-               self.config["enabled"][subsystem] or False
-
-    def enable_subsystem(self, subsystem):
-        if not isinstance(subsystem, basestring):
-            subsystem = subsystem.name
-        self.config["enabled"][subsystem] = True
-        logger.info(u"enabled subsystem '%s'" % subsystem)
-
-    def disable_subsystem(self, subsystem):
-        if not isinstance(subsystem, basestring):
-            subsystem = subsystem.name
-        self.config["enabled"][subsystem] = False
-        logger.info(u"disabled %s" % subsystem)
-
-    def get_enabled_subsystems_list(self):
-        return [s for s in self.subsystems
-                if self.is_subsystem_enabled(s)]
-
-    def is_subsystem_loaded(self, name):
-        for subsystem in self.subsystems:
-            if subsystem.name == name:
-                return subsystem.is_loaded
-        return None
+            subsystem.execute(cmd, *args, **kwargs)
 
     def get_subsystem(self, name):
         for subsystem in self.subsystems:
             if subsystem.name == name:
                 return subsystem
-        return False
+        return None
 
-    def execute(self, command, args=dict(), plugin=None, plugins=list(),
-                subsystem=None, subsystems=list()):
-        args = args or dict()
-        plugins = plugin and [plugin] or plugins
-        subsystems = subsystem and [subsystem] or subsystems
-        task = Task(plugins=plugins, subsystems=subsystems, manager=self)
-        return task.execute(command, args)
+    def find_subsystems(self):
+        for source in self.config['sources']:
+            for subsystem in glob.glob(os.path.join(source, '*')):
+                if not os.path.isdir(subsystem):
+                    continue
+                for module in glob.glob(os.path.join(subsystem, '*%s*' % os.path.extsep)):
+                    if os.path.splitext(os.path.basename(module))[0] == os.path.basename(subsystem):
+                        break
+                    else:
+                        module = None
+                if not module:
+                    continue
+                package_dir = subsystem
+                module_name = os.path.splitext(os.path.basename(module))[0]
+                if module_name in self.config['subsystems'] and self.config['subsystems'][module_name]['enabled']:
+                    logger.info("Found subsystem `%s` in '%s'" % (module_name, package_dir))
+                    self.subsystems.append(Subsystem(self, package_dir, module_name))
+        return self.subsystems
+
+    def init_subsystems(self):
+        subsystems = list()
+        for subsystem in self.subsystems:
+            dotpath = self.get_dotpath(os.path.join(subsystem.package_dir, subsystem.module_name))
+            module = __import__(dotpath)
+            for sym in dotpath.split('.')[1:]:
+                module = getattr(module, sym)
+            for sym in dir(module):
+                if type(getattr(module, sym)) == type(object) \
+                        and Subsystem in getattr(module, sym).__bases__:
+                    logger.info("Initialized subsystem `%s`" % subsystem.module_name)
+                    subsystem = getattr(module, sym)(subsystem=subsystem)
+                    subsystem.setup()
+                    subsystems.append(subsystem)
+        self.subsystems = subsystems
+            
+    def _get_default_config(self, config=dict()):
+        config = config or dict()
+        for key in default_config:
+            if key not in config:
+                config[key] = default_config[key]
+        return config
+

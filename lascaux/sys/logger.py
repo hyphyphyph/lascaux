@@ -12,7 +12,7 @@ stream_handler = logging.StreamHandler()
 stream_handler.setFormatter(formatter)
 
 
-def logger(Name):
-    logger = logging.getLogger(Name)
+def logger(name):
+    logger = logging.getLogger(name)
     logger.addHandler(stream_handler)
     return logger

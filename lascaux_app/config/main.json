@@ -1,11 +1,17 @@
 {
-    "title": "Lascaux Application",
-    "database": {
-        "interface": "mysql",
-        "host": "localhost",
-        "port": "",
-        "database": "maxfind",
-        "username": "root",
-        "password": "root"
+    "lascaux_app": {
+        "plugins": {
+            "hello_world": {
+                "routing": "routes.json"
+            }
+        },
+        "db": {
+            "interface": "mysql",
+            "host": "localhost",
+            "port": "",
+            "database": "maxfind",
+            "username": "root",
+            "password": "root"
+        }
     }
 }

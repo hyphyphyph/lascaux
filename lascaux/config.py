@@ -4,60 +4,29 @@ import hashlib
 
 from libel import merge_dict
 
-import lascaux
-from lascaux.subsystems.plugin.lib import get_plugin_dirs, is_plugin_enabled
-from lascaux.logger import logger
-from lascaux.util import parse_config, SUPPORTED_CONFIG_EXTENSIONS
+from lascaux.sys.logger import logger
+from lascaux.sys.util import parse_config
 
 
 logger = logger(__name__)
 
 
 class Config(dict):
+    
     def __init__(self):
-        self.refresh()
+        merge_dict(self, parse_config(os.path.abspath('config%slsx' % os.path.extsep)))
+        for package in self['app_packages']:
+            try: module = __import__(package)
+            except: module = None
+            if not module: 
+                self['app_packages'].remove(package)
+                continue
+            package_dir = os.path.abspath(os.path.dirname(module.__file__))
+            for config in glob.glob(os.path.join(package_dir, 'config', '*%s*' % os.path.extsep)):
+                if package not in self:
+                    self[package] = dict()
+                self[package]['package_dir'] = package_dir
+                merge_dict(self, parse_config(config))
 
-    def refresh(self):
-        sources = list()
-        sources.extend([os.path.abspath(os.path.dirname(p.__file__))
-                        for p in lascaux.app_packages])
-        sources.extend(get_plugin_dirs())
-        sources.append(lascaux.__lib_path__)
-        sources.reverse()
-        merge_dict(lascaux.__config__, self)
-        for source in sources:
-            for c in glob.glob(os.path.join(source, 'config', '*.*')):
-                if os.path.splitext(c)[1] in SUPPORTED_CONFIG_EXTENSIONS:
-                    try:
-                        config = parse_config(c)
-                        merge_dict(self, config)
-                        logger.debug(u"loaded config %s" % c)
-                    except Exception, e:
-                        logger.error(u"failed to load config %s" % c)
-                        raise e
-        for c in glob.glob(os.path.join(lascaux.__exec_path__, 'config.*')):
-            if os.path.splitext(c)[1] in SUPPORTED_CONFIG_EXTENSIONS:
-                config = parse_config(c)
-                merge_dict(self, config)
-                logger.debug(u"loaded config %s" % c)
-        self._parse_special()
-
-    def sap(self, String=""):
-        """Salt and pepper"""
-        return self['security']['salt']+u'%s' % String + self['security']['pepper']
-
-    def _parse_special(self):
-        self['paths']['tmp'] = os.path.abspath(self['paths']['tmp'])
-        self['session']['store_path'] = os.path.abspath(self['session'] \
-                                                        ['store_path'])
-        self['security']['salt_raw'] = self['security']['salt']
-        self['security']['salt'] = hashlib.sha1(self['security'] \
-                                                ['salt']).hexdigest()
-        self['security']['pepper_raw'] = self['security']['pepper']
-        self['security']['pepper'] = hashlib.sha1(self['security'] \
-                                                  ['pepper']).hexdigest()
-
-    def get_tmp(self):
-        return self["paths"]["tmp"]
 
 config = Config()

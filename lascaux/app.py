@@ -1,26 +1,35 @@
+# -*- coding: utf-8 -*-
+
+if __name__ == "__main__": import sys; sys.path.append('.')
 import os.path
 
-from lascaux.sobject import SObject
-from lascaux.logger import logger
-from lascaux.lib.instlatte_setup import new_manager
+from instlatte import Manager
+
+import lascaux
+from lascaux import config
+from lascaux.sys.logger import logger
 
 
 logger = logger(__name__)
 
 
-class App(SObject):
+class App(object):
 
     self = None # weakref proxy resolution
 
     def __init__(self):
         self.self = self
-        self.manager = new_manager()
-        logger.info(u"initialized main app instance %s" % id(self))
-        self.manager.execute('__load_enabled_plugins__')
-        self.hook('app_init')
+        self.manager = Manager({
+            'sources': [os.path.abspath(os.path.join(os.path.dirname(lascaux.__file__), 'subsystems'))],
+            'subsystems': config['subsystems']
+        })
+        self.manager.setup()
+        logger.info("Initialized main app instance %s" % id(self))
+        self.manager.execute('pre_app_init', app=self)
+        self.manager.execute('app_init', app=self)
 
     def start(self):
-        self.manager.execute('start_server', dict(app=self))
+        self.manager.execute('app_start', app=self)
 
     def get_root(self):
         self_ = self.self
@@ -28,12 +37,6 @@ class App(SObject):
             self_ = self.self
         return self_
 
-    def hook(self, hook, *argc, **argv):
-        """ 
-        Call a hook with arbitrary named arguments that will be passed to the 
-        executing method. 
-        """
-        return self.manager.execute('exec_hook', 
-                                    dict(hook=hook, app=self, 
-                                         argc=argc, argv=argv),
-                                    subsystems=['hook'])
+
+if __name__ == "__main__":
+    app = App()

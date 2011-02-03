@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 if __name__ == "__main__": import sys; sys.path.append(".")
 import unittest
 import os.path
@@ -13,13 +15,23 @@ from instlatte import Manager
 class TestSubsystemRouter(unittest.TestCase):
 
     def setUp(self):
-        self.m = Manager()
-        self.m.add_subsystem(os.path.join(lascaux.__lib_path__,
-                                          'subsystems', 'router'))
-        self.m.init()
+        self.manager = Manager({
+            'sources': [os.path.abspath(os.path.join(os.path.dirname(lascaux.__file__), 'subsystems'))],
+            'subsystems': {
+                'router': { 
+                    'enabled': True,
+                    'routers': {
+                        'regex': {
+                            'enabled': True
+                        }
+                    }
+                }
+            }
+        })
+        self.manager.setup()
 
     def runTest(self):
-        self.m.execute("__load_enabled_plugins__")
+        self.manager.execute('load_routers')
 
 
 if __name__ == "__main__":

@@ -1,0 +1,39 @@
+{
+    "app_packages": ["lascaux_app"],
+    "debug": true,
+    "subsystems": {
+        "plugin": { "enabled": true },
+        "router": { 
+            "enabled": true,
+            "routers": {
+                "regex": {
+                    "enabled": true
+                }
+            }
+        },
+        "server": {
+            "enabled": true,
+            "servers": { 
+                "simplewsgi": {
+                    "enabled": true,
+                    "host": "0.0.0.0",
+                    "port": "8080"
+                } 
+            },
+            "static_dir_mappings": {
+                "": "public",
+                "style": "style",
+                "scripts": "scripts"
+            }
+        },
+        "session": { 
+            "enabled": true,
+            "cookie_uuid_key": "lascaux_session_uuid",
+            "stores": {
+                "json_file": {
+                    "data_dir": "./tmp/session_data"
+                }
+            }
+        }
+    }
+}

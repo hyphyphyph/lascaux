@@ -8,50 +8,51 @@ from wsgiref.simple_server import make_server
 
 import libel
 
-from lascaux.baseserver import BaseServer
-from lascaux.sys import logger
+from lascaux.server import Server
+from lascaux.sys.logger import logger
 
-from lascaux.request import Request, MakoRenderer
-from lascaux.sys import config
+from lascaux.reqres import Reqres
+# from lascaux.sys import config
 
 
 logger = logger(__name__)
 
 
-class SimpleWSGIServer(BaseServer):
+class SimpleWSGIServer(Server):
 
-    def start(self, app):
-        BaseServer.start(self, app)
+    def start(self):
+        Server.start(self)
 
         # Silences standard output from simple_server
         class quiet_handler(wsgiref.simple_server.WSGIRequestHandler):
             def log_message(self, format, *args):
                 pass
 
-        server = make_server(config["server"]["host"],
-                             int(config["server"]["port"]),
+        server = make_server(self.config["host"],
+                             int(self.config["port"]),
                              self, handler_class=quiet_handler)
         server.serve_forever()
 
     def __call__(self, environ, start_response):
-        return self.handle_request(environ=environ,
-                                   start_response=start_response)
+        return self.serve(environ=environ,
+                          start_response=start_response)
 
-    def handle_request(self, environ, start_response):
+    def serve(self, environ, start_response):
         uri = environ.get("PATH_INFO")
-        request = Request(self.app.get_root(), uri)
-        request.cookies.load(environ.get("HTTP_COOKIE"))
-        request.session.load()
-        request.set_domain(environ.get("HTTP_HOST"))
-        if environ["REQUEST_METHOD"] == "POST":
-            self._extract_post_from_environ(environ, request)
-        request = BaseServer.handle_request(self, request)
-        request.close()
-        start_response(request.get_http_code(), request.get_http_headers())
-        if request.flag_redirect:
-            return [""]
-        content = MakoRenderer(request).render()
-        return [content]
+        reqres = Reqres(self.app.get_root(), uri)
+        reqres.cookies.eat(environ.get("HTTP_COOKIE"))
+        reqres.session.load()
+        reqres.set_domain(environ.get("HTTP_HOST"))
+        reqres.request_method = environ['REQUEST_METHOD'].lower()
+        # if environ["REQUEST_METHOD"] == "POST":
+        #     self._extract_post_from_environ(environ, reqres)
+        reqres = Server.serve(self, reqres)
+        reqres.close()
+        start_response(reqres.get_http_code(), reqres.get_http_headers())
+        # if reqres.redirect:
+        #     return ['']
+        # content = MakoRenderer(reqres).render()
+        return [reqres.render().encode('utf-8')]
         
     def _extract_POST_from_environ(self, environ, request):
         form_data = cgi.FieldStorage(fp=environ["wsgi.input"], environ=environ)

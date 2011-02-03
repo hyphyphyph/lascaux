@@ -1,6 +1,5 @@
-import lascaux
-import lascaux.sys
+from lascaux.app import App
 
 
-app = lascaux.sys.App()
+app = App()
 app.start()

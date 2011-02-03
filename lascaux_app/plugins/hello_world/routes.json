@@ -1,0 +1,6 @@
+{
+    "hello_world": {
+        "regex": "^/hello/(?P<place>[a-z]+)$",
+        "controller": "index:Index"
+    }
+}

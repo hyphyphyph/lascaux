@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 if __name__ == "__main__": import sys; sys.path.append(".")
 import unittest
 import os.path
@@ -6,27 +8,26 @@ try:
 except:
     import simplejson as json
 
-import lascaux
 from instlatte import Manager
+
+import lascaux
 
 
 class TestSubsystemPlugin(unittest.TestCase):
 
     def setUp(self):
-        self.m = Manager({
-            "subsystem_config": {
-                "plugin": {
-                    "enabled": { "lascaux": True },
-                    "only_enabled": True
+        self.manager = Manager({
+            'sources': [os.path.abspath(os.path.join(os.path.dirname(lascaux.__file__), 'subsystems'))],
+            'subsystems': {
+                'plugin': {
+                    'enabled': True
                 }
             }
         })
-        self.m.add_subsystem(os.path.join(lascaux.__lib_path__,
-                                          'subsystems', 'plugin'))
-        self.m.init()
+        self.manager.setup()
 
-    def runTest(self):
-        self.m.execute("__load_enabled_plugins__")
+    def test_find_plugins(self):
+        self.manager.execute('load_plugins')
 
 
 if __name__ == "__main__":

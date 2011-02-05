@@ -1,23 +1,8 @@
 {
     "title": "Lascaux Framework",
     "version": "2.0",
-    "debug": true,
-    "server": {
-        "server": "simplewsgi",
-        "host": "0.0.0.0",
-        "port": "8080"
-    },
-    "paths": {
-        "tmp": "./tmp"
-    },
-    "defaults": {
-        "redirect_code": "300 MULTIPLE CHOICES"
-    },
-    "session": {
-        "cookie_uuid_key": "lascaux_session_uuid",
-        "storage": "json_file",
-        "store_path": "./tmp/session_data"
-    },
+    "paths": { "tmp": "./tmp" },
+    "defaults": { "redirect_code": "300 MULTIPLE CHOICES" },
     "security": {
         "salt": "salt",
         "pepper": "pepper"

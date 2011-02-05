@@ -25,6 +25,7 @@ class Controller(object):
         self.save = reqres.save
         self.cookies = reqres.cookies
         self.session = reqres.session
+        self.redirect = reqres.redirect
 
     def get(self, *args, **kwargs): pass 
     def post(self, *args, **kwargs): pass

@@ -47,6 +47,8 @@ class SimpleWSGIServer(Server):
         reqres = Server.serve(self, reqres)
         reqres.close()
         start_response(reqres.get_http_code(), reqres.get_http_headers())
+        if reqres.flag_redirect:
+            return ['']
         return [reqres.render().encode('utf-8')]
         
     def _extract_POST_from_environ(self, environ, request):

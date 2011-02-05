@@ -5,7 +5,7 @@
         "tmp": "./tmp",
         "template_cache": "./tmp/tmpl_cache"
     },
-    "defaults": { "redirect_code": "300 MULTIPLE CHOICES" },
+    "defaults": { "redirect_code": "303 REDIRECT" },
     "security": {
         "salt": "salt",
         "pepper": "pepper"

@@ -20,7 +20,7 @@ class Reqres(object):
     app = None
     uri = u''
     static_path = u''
-    redirect = u''
+    flag_redirect = u''
     error = False
 
     headers = dict()
@@ -36,11 +36,11 @@ class Reqres(object):
 
     exec_paths = list()
 
-    def __init__(self, app=None, uri=u'', redirect=u'', headers=dict()):
+    def __init__(self, app=None, uri=u'', redirect=False, headers=dict()):
         self._init_time = time.time()
         self.app = app and weakref.proxy(app) or None
         self.uri = uri
-        self.redirect = redirect
+        self.flag_redirect = redirect
         self.headers = headers or {'Content-type': 'text/html'}
         self.http_extra = dict()
         self.cookies = HttpCookie(self)
@@ -53,7 +53,7 @@ class Reqres(object):
         logger.info(u'%s milliseconds' % ((self._close_time -
                                            self._init_time) * 1000))
         self.session.save()
-        self.cookies.bake()
+        # self.cookies.bake()
         if config['debug']:
             for header in self.headers:
                 self.save(u'%s %s' % (header, self.headers[header]), 'debug')
@@ -90,6 +90,12 @@ class Reqres(object):
         if 'debug' in self.content:
             final += u'<hr /><pre>\n%s</pre>' % u'\n'.join(self.content['debug'])
         return final
+
+    def redirect(self, uri, code=None):
+        code = code or config['defaults']['redirect_code']
+        self.flag_redirect = True
+        self.set_http_code(code)
+        self.headers['Location'] = uri
 
     def set_http_code(self, code):
         self.http_status_code = code

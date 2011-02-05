@@ -30,13 +30,13 @@ class Server(object):
             return reqres
         else:
             reqres.find_execpaths()
-        if reqres.redirect:
+        if reqres.flag_redirect:
             self.serve_redirect(reqres)
         if reqres.execpaths:
             reqres.execute()
         else:
             reqres.error = '404'
-        if reqres.redirect:
+        if reqres.flag_redirect:
            self.serve_redirect(reqres)
         if reqres.error:
             self.serve_error(reqres)

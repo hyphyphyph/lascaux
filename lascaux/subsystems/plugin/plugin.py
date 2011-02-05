@@ -22,6 +22,9 @@ class PluginSubsystem(instlatte.Subsystem, Sentient):
     def setup(self):
         self.plugins = list()
 
+    def exec_find_plugins(self, app=None):
+        self.find_plugins(app)
+
     def exec_load_plugins(self, app=None):
         self.find_plugins(app)
         self.load_controller_modules(app)

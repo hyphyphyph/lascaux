@@ -1,6 +1,10 @@
+# -*- coding: utf-8 -*-
+
 import os
 import os.path
 import logging
+
+from lascaux import config
 
 
 if not os.path.isdir("tmp"):
@@ -14,5 +18,6 @@ stream_handler.setFormatter(formatter)
 
 def logger(name):
     logger = logging.getLogger(name)
-    logger.addHandler(stream_handler)
+    if config['logging']['enabled']:
+        logger.addHandler(stream_handler)
     return logger

@@ -1,4 +1,7 @@
 {
+    "logging": {
+        "enabled": false
+    },
     "app_packages": ["lascaux_app"],
     "debug": true,
     "subsystems": {

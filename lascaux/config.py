@@ -4,11 +4,11 @@ import hashlib
 
 from libel import merge_dict
 
-from lascaux.sys.logger import logger
+# from lascaux.sys.logger import logger
 from lascaux.sys.util import parse_config
 
 
-logger = logger(__name__)
+# logger = logger(__name__)
 
 
 class Config(dict):

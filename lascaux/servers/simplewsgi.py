@@ -12,8 +12,6 @@ from lascaux.server import Server
 from lascaux.sys.logger import logger
 
 from lascaux.reqres import Reqres
-# from lascaux.sys import config
-
 
 logger = logger(__name__)
 
@@ -49,9 +47,6 @@ class SimpleWSGIServer(Server):
         reqres = Server.serve(self, reqres)
         reqres.close()
         start_response(reqres.get_http_code(), reqres.get_http_headers())
-        # if reqres.redirect:
-        #     return ['']
-        # content = MakoRenderer(reqres).render()
         return [reqres.render().encode('utf-8')]
         
     def _extract_POST_from_environ(self, environ, request):

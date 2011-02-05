@@ -1,7 +1,10 @@
 {
     "title": "Lascaux Framework",
     "version": "2.0",
-    "paths": { "tmp": "./tmp" },
+    "paths": { 
+        "tmp": "./tmp",
+        "template_cache": "./tmp/tmpl_cache"
+    },
     "defaults": { "redirect_code": "300 MULTIPLE CHOICES" },
     "security": {
         "salt": "salt",

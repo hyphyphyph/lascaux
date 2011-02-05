@@ -6,6 +6,8 @@ import os.path
 from mako.template import Template
 from crepehat import Kitchen
 
+from storm.locals import create_database, Store
+
 from lascaux import config
 
 
@@ -14,6 +16,7 @@ class Controller(object):
     plugin = None
     reqres = None
     execpath = None
+    _store = None
 
     def __init__(self, reqres, execpath):
         self.reqres = weakref.proxy(reqres)
@@ -33,7 +36,7 @@ class Controller(object):
         kitchen = Kitchen(os.path.join(self.plugin.config['package_dir'], 'templates'),
                           ['.mako'])
         template = kitchen.get(name)
-        t = Template(filename=template)
+        t = Template(filename=template, module_directory=config['paths']['template_cache'])
         return t.render(**kwargs)
 
     def final(self, name, app_package=True):
@@ -48,8 +51,21 @@ class Controller(object):
         for location in self.reqres.content:
             content.setdefault(location, list())
             content[location] = u'\n'.join(self.reqres.content[location])
-        t = Template(filename=template)
+        t = Template(filename=template, module_directory=config['paths']['template_cache'])
         final = t.render(**content)
         saved = self.reqres.erase_content()
         self.save(final)
         return saved
+
+    def get_store(self, app_package=None):
+        if not self._store:
+            app_package = app_package or self.plugin.app_package
+            c = config[app_package]['db']
+            db = create_database('%s://%s:%s@%s%s/%s' % 
+                                 (c['interface'], 
+                                  c['username'], c['password'],
+                                  c['host'], c['port'] and ':%s' % c['port'],
+                                  c['database']))
+            self._store = store = Store(db)
+        return self._store
+    store = property(get_store)

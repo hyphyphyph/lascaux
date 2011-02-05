@@ -9,7 +9,7 @@
             "interface": "mysql",
             "host": "localhost",
             "port": "",
-            "database": "maxfind",
+            "database": "lascaux",
             "username": "root",
             "password": "root"
         }

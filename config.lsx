@@ -1,6 +1,6 @@
 {
-    "logging": { "enabled": false },
     "app_packages": ["lascaux_app"],
+    "logging": { "enabled": true },
     "debug": true,
     "subsystems": {
         "server": {

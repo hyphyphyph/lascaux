@@ -7,8 +7,8 @@ import instlatte
 from instlatte.lib import Sentient
 
 from lascaux import config
-from lascaux.sys.util import parse_config
-from lascaux.sys.logger import logger
+from lascaux.system.util import parse_config
+from lascaux.system.logger import logger
 from lascaux.plugin import Plugin
 
 

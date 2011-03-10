@@ -5,7 +5,7 @@ import hashlib
 from libel import merge_dict
 
 import lascaux
-from lascaux.sys.util import parse_config
+from lascaux.system.util import parse_config
 
 
 class Config(dict):
@@ -16,6 +16,7 @@ class Config(dict):
                                                              'config', '*%s*' % os.path.extsep))):
             merge_dict(self, parse_config(config))
         for package in base_config['app_packages']:
+            __import__(package)
             try: module = __import__(package)
             except: module = None
             if not module: 

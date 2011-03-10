@@ -6,7 +6,7 @@ from instlatte.lib import Sentient
 
 import lascaux
 from lascaux import config
-from lascaux.sys.logger import logger
+from lascaux.system.logger import logger
 from lascaux.session import Session, SessionStore
 
 

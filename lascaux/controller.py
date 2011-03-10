@@ -8,7 +8,7 @@ from crepehat import Kitchen
 
 from storm.locals import create_database, Store
 
-from lascaux import config
+from lascaux.config import config
 
 
 class Controller(object):

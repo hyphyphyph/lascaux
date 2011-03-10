@@ -4,7 +4,7 @@ import os.path
 
 import lascaux
 from lascaux import config
-from lascaux.sys.logger import logger
+from lascaux.system.logger import logger
 
 
 logger = logger(__name__)

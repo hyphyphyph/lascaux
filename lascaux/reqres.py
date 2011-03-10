@@ -6,7 +6,7 @@ import time
 from lascaux import config
 from lascaux.httpcookie import HttpCookie
 from lascaux.session import Session
-from lascaux.sys.logger import logger
+from lascaux.system.logger import logger
 
 
 logger = logger(__name__)

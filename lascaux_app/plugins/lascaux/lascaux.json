@@ -1,8 +1,0 @@
-{
-    "routes": {
-        "lascaux_index": {
-            "simple": "lascaux",
-            "controller": "index:IndexController"
-        }
-    }
-}

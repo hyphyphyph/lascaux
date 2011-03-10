@@ -7,7 +7,7 @@ from instlatte import Manager
 
 import lascaux
 from lascaux import config
-from lascaux.sys.logger import logger
+from lascaux.system.logger import logger
 from lascaux.lib.instlatte_setup import new_manager
 
 

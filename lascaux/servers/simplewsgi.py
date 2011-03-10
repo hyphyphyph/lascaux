@@ -9,7 +9,7 @@ import libel
 
 from lascaux import config
 from lascaux.server import Server
-from lascaux.sys.logger import logger
+from lascaux.system.logger import logger
 from lascaux.reqres import Reqres
 
 

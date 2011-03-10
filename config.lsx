@@ -1,5 +1,5 @@
 {
-    "app_packages": ["lascaux_app"],
+    "app_packages": ["yvan"],
     "logging": { "enabled": true },
     "debug": true,
     "subsystems": {

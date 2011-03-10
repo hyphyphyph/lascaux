@@ -5,7 +5,7 @@ import instlatte
 from instlatte.lib import Sentient
 
 import lascaux
-from lascaux.sys.logger import logger
+from lascaux.system.logger import logger
 from lascaux.router import Router
 
 

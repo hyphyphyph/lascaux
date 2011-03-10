@@ -1,17 +1,17 @@
-import cgi
-import binascii
-import uuid
 import os.path
+import cgi
+import uuid
 
 import wsgiref.simple_server
 from wsgiref.simple_server import make_server
 
 import libel
 
+from lascaux import config
 from lascaux.server import Server
 from lascaux.sys.logger import logger
-
 from lascaux.reqres import Reqres
+
 
 logger = logger(__name__)
 
@@ -42,8 +42,8 @@ class SimpleWSGIServer(Server):
         reqres.session.load()
         reqres.set_domain(environ.get("HTTP_HOST"))
         reqres.request_method = environ['REQUEST_METHOD'].lower()
-        # if environ["REQUEST_METHOD"] == "POST":
-        #     self._extract_post_from_environ(environ, reqres)
+        if environ["REQUEST_METHOD"].upper() == "POST":
+            reqres.post = self._extract_post(environ)
         reqres = Server.serve(self, reqres)
         reqres.close()
         start_response(reqres.get_http_code(), reqres.get_http_headers())
@@ -51,7 +51,7 @@ class SimpleWSGIServer(Server):
             return ['']
         return [reqres.render().encode('utf-8')]
         
-    def _extract_POST_from_environ(self, environ, request):
+    def _extract_post(self, environ):
         form_data = cgi.FieldStorage(fp=environ["wsgi.input"], environ=environ)
         form_values = {}
         for name in form_data:
@@ -69,4 +69,4 @@ class SimpleWSGIServer(Server):
             else:
                 # TODO: should the encoding be hard-coded ?
                 form_values[name] = form_data[name].value.decode('utf-8')
-        request.POST = form_values
+        return form_values
